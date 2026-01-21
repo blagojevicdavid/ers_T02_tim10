@@ -1,11 +1,16 @@
-﻿using Database.Repozitorijumi;
+﻿using Database.BazaPodataka;
+using Database.BazaPodataka.Database.BazaPodataka;
+using Database.Repozitorijumi;
 using Domain.BazaPodataka;
+using Domain.Enumeracije;
 using Domain.Modeli;
 using Domain.Repozitorijumi;
 using Domain.Servisi;
 using Presentation.Authentifikacija;
 using Presentation.Meni;
-using Services.AutenftikacioniServisi;
+using Services.AutentifikacioniServisi;
+
+
 
 namespace Loger_Bloger
 {
@@ -14,13 +19,22 @@ namespace Loger_Bloger
         public static void Main()
         {
             // Baza podataka
-            IBazaPodataka bazaPodataka = null; // TODO: Initialize the database with appropriate implementation 
+            IBazaPodataka bazaPodataka = new XmlBazaPodataka();
 
             // Repozitorijumi
             IKorisniciRepozitorijum korisniciRepozitorijum = new KorisniciRepozitorijum(bazaPodataka);
 
+            IVinoRepozitorijum vinoRepozitorijum = new VinoRepozitorijum(bazaPodataka);
+
+            IVinovaLozaRepozitorijum vinovaLozaRepozitorijum = new VinoveLozeRepozitorijum(bazaPodataka);
+
+            IVinskiPodrumRepozitorijum CinskipodrumRepo = new VinskiPodrumRepozitorijum(bazaPodataka);
+
+
             // Servisi
-            IAutentifikacijaServis autentifikacijaServis = new AutentifikacioniServis(); // TODO: Pass necessary dependencies
+            IAutentifikacijaServis autentifikacijaServis =
+    new AutentifikacioniServis(korisniciRepozitorijum);
+            // TODO: Pass necessary dependencies
             // TODO: Add other necessary services
 
             // Ako nema nijednog korisnika u sistemu, dodati dva nova

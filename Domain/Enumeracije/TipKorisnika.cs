@@ -2,6 +2,8 @@
 {
     public enum TipKorisnika
     {
-        // TODO: Add appropriate user roles
+        GlavniEnolog,
+        KelarMajstor
     }
+
 }

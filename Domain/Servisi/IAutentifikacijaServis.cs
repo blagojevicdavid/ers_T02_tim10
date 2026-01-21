@@ -4,6 +4,7 @@ namespace Domain.Servisi
 {
     public interface IAutentifikacijaServis
     {
-        public (bool, Korisnik) Prijava(string korisnickoIme, string lozinka);
+        (bool, Korisnik) Prijava(string korisnickoIme, string lozinka);
+        (bool, Korisnik) Registracija(Korisnik noviKorisnik);
     }
 }
