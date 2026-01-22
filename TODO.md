@@ -1,0 +1,3 @@
+1. ### kontrola menija i nalazenje najboljeg rjesenja
+2. 
+3. 
