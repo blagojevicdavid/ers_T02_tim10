@@ -9,6 +9,7 @@ using Domain.Servisi;
 using Presentation.Authentifikacija;
 using Presentation.Meni;
 using Services.AutentifikacioniServisi;
+using Services.VinogradServisi;
 
 
 
@@ -29,6 +30,11 @@ namespace Loger_Bloger
             IVinovaLozaRepozitorijum vinovaLozaRepozitorijum = new VinoveLozeRepozitorijum(bazaPodataka);
 
             IVinskiPodrumRepozitorijum CinskipodrumRepo = new VinskiPodrumRepozitorijum(bazaPodataka);
+
+            IFermentacijaRepozitorijum fermentacijaRepozitorijum = new FermentacijaRepozitorijum(bazaPodataka);
+
+            IFermentacijaServis fermentacijaServis = new FermentacijaServis(fermentacijaRepozitorijum);
+
 
 
             // Servisi
@@ -55,8 +61,10 @@ namespace Loger_Bloger
             Console.Clear();
             Console.WriteLine($"Uspešno ste prijavljeni kao: {prijavljen.ImePrezime} ({prijavljen.Uloga})");
 
-            OpcijeMeni meni = new OpcijeMeni(); // TODO: Pass necessary dependencies
+            OpcijeMeni meni = new OpcijeMeni(fermentacijaServis); // TODO: Pass necessary dependencies
             meni.PrikaziMeni();
+
+
         }
     }
 }
