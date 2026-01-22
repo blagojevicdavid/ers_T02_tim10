@@ -11,11 +11,14 @@ namespace Presentation.Meni
 {
     public class FermentacijaMeni
     {
+        //servisi ovde
         private readonly IFermentacijaServis fermentacijaServis;
+        private readonly IMerenjeSeceraServis merenjeSeceraServis;
 
-        public FermentacijaMeni(IFermentacijaServis servis)
+        public FermentacijaMeni(IFermentacijaServis servis, IMerenjeSeceraServis merenjeServis)
         {
             fermentacijaServis = servis;
+            merenjeSeceraServis = merenjeServis;
         }
 
         public void Prikazi()
@@ -29,6 +32,8 @@ namespace Presentation.Meni
                 Console.WriteLine("2) Pregled jedne fermentacije");
                 Console.WriteLine("3) Započni fermentaciju");
                 Console.WriteLine("4) Promeni fazu fermentacije");
+                Console.WriteLine("5) Dodaj merenje šećera (Brix)");
+                Console.WriteLine("6) Pregled merenja šećera (Brix)");
                 Console.WriteLine("0) Nazad");
                 Console.Write("Izbor: ");
 
@@ -51,6 +56,14 @@ namespace Presentation.Meni
                     case "4":
                         PromeniFazu();
                         break;
+                    case "5":
+                        DodajMerenjeSecera();
+                        break;
+
+                    case "6":
+                        PregledMerenjaSecera();
+                        break;
+
 
                     case "0":
                         nazad = true;
@@ -147,5 +160,59 @@ namespace Presentation.Meni
             bool ok = fermentacijaServis.PromeniFazu(fid, faza);
             Console.WriteLine(ok ? "Faza ažurirana." : "Fermentacija nije pronađena / greška.");
         }
+
+        private void DodajMerenjeSecera()
+        {
+            Console.Write("Unesi FermentacijaId (GUID): ");
+            if (!Guid.TryParse(Console.ReadLine(), out Guid fid))
+            {
+                Console.WriteLine("Neispravan GUID.");
+                return;
+            }
+
+            Console.Write("Unesi nivo šećera (Brix): ");
+            if (!double.TryParse(Console.ReadLine(), out double brix))
+            {
+                Console.WriteLine("Neispravan broj.");
+                return;
+            }
+
+            Console.Write("Napomena (opciono): ");
+            string? napomena = Console.ReadLine();
+
+            try
+            {
+                var m = merenjeSeceraServis.DodajMerenje(fid, brix, napomena ?? "");
+                Console.WriteLine($"Upisano merenje: {m.NivoSeceraBrix} Brix u {m.DatumVreme} (ID={m.Id})");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Greška: {ex.Message}");
+            }
+        }
+
+        private void PregledMerenjaSecera()
+        {
+            Console.Write("Unesi FermentacijaId (GUID): ");
+            if (!Guid.TryParse(Console.ReadLine(), out Guid fid))
+            {
+                Console.WriteLine("Neispravan GUID.");
+                return;
+            }
+
+            var lista = merenjeSeceraServis.PregledMerenja(fid);
+
+            Console.WriteLine("\n--- Merenja šećera (Brix) ---");
+            int brojac = 0;
+            foreach (var m in lista)
+            {
+                brojac++;
+                Console.WriteLine($"{brojac}) {m.DatumVreme} | {m.NivoSeceraBrix} Brix | {m.Napomena}");
+            }
+
+            if (brojac == 0)
+                Console.WriteLine("Nema merenja za ovu fermentaciju.");
+        }
+
     }
 }

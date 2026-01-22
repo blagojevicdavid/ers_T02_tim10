@@ -35,6 +35,10 @@ namespace Loger_Bloger
 
             IFermentacijaServis fermentacijaServis = new FermentacijaServis(fermentacijaRepozitorijum);
 
+            IMerenjeSeceraRepozitorijum merenjeSeceraRepozitorijum = new MerenjeSeceraRepozitorijum(bazaPodataka);
+
+            IMerenjeSeceraServis merenjeSeceraServis = new MerenjeSeceraServis(merenjeSeceraRepozitorijum, fermentacijaRepozitorijum);
+
 
 
             // Servisi
@@ -61,7 +65,7 @@ namespace Loger_Bloger
             Console.Clear();
             Console.WriteLine($"Uspešno ste prijavljeni kao: {prijavljen.ImePrezime} ({prijavljen.Uloga})");
 
-            OpcijeMeni meni = new OpcijeMeni(fermentacijaServis); // TODO: Pass necessary dependencies
+            OpcijeMeni meni = new OpcijeMeni(fermentacijaServis, merenjeSeceraServis); // TODO: Pass necessary dependencies
             meni.PrikaziMeni();
 
 

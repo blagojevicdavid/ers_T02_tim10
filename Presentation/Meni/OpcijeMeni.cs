@@ -6,10 +6,12 @@ namespace Presentation.Meni
     public class OpcijeMeni
     {
         private readonly IFermentacijaServis fermentacijaServis;
+        private readonly IMerenjeSeceraServis merenjeSeceraServis;
 
-        public OpcijeMeni(IFermentacijaServis fermentacijaServis /*ovde navesti ostale servise*/)
+        public OpcijeMeni(IFermentacijaServis fermentacijaServis, IMerenjeSeceraServis merenjeSeceraServis  /*ovde navesti ostale servise*/)
         {
             this.fermentacijaServis = fermentacijaServis;
+            this.merenjeSeceraServis = merenjeSeceraServis;
             // i ovde ispuniti za ostale
         }
 
@@ -29,7 +31,7 @@ namespace Presentation.Meni
                 switch (izbor)
                 {
                     case "1":
-                        new FermentacijaMeni(fermentacijaServis).Prikazi();
+                        new FermentacijaMeni(fermentacijaServis, merenjeSeceraServis /*ovde ostatak servis*/).Prikazi();
                         Console.WriteLine("\n============================================ Meni ===========================================");
                         Console.WriteLine("Odaberite jednu od sledećih opcija:");
                         Console.WriteLine("1) Meni fermentacije");

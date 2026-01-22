@@ -19,6 +19,8 @@ namespace Domain.BazaPodataka
 
         public List<Fermentacija> Fermentacije { get; set; } = new();
 
+        public List<MerenjeSecera> MerenjaSecera { get; set; } = new();
+
 
 
 
