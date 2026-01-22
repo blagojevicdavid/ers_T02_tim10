@@ -21,6 +21,8 @@ namespace Domain.BazaPodataka
 
         public List<MerenjeSecera> MerenjaSecera { get; set; } = new();
 
+        public List<EvidencijaProizvodnjeVina> EvidencijeProizvodnjeVina { get; set; } = new();
+
 
 
 

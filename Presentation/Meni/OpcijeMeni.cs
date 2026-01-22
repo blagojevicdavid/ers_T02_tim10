@@ -7,11 +7,17 @@ namespace Presentation.Meni
     {
         private readonly IFermentacijaServis fermentacijaServis;
         private readonly IMerenjeSeceraServis merenjeSeceraServis;
+        private readonly IEvidencijaProizvodnjeVinaServis evidencijaVinaServis;
+        // ovde navesti ostale servise
 
-        public OpcijeMeni(IFermentacijaServis fermentacijaServis, IMerenjeSeceraServis merenjeSeceraServis  /*ovde navesti ostale servise*/)
+        public OpcijeMeni(IFermentacijaServis fermentacijaServis,
+            IMerenjeSeceraServis merenjeSeceraServis,
+            IEvidencijaProizvodnjeVinaServis evidencijaVinaServis
+            /*ovde navesti ostale servise*/)
         {
             this.fermentacijaServis = fermentacijaServis;
             this.merenjeSeceraServis = merenjeSeceraServis;
+            this.evidencijaVinaServis = evidencijaVinaServis;
             // i ovde ispuniti za ostale
         }
 
@@ -20,6 +26,7 @@ namespace Presentation.Meni
             Console.WriteLine("\n============================================ Meni ===========================================");
             Console.WriteLine("Odaberite jednu od sledećih opcija:");
             Console.WriteLine("1) Meni fermentacije");
+            Console.WriteLine("2) Proizvodnja vina (gotovi proizvodi)");
             Console.WriteLine("0) Izlaz");
 
             bool kraj = false;
@@ -35,12 +42,25 @@ namespace Presentation.Meni
                         Console.WriteLine("\n============================================ Meni ===========================================");
                         Console.WriteLine("Odaberite jednu od sledećih opcija:");
                         Console.WriteLine("1) Meni fermentacije");
+                        Console.WriteLine("2) Proizvodnja vina (gotovi proizvodi)");
+                        // ovde dodati ostale menije
                         Console.WriteLine("0) Izlaz");
                         break;
 
                     case "0":
                         kraj = true;
                         break;
+
+                    case "2":
+                        new ProizvodnjaVinaMeni(evidencijaVinaServis).Prikazi();
+                        Console.WriteLine("\n============================================ Meni ===========================================");
+                        Console.WriteLine("Odaberite jednu od sledećih opcija:");
+                        Console.WriteLine("1) Meni fermentacije");
+                        Console.WriteLine("2) Proizvodnja vina (gotovi proizvodi)");
+                        // ovde dodati ostale menije
+                        Console.WriteLine("0) Izlaz");
+                        break;
+
 
                     default:
                         Console.WriteLine("Nepoznata opcija. Pokusaj ponovo.");
