@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Domain.Servisi;
 
 namespace Presentation.Meni
@@ -12,9 +7,14 @@ namespace Presentation.Meni
     {
         private readonly IEvidencijaProizvodnjeVinaServis evidencijaVinaServis;
 
-        public ProizvodnjaVinaMeni(IEvidencijaProizvodnjeVinaServis evidencijaVinaServis)
+        // ✅ DODATO
+        private readonly PaleteMeni paleteMeni;
+
+        // ✅ IZMIJENJENO: sada prima i PaleteMeni
+        public ProizvodnjaVinaMeni(IEvidencijaProizvodnjeVinaServis evidencijaVinaServis, PaleteMeni paleteMeni)
         {
             this.evidencijaVinaServis = evidencijaVinaServis;
+            this.paleteMeni = paleteMeni;
         }
 
         public void Prikazi()
@@ -27,6 +27,7 @@ namespace Presentation.Meni
                 Console.WriteLine("1) Zabeleži proizvedeno vino");
                 Console.WriteLine("2) Pregled svih gotovih proizvoda");
                 Console.WriteLine("3) Pregled gotovih proizvoda po fermentaciji");
+                Console.WriteLine("4) Slanje paleta u podrum"); // ✅ DODATO
                 Console.WriteLine("0) Nazad");
                 Console.Write("Izbor: ");
 
@@ -44,6 +45,10 @@ namespace Presentation.Meni
 
                     case "3":
                         PregledPoFermentaciji();
+                        break;
+
+                    case "4":
+                        paleteMeni.Prikazi(); // ✅ tvoj task
                         break;
 
                     case "0":

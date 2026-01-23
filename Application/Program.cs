@@ -1,17 +1,18 @@
 ﻿using Database.BazaPodataka;
 using Database.BazaPodataka.Database.BazaPodataka;
 using Database.Repozitorijumi;
+
 using Domain.BazaPodataka;
-using Domain.Enumeracije;
 using Domain.Modeli;
 using Domain.Repozitorijumi;
 using Domain.Servisi;
+
 using Presentation.Authentifikacija;
 using Presentation.Meni;
+
 using Services.AutentifikacioniServisi;
 using Services.VinogradServisi;
-
-
+using Services.LoggerServisi; // mora odgovarati tvom namespace-u
 
 namespace Loger_Bloger
 {
@@ -19,45 +20,37 @@ namespace Loger_Bloger
     {
         public static void Main()
         {
-            // Baza podataka
             IBazaPodataka bazaPodataka = new XmlBazaPodataka();
 
-            // Repozitorijumi
             IKorisniciRepozitorijum korisniciRepozitorijum = new KorisniciRepozitorijum(bazaPodataka);
-
             IVinoRepozitorijum vinoRepozitorijum = new VinoRepozitorijum(bazaPodataka);
-
             IVinovaLozaRepozitorijum vinovaLozaRepozitorijum = new VinoveLozeRepozitorijum(bazaPodataka);
 
-            IVinskiPodrumRepozitorijum CinskipodrumRepo = new VinskiPodrumRepozitorijum(bazaPodataka);
+            // ✅ BITNO: tačno ime varijable koristimo kasnije
+            IVinskiPodrumRepozitorijum vinskiPodrumRepozitorijum = new VinskiPodrumRepozitorijum(bazaPodataka);
 
             IFermentacijaRepozitorijum fermentacijaRepozitorijum = new FermentacijaRepozitorijum(bazaPodataka);
-
-            IFermentacijaServis fermentacijaServis = new FermentacijaServis(fermentacijaRepozitorijum);
-
             IMerenjeSeceraRepozitorijum merenjeSeceraRepozitorijum = new MerenjeSeceraRepozitorijum(bazaPodataka);
-
-            IMerenjeSeceraServis merenjeSeceraServis = new MerenjeSeceraServis(merenjeSeceraRepozitorijum, fermentacijaRepozitorijum);
-
             IEvidencijaProizvodnjeVinaRepozitorijum evidencijaVinaRepo = new EvidencijaProizvodnjeVinaRepozitorijum(bazaPodataka);
 
-            IEvidencijaProizvodnjeVinaServis evidencijaVinaServis =new EvidencijaProizvodnjeVinaServis(evidencijaVinaRepo, fermentacijaRepozitorijum);
+            // ✅ DODATO: palete repo
+            IPaleteRepozitorijum paleteRepozitorijum = new PaleteRepozitorijum(bazaPodataka);
 
+            IFermentacijaServis fermentacijaServis = new FermentacijaServis(fermentacijaRepozitorijum);
+            IMerenjeSeceraServis merenjeSeceraServis = new MerenjeSeceraServis(merenjeSeceraRepozitorijum, fermentacijaRepozitorijum);
+            IEvidencijaProizvodnjeVinaServis evidencijaVinaServis = new EvidencijaProizvodnjeVinaServis(evidencijaVinaRepo, fermentacijaRepozitorijum);
 
+            IAutentifikacijaServis autentifikacijaServis = new AutentifikacioniServis(korisniciRepozitorijum);
 
-            // Servisi
-            IAutentifikacijaServis autentifikacijaServis =
-    new AutentifikacioniServis(korisniciRepozitorijum);
-            // TODO: Pass necessary dependencies
-            // TODO: Add other necessary services
+            // ✅ DODATO: logger (ako se tvoja klasa ne zove LoggerServis, preimenuj OVDJE)
+            ILoggerServis loggerServis = new LoggerServis();
 
-            // Ako nema nijednog korisnika u sistemu, dodati dva nova
-            if (korisniciRepozitorijum.SviKorisnici().Count() == 0)
-            {
-                // TODO: Add initial users to the system
-            }
+            // ✅ DODATO: palete servis
+            IPaleteServis paleteServis = new PaleteServis(paleteRepozitorijum, vinskiPodrumRepozitorijum, loggerServis);
 
-            // Prezentacioni sloj
+            // ✅ DODATO: palete meni
+            PaleteMeni paleteMeni = new PaleteMeni(paleteServis);
+
             AutentifikacioniMeni am = new AutentifikacioniMeni(autentifikacijaServis);
             Korisnik prijavljen = new Korisnik();
 
@@ -69,10 +62,9 @@ namespace Loger_Bloger
             Console.Clear();
             Console.WriteLine($"Uspešno ste prijavljeni kao: {prijavljen.ImePrezime} ({prijavljen.Uloga})");
 
-            OpcijeMeni meni = new OpcijeMeni(fermentacijaServis, merenjeSeceraServis, evidencijaVinaServis); // TODO: Pass necessary dependencies
+            // ✅ IZMIJENJENO: dodali smo paleteMeni kao 4. parametar
+            OpcijeMeni meni = new OpcijeMeni(fermentacijaServis, merenjeSeceraServis, evidencijaVinaServis, paleteMeni);
             meni.PrikaziMeni();
-
-
         }
     }
 }

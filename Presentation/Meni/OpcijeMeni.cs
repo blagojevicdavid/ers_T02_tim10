@@ -8,16 +8,25 @@ namespace Presentation.Meni
         private readonly IFermentacijaServis fermentacijaServis;
         private readonly IMerenjeSeceraServis merenjeSeceraServis;
         private readonly IEvidencijaProizvodnjeVinaServis evidencijaVinaServis;
-        // ovde navesti ostale servise
 
-        public OpcijeMeni(IFermentacijaServis fermentacijaServis,
+        // ✅ DODATO
+        private readonly PaleteMeni paleteMeni;
+
+        // ovde navesti ostale servise
+        public OpcijeMeni(
+            IFermentacijaServis fermentacijaServis,
             IMerenjeSeceraServis merenjeSeceraServis,
-            IEvidencijaProizvodnjeVinaServis evidencijaVinaServis
+            IEvidencijaProizvodnjeVinaServis evidencijaVinaServis,
+            PaleteMeni paleteMeni
             /*ovde navesti ostale servise*/)
         {
             this.fermentacijaServis = fermentacijaServis;
             this.merenjeSeceraServis = merenjeSeceraServis;
             this.evidencijaVinaServis = evidencijaVinaServis;
+
+            // ✅ DODATO
+            this.paleteMeni = paleteMeni;
+
             // i ovde ispuniti za ostale
         }
 
@@ -52,7 +61,9 @@ namespace Presentation.Meni
                         break;
 
                     case "2":
-                        new ProizvodnjaVinaMeni(evidencijaVinaServis).Prikazi();
+                        // ✅ MINIMALNO: sada prosleđujemo paleteMeni u “gotov proizvod”
+                        new ProizvodnjaVinaMeni(evidencijaVinaServis, paleteMeni).Prikazi();
+
                         Console.WriteLine("\n============================================ Meni ===========================================");
                         Console.WriteLine("Odaberite jednu od sledećih opcija:");
                         Console.WriteLine("1) Meni fermentacije");
@@ -60,7 +71,6 @@ namespace Presentation.Meni
                         // ovde dodati ostale menije
                         Console.WriteLine("0) Izlaz");
                         break;
-
 
                     default:
                         Console.WriteLine("Nepoznata opcija. Pokusaj ponovo.");
