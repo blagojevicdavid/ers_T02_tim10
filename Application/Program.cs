@@ -42,11 +42,22 @@ namespace Loger_Bloger
 
             IAutentifikacijaServis autentifikacijaServis = new AutentifikacioniServis(korisniciRepozitorijum);
 
+            IBerbaLozeRepozitorijum berbaLozeRepo = new BerbaLozeRepozitorijum(bazaPodataka);
+
+
             // ✅ DODATO: logger (ako se tvoja klasa ne zove LoggerServis, preimenuj OVDJE)
             ILoggerServis loggerServis = new LoggerServis();
 
             // ✅ DODATO: palete servis
             IPaleteServis paleteServis = new PaleteServis(paleteRepozitorijum, vinskiPodrumRepozitorijum, loggerServis);
+
+            IBerbaLozeServis berbaLozeServis = new BerbaLozeServis(berbaLozeRepo, loggerServis);
+
+            IProracunGrozdjaServis proracunGrozdjaServis = new ProracunGrozdjaServis();
+
+            IVinovaLozaServis vinovaLozaServis = new VinovaLozaServis(vinovaLozaRepozitorijum);
+
+
 
             // ✅ DODATO: palete meni
             PaleteMeni paleteMeni = new PaleteMeni(paleteServis);
@@ -63,7 +74,7 @@ namespace Loger_Bloger
             Console.WriteLine($"Uspešno ste prijavljeni kao: {prijavljen.ImePrezime} ({prijavljen.Uloga})");
 
             // ✅ IZMIJENJENO: dodali smo paleteMeni kao 4. parametar
-            OpcijeMeni meni = new OpcijeMeni(fermentacijaServis, merenjeSeceraServis, evidencijaVinaServis, paleteMeni);
+            OpcijeMeni meni = new OpcijeMeni(fermentacijaServis, merenjeSeceraServis, evidencijaVinaServis, paleteMeni,berbaLozeServis, proracunGrozdjaServis, vinovaLozaServis);
             meni.PrikaziMeni();
         }
     }

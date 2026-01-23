@@ -23,6 +23,7 @@ namespace Domain.BazaPodataka
 
         public List<EvidencijaProizvodnjeVina> EvidencijeProizvodnjeVina { get; set; } = new();
 
+        public List<BerbaLoze> BerbeLoze { get; set; } = new();
 
 
 

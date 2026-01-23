@@ -8,9 +8,11 @@ namespace Domain.Modeli
 {
     public class BerbaLoze
     {
-        public Guid Id { get; }
-        public DateTime DatumBerbe { get; }
-        public double KolicinaKg { get; }
+        public Guid Id { get; set;  }
+        public DateTime DatumBerbe { get; set; }
+        public double KolicinaKg { get; set; }
+
+        public BerbaLoze() { }
 
         public BerbaLoze(Guid id, DateTime datumBerbe, double kolicinaKg)
         {

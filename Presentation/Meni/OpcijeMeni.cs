@@ -8,16 +8,23 @@ namespace Presentation.Meni
         private readonly IFermentacijaServis fermentacijaServis;
         private readonly IMerenjeSeceraServis merenjeSeceraServis;
         private readonly IEvidencijaProizvodnjeVinaServis evidencijaVinaServis;
+        
 
         // ✅ DODATO
         private readonly PaleteMeni paleteMeni;
+        private readonly IBerbaLozeServis berbaLozeServis;
+        private readonly IProracunGrozdjaServis proracunGrozdjaServis;
+        private readonly IVinovaLozaServis vinovaLozaServis;
 
         // ovde navesti ostale servise
         public OpcijeMeni(
             IFermentacijaServis fermentacijaServis,
             IMerenjeSeceraServis merenjeSeceraServis,
             IEvidencijaProizvodnjeVinaServis evidencijaVinaServis,
-            PaleteMeni paleteMeni
+            PaleteMeni paleteMeni,
+            IBerbaLozeServis berbaLozeServis,
+            IProracunGrozdjaServis proracunGrozdjaServis,
+            IVinovaLozaServis vinovaLozaServis
             /*ovde navesti ostale servise*/)
         {
             this.fermentacijaServis = fermentacijaServis;
@@ -28,6 +35,10 @@ namespace Presentation.Meni
             this.paleteMeni = paleteMeni;
 
             // i ovde ispuniti za ostale
+            this.berbaLozeServis = berbaLozeServis;
+            this.proracunGrozdjaServis = proracunGrozdjaServis;
+            this.vinovaLozaServis = vinovaLozaServis;
+
         }
 
         public void PrikaziMeni()
@@ -36,6 +47,9 @@ namespace Presentation.Meni
             Console.WriteLine("Odaberite jednu od sledećih opcija:");
             Console.WriteLine("1) Meni fermentacije");
             Console.WriteLine("2) Proizvodnja vina (gotovi proizvodi)");
+            Console.WriteLine("3) Berba loze");
+            Console.WriteLine("4) Proračun grožđa");
+            Console.WriteLine("5) Sadnja vinove loze");
             Console.WriteLine("0) Izlaz");
 
             bool kraj = false;
@@ -52,7 +66,12 @@ namespace Presentation.Meni
                         Console.WriteLine("Odaberite jednu od sledećih opcija:");
                         Console.WriteLine("1) Meni fermentacije");
                         Console.WriteLine("2) Proizvodnja vina (gotovi proizvodi)");
+                        Console.WriteLine("3) Berba loze");
+                        Console.WriteLine("4) Proračun grožđa");
+                        Console.WriteLine("5) Sadnja vinove loze");
                         // ovde dodati ostale menije
+
+
                         Console.WriteLine("0) Izlaz");
                         break;
 
@@ -68,8 +87,50 @@ namespace Presentation.Meni
                         Console.WriteLine("Odaberite jednu od sledećih opcija:");
                         Console.WriteLine("1) Meni fermentacije");
                         Console.WriteLine("2) Proizvodnja vina (gotovi proizvodi)");
+                        Console.WriteLine("3) Berba loze");
+                        Console.WriteLine("4) Proračun grožđa");
+                        Console.WriteLine("5) Sadnja vinove loze");
                         // ovde dodati ostale menije
                         Console.WriteLine("0) Izlaz");
+                        break;
+
+                    case "3":
+                        new BerbaLozeMeni(berbaLozeServis).Prikazi();
+
+                        Console.WriteLine("\n============================================ Meni ===========================================");
+                        Console.WriteLine("Odaberite jednu od sledećih opcija:");
+                        Console.WriteLine("1) Meni fermentacije");
+                        Console.WriteLine("2) Proizvodnja vina (gotovi proizvodi)");
+                        Console.WriteLine("3) Berba loze");
+                        Console.WriteLine("4) Proračun grožđa");
+                        Console.WriteLine("5) Sadnja vinove loze");
+                        Console.WriteLine("0) Izlaz");
+                        break;
+
+                    case "4":
+                        new ProracunGrozdjaMeni(proracunGrozdjaServis).Prikazi();
+
+                        Console.WriteLine("\n============================================ Meni ===========================================");
+                        Console.WriteLine("Odaberite jednu od sledećih opcija:");
+                        Console.WriteLine("1) Meni fermentacije");
+                        Console.WriteLine("2) Proizvodnja vina (gotovi proizvodi)");
+                        Console.WriteLine("3) Berba loze");
+                        Console.WriteLine("4) Proračun grožđa");
+                        Console.WriteLine("5) Sadnja vinove loze");
+                        Console.WriteLine("0) Izlaz");
+                        break;
+
+                    case "5":
+                        new VinovaLozaMeni(vinovaLozaServis).Prikazi();
+                        Console.WriteLine("\n============================================ Meni ===========================================");
+                        Console.WriteLine("Odaberite jednu od sledećih opcija:");
+                        Console.WriteLine("1) Meni fermentacije");
+                        Console.WriteLine("2) Proizvodnja vina (gotovi proizvodi)");
+                        Console.WriteLine("3) Berba loze");
+                        Console.WriteLine("4) Proračun grožđa");
+                        Console.WriteLine("5) Sadnja vinove loze");
+                        Console.WriteLine("0) Izlaz");
+
                         break;
 
                     default:
