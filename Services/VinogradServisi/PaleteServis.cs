@@ -117,5 +117,23 @@ namespace Services.VinogradServisi
                 VinskiPodrumId = Guid.Empty
             };
         }
+
+        public Paleta KreirajNovuPaletu(string adresaOdredista)
+        {
+            if (string.IsNullOrWhiteSpace(adresaOdredista))
+                throw new ArgumentException("Adresa odredišta je obavezna.");
+
+            Paleta paleta = KreirajNovuUpakovanuPaletu();
+
+            paleta.AdresaOdredista = adresaOdredista.Trim();
+
+            Paleta sacuvana = paleteRepozitorijum.DodajPaletu(paleta);
+
+            if (sacuvana == null)
+                throw new InvalidOperationException("Paleta nije sačuvana.");
+
+            return sacuvana;
+        }
+
     }
 }
