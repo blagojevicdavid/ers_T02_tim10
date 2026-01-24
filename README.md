@@ -1,6 +1,6 @@
 # 🍷 Vinariја Monte Rosso – Informacioni sistem
 
-Ovaj repozitorijum sadrži kompletno implementiran informacioni sistem za upravljanje radom **vinariје Monte Rosso** u Toskani. Projekat je realizovan u okviru predmeta **Elementi razvoja softvera (ERS)** i u potpunosti prati zadatu projektnu specifikaciju za temu **T02 – Vinariја**.
+Ovaj repozitorijum sadrži kompletno implementiran informacioni sistem za upravljanje radom **vinariје Monte Rosso** u Toskani. Projekat je realizovan u okviru predmeta **Elementi razvoja softvera (ERS)** i prati zadatu projektnu specifikaciju za temu **T02 – Vinariја**.
 
 Sistem je razvijen kao **konzolna aplikacija**, strogo podeljena po slojevima, uz doslednu primenu **SOLID principa**, **Dependency Injection‑a**, repozitorijumskog obrasca i testiranja.
 
