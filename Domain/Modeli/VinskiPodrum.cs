@@ -26,6 +26,14 @@ namespace Domain.Modeli
             TemperaturaSkladistenja = temperaturaSkladistenja;
             MaksimalanBrojPaleta = maksimalanBrojPaleta;
         }
+
+        public TipPodrum Tip { get; set; }
+
+        public enum TipPodrum
+        {
+            Vinski,
+            Lokalni
+        }
     }
 }
 

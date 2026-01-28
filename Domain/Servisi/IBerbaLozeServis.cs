@@ -11,5 +11,8 @@ namespace Domain.Servisi
     {
         BerbaLoze EvidentirajBerbu(DateTime datumBerbe, double kolicinaKg);
         IEnumerable<BerbaLoze> VratiSveBerbe();
+
+        BerbaLoze Pronadji(Guid id);
+        bool Azuriraj(Guid id, DateTime datumBerbe, double kolicinaKg);
     }
 }
