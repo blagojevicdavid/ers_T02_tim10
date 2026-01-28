@@ -18,7 +18,7 @@ namespace Services.SkladistenjeServisi
         public NacinSkladistenja PreuzmiNacinSkladistenja()
         {
             if (izabraniNacin == null)
-                throw new InvalidOperationException("Nacin skladistenja nije izabran.");
+                throw new InvalidOperationException("Način skladištenja nije izabran.");
             return izabraniNacin.Value;
         }
     }

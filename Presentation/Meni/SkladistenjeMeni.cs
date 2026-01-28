@@ -20,7 +20,7 @@ namespace Presentation.Meni
 
         public void Prikazi()
         {
-            Console.WriteLine("\n--- ODABIR NAČINA SKLADIŠTENJA (SCRUM-58) ---");
+            Console.WriteLine("\n ODABIR NAČINA SKLADIŠTENJA ");
             Console.WriteLine("1) Vinski podrum");
             Console.WriteLine("2) Lokalni podrum");
             Console.Write("Izbor: ");
