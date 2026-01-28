@@ -14,6 +14,8 @@ using Services.AutentifikacioniServisi;
 using Services.VinogradServisi;
 using Services.LoggerServisi; // mora odgovarati tvom namespace-u
 
+using Services.SkladistenjeServisi;
+
 namespace Loger_Bloger
 {
     public class Program
@@ -58,7 +60,6 @@ namespace Loger_Bloger
             IVinovaLozaServis vinovaLozaServis = new VinovaLozaServis(vinovaLozaRepozitorijum);
 
 
-
             // ✅ DODATO: palete meni
             PaleteMeni paleteMeni = new PaleteMeni(paleteServis);
 
@@ -72,6 +73,11 @@ namespace Loger_Bloger
 
             Console.Clear();
             Console.WriteLine($"Uspešno ste prijavljeni kao: {prijavljen.ImePrezime} ({prijavljen.Uloga})");
+
+            //Izbor skladistenja
+            ISKladistenjeServis skladistenjeServis = new SkladistenjeServis();
+            var skladMeni = new SkladistenjeMeni(skladistenjeServis);
+            skladMeni.Prikazi();
 
             // ✅ IZMIJENJENO: dodali smo paleteMeni kao 4. parametar
             OpcijeMeni meni = new OpcijeMeni(fermentacijaServis, merenjeSeceraServis, evidencijaVinaServis, paleteMeni,berbaLozeServis, proracunGrozdjaServis, vinovaLozaServis);
