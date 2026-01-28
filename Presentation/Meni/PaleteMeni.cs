@@ -60,7 +60,7 @@ namespace Presentation.Meni
             {
                 var paleta = paleteServis.KreirajNovuPaletu(adresa ?? string.Empty);
 
-                Console.WriteLine("✅ Paleta je uspešno kreirana!");
+                Console.WriteLine("Paleta je uspešno kreirana!");
                 Console.WriteLine($"Šifra: {paleta.Sifra}");
                 Console.WriteLine($"ID: {paleta.Id}");
                 Console.WriteLine($"Adresa: {paleta.AdresaOdredista}");
