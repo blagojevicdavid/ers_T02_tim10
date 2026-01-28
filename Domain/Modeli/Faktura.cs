@@ -16,8 +16,8 @@ namespace Domain.Modeli
         public NacinPlacanja NacinPlacanja { get; set; }
         public List<StavkaFakture> Stavke { get; set; } = new();
 
-        // Ukupan iznos (cena * kolicina)
-        public decimal UkupanIznos
+
+        public decimal UkupanIznos   //ovo ne bi trebalo da se nalazi ovde? pomocna metoda?
         {
             get
             {
@@ -26,8 +26,8 @@ namespace Domain.Modeli
                     suma += s.CenaPoKomadu * s.Kolicina;
                 return suma;
             }
-            set { } // zbog XML serijalizacije
         }
+
 
         public Faktura()
         {

@@ -45,7 +45,7 @@ namespace Database.Repozitorijumi
         {
             try
             {
-                // (po želji) šifra palete, slično kao vino:
+                
                 paleta.Sifra = $"PL-2025-{paleta.Id}";
 
                 bazaPodataka.Tabele.Palete.Add(paleta);

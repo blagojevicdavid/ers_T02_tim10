@@ -11,7 +11,7 @@ namespace Presentation.Meni
 {
     public class FermentacijaMeni
     {
-        //servisi ovde
+        //servisi 
         private readonly IFermentacijaServis fermentacijaServis;
         private readonly IMerenjeSeceraServis merenjeSeceraServis;
 

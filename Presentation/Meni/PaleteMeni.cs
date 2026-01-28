@@ -14,7 +14,7 @@ namespace Presentation.Meni
 
         public void Prikazi()
         {
-            Console.WriteLine("\n--- SLANJE PALETA U PODRUM (SCRUM-81) ---");
+            Console.WriteLine("\n--- SLANJE PALETA U PODRUM---");
 
             Console.Write("Unesi ID vinskog podruma (GUID): ");
             if (!Guid.TryParse(Console.ReadLine(), out Guid podrumId))

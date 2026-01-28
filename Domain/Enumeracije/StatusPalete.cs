@@ -9,7 +9,8 @@ namespace Domain.Enumeracije
     public enum StatusPalete
     {
         Upakovana,
-        Otpremljena
+        Otpremljena,
+        Raspakovana
     }
 }
 

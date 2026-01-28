@@ -1,73 +1,63 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.BazaPodataka;
+using System.IO;
+using System.Xml.Serialization;
 
 namespace Database.BazaPodataka
 {
-    using System.Xml.Serialization;
-    using Domain.BazaPodataka;
-
-    namespace Database.BazaPodataka
+    public class XmlBazaPodataka : IBazaPodataka
     {
-        public class XmlBazaPodataka : IBazaPodataka
+        private readonly string putanjaDoFajla;
+
+        public TabeleBazaPodataka Tabele { get; set; }
+
+        public XmlBazaPodataka() : this("podaci.xml")
         {
-            public TabeleBazaPodataka Tabele { get; set; }
+        }
 
-            public XmlBazaPodataka()
+        public XmlBazaPodataka(string putanja)
+        {
+            putanjaDoFajla = string.IsNullOrWhiteSpace(putanja) ? "podaci.xml" : putanja;
+            Tabele = UcitajIliKreirajPrazno();
+        }
+
+        public bool SacuvajPromene()
+        {
+            try
             {
-                // Učitavanje podataka iz XML datoteke
-                try
-                {
-                    if (File.Exists("podaci.xml"))
-                    {
-                        XmlSerializer serializer =
-                            new XmlSerializer(typeof(TabeleBazaPodataka));
+                var folder = Path.GetDirectoryName(putanjaDoFajla);
+                if (!string.IsNullOrWhiteSpace(folder) && !Directory.Exists(folder))
+                    Directory.CreateDirectory(folder);
 
-                        StreamReader sr =
-                            new StreamReader("podaci.xml");
-
-                        object? data = serializer.Deserialize(sr);
-                        sr.Close();
-
-                        if (data != null)
-                            Tabele = (TabeleBazaPodataka)data;
-                        else
-                            Tabele = new TabeleBazaPodataka();
-                    }
-                    else
-                    {
-                        Tabele = new TabeleBazaPodataka();
-                    }
-                }
-                catch
-                {
-                    Tabele = new TabeleBazaPodataka();
-                }
+                using FileStream fs = new FileStream(putanjaDoFajla, FileMode.Create, FileAccess.Write, FileShare.None);
+                XmlSerializer serializer = new XmlSerializer(typeof(TabeleBazaPodataka));
+                serializer.Serialize(fs, Tabele);
+                return true;
             }
-
-            public bool SacuvajPromene()
+            catch
             {
-                try
-                {
-                    XmlSerializer serializer =
-                        new XmlSerializer(typeof(TabeleBazaPodataka));
+                return false;
+            }
+        }
 
-                    StreamWriter sw =
-                        new StreamWriter("podaci.xml");
+        private TabeleBazaPodataka UcitajIliKreirajPrazno()
+        {
+            try
+            {
+                if (!File.Exists(putanjaDoFajla))
+                    return new TabeleBazaPodataka();
 
-                    serializer.Serialize(sw, Tabele);
-                    sw.Close();
+                using FileStream fs = new FileStream(putanjaDoFajla, FileMode.Open, FileAccess.Read, FileShare.Read);
+                XmlSerializer serializer = new XmlSerializer(typeof(TabeleBazaPodataka));
 
-                    return true;
-                }
-                catch
-                {
-                    return false;
-                }
+                if (serializer.Deserialize(fs) is TabeleBazaPodataka ucitano && ucitano != null)
+                    return ucitano;
+
+                return new TabeleBazaPodataka();
+            }
+            catch
+            {
+                return new TabeleBazaPodataka();
             }
         }
     }
-
 }

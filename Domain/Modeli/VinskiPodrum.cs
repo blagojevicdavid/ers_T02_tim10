@@ -13,7 +13,7 @@ namespace Domain.Modeli
         public double TemperaturaSkladistenja { get; set; }
         public int MaksimalanBrojPaleta { get; set; }
 
-        // XML-friendly
+       
         public VinskiPodrum()
         {
             Id = Guid.NewGuid();

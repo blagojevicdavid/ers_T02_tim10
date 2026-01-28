@@ -40,47 +40,47 @@ namespace Services.VinogradServisi
             if (podrum == null)
             {
                 loggerServis.Evidentiraj(TipEvidencije.ERROR,
-                    $"[SCRUM-81] Nepostojeci vinski podrum. ID={vinskiPodrumId}");
+                    $"Nepostojeci vinski podrum. ID={vinskiPodrumId}");
                 throw new ArgumentException("Nepostojeci vinski podrum.");
             }
 
             loggerServis.Evidentiraj(
                 TipEvidencije.INFO,
-                $"[SCRUM-81] Pocetak isporuke: podrum={podrum.Naziv} (ID={vinskiPodrumId}), brojPaleta={brojPaleta}"
+                $"Pocetak isporuke: podrum={podrum.Naziv} (ID={vinskiPodrumId}), brojPaleta={brojPaleta}"
             );
 
             var poslate = new List<Paleta>();
 
             for (int i = 0; i < brojPaleta; i++)
             {
-                // 1) prva dostupna upakovana paleta
+                // prva dostupna upakovana paleta
                 var paleta = NadjiPrvuUpakovanu();
 
-                // 2) ako nema, zapocni novu paletu
+                // ako nema, zapocinjem novu paletu
                 if (paleta == null)
                 {
                     loggerServis.Evidentiraj(
                         TipEvidencije.WARNING,
-                        "[SCRUM-81] Nema dostupne upakovane palete -> kreiram novu paletu (zapocinjem pakovanje)."
+                        "Nema dostupne upakovane palete -> kreiram novu paletu (zapocinjem pakovanje)."
                     );
 
                     paleta = KreirajNovuUpakovanuPaletu();
-                    paleteRepozitorijum.DodajPaletu(paleta);
+                    paleteRepozitorijum.DodajPaletu(paleta);  //da li je uspjesno dodata?
                 }
 
-                // 3) priprema 0.3s po paleti
+                
                 Thread.Sleep(PRIPREMA_MS);
 
-                // 4) oznaci kao otpremljenu i dodijeli podrum
+                
                 paleta.VinskiPodrumId = vinskiPodrumId;
-                paleta.Status = StatusPalete.Otpremljena; // ✅ tacno kao u tvom enum-u
+                paleta.Status = StatusPalete.Otpremljena; 
 
                 bool ok = paleteRepozitorijum.AzurirajPaletu(paleta);
                 if (!ok)
                 {
                     loggerServis.Evidentiraj(
                         TipEvidencije.ERROR,
-                        $"[SCRUM-81] Neuspelo azuriranje palete {paleta.Sifra} (ID={paleta.Id})."
+                        $"Neuspelo azuriranje palete {paleta.Sifra} (ID={paleta.Id})."
                     );
                     throw new InvalidOperationException("Neuspelo azuriranje palete.");
                 }
@@ -89,13 +89,13 @@ namespace Services.VinogradServisi
 
                 loggerServis.Evidentiraj(
                     TipEvidencije.INFO,
-                    $"[SCRUM-81] Otpremljena paleta {paleta.Sifra} u podrum '{podrum.Naziv}' (ID={vinskiPodrumId})."
+                    $"Otpremljena paleta {paleta.Sifra} u podrum '{podrum.Naziv}' (ID={vinskiPodrumId})."
                 );
             }
 
             loggerServis.Evidentiraj(
                 TipEvidencije.INFO,
-                $"[SCRUM-81] Kraj isporuke: ukupno poslate={poslate.Count}"
+                $"Kraj isporuke: ukupno poslate={poslate.Count}"
             );
 
             return poslate;

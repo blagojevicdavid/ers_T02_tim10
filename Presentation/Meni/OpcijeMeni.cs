@@ -5,75 +5,46 @@ namespace Presentation.Meni
 {
     public class OpcijeMeni
     {
-        private readonly IFermentacijaServis fermentacijaServis;
-        private readonly IMerenjeSeceraServis merenjeSeceraServis;
         private readonly IEvidencijaProizvodnjeVinaServis evidencijaVinaServis;
-
-        // ✅ DODATO
         private readonly PaleteMeni paleteMeni;
+        private readonly PakovanjeMeni pakovanjeMeni;
 
-        // ovde navesti ostale servise
         public OpcijeMeni(
-            IFermentacijaServis fermentacijaServis,
-            IMerenjeSeceraServis merenjeSeceraServis,
             IEvidencijaProizvodnjeVinaServis evidencijaVinaServis,
-            PaleteMeni paleteMeni
-            /*ovde navesti ostale servise*/)
+            PaleteMeni paleteMeni,
+            PakovanjeMeni pakovanjeMeni)
         {
-            this.fermentacijaServis = fermentacijaServis;
-            this.merenjeSeceraServis = merenjeSeceraServis;
             this.evidencijaVinaServis = evidencijaVinaServis;
-
-            // ✅ DODATO
             this.paleteMeni = paleteMeni;
-
-            // i ovde ispuniti za ostale
+            this.pakovanjeMeni = pakovanjeMeni;
         }
 
-        public void PrikaziMeni()
+        public void Prikazi()
         {
-            Console.WriteLine("\n============================================ Meni ===========================================");
-            Console.WriteLine("Odaberite jednu od sledećih opcija:");
-            Console.WriteLine("1) Meni fermentacije");
-            Console.WriteLine("2) Proizvodnja vina (gotovi proizvodi)");
-            Console.WriteLine("0) Izlaz");
+            bool izlaz = false;
 
-            bool kraj = false;
-            while (!kraj)
+            while (!izlaz)
             {
-                Console.Write("\nIzbor: ");
-                string? izbor = Console.ReadLine();
+                Console.Clear();
+                Console.WriteLine("=== GLAVNI MENI ===");
+                Console.WriteLine("1) Proizvodnja vina");
+                Console.WriteLine("0) Izlaz");
+                Console.Write("Izbor: ");
+
+                string izbor = Console.ReadLine();
 
                 switch (izbor)
                 {
                     case "1":
-                        new FermentacijaMeni(fermentacijaServis, merenjeSeceraServis /*ovde ostatak servis*/).Prikazi();
-                        Console.WriteLine("\n============================================ Meni ===========================================");
-                        Console.WriteLine("Odaberite jednu od sledećih opcija:");
-                        Console.WriteLine("1) Meni fermentacije");
-                        Console.WriteLine("2) Proizvodnja vina (gotovi proizvodi)");
-                        // ovde dodati ostale menije
-                        Console.WriteLine("0) Izlaz");
+                        new ProizvodnjaVinaMeni(
+                            evidencijaVinaServis,
+                            paleteMeni,
+                            pakovanjeMeni
+                        ).Prikazi();
                         break;
 
                     case "0":
-                        kraj = true;
-                        break;
-
-                    case "2":
-                        // ✅ MINIMALNO: sada prosleđujemo paleteMeni u “gotov proizvod”
-                        new ProizvodnjaVinaMeni(evidencijaVinaServis, paleteMeni).Prikazi();
-
-                        Console.WriteLine("\n============================================ Meni ===========================================");
-                        Console.WriteLine("Odaberite jednu od sledećih opcija:");
-                        Console.WriteLine("1) Meni fermentacije");
-                        Console.WriteLine("2) Proizvodnja vina (gotovi proizvodi)");
-                        // ovde dodati ostale menije
-                        Console.WriteLine("0) Izlaz");
-                        break;
-
-                    default:
-                        Console.WriteLine("Nepoznata opcija. Pokusaj ponovo.");
+                        izlaz = true;
                         break;
                 }
             }

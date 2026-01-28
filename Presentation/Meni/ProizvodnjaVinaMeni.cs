@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Domain.Modeli;
 using Domain.Servisi;
 
 namespace Presentation.Meni
@@ -6,146 +8,196 @@ namespace Presentation.Meni
     public class ProizvodnjaVinaMeni
     {
         private readonly IEvidencijaProizvodnjeVinaServis evidencijaVinaServis;
-
-        // ✅ DODATO
         private readonly PaleteMeni paleteMeni;
+        private readonly PakovanjeMeni pakovanjeMeni;
 
-        // ✅ IZMIJENJENO: sada prima i PaleteMeni
-        public ProizvodnjaVinaMeni(IEvidencijaProizvodnjeVinaServis evidencijaVinaServis, PaleteMeni paleteMeni)
+        public ProizvodnjaVinaMeni(
+            IEvidencijaProizvodnjeVinaServis evidencijaVinaServis,
+            PaleteMeni paleteMeni,
+            PakovanjeMeni pakovanjeMeni)
         {
             this.evidencijaVinaServis = evidencijaVinaServis;
             this.paleteMeni = paleteMeni;
+            this.pakovanjeMeni = pakovanjeMeni;
         }
 
         public void Prikazi()
         {
-            bool nazad = false;
+            bool izlaz = false;
 
-            while (!nazad)
+            while (!izlaz)
             {
-                Console.WriteLine("\n--- PROIZVODNJA VINA (Gotovi proizvodi) ---");
-                Console.WriteLine("1) Zabeleži proizvedeno vino");
-                Console.WriteLine("2) Pregled svih gotovih proizvoda");
-                Console.WriteLine("3) Pregled gotovih proizvoda po fermentaciji");
-                Console.WriteLine("4) Slanje paleta u podrum"); // ✅ DODATO
+                Console.Clear();
+                Console.WriteLine("=== PROIZVODNJA VINA ===");
+                Console.WriteLine("1) Pregled svih evidencija proizvodnje");
+                Console.WriteLine("2) Pregled evidencija za fermentaciju");
+                Console.WriteLine("3) Zabeleži proizvodnju (kreiraj evidenciju)");
+                Console.WriteLine("4) Pregled paleta");
+                Console.WriteLine("5) Priprema vina za prodaju (pakovanje + slanje)");
                 Console.WriteLine("0) Nazad");
                 Console.Write("Izbor: ");
 
-                string? izbor = Console.ReadLine();
+                string izbor = Console.ReadLine() ?? "";
 
                 switch (izbor)
                 {
                     case "1":
-                        ZabeleziProizvedenoVino();
+                        PrikaziSveEvidencije();
                         break;
 
                     case "2":
-                        PregledSvih();
+                        PrikaziEvidencijeZaFermentaciju();
                         break;
 
                     case "3":
-                        PregledPoFermentaciji();
+                        ZabeleziProizvodnju();
                         break;
 
                     case "4":
-                        paleteMeni.Prikazi(); // ✅ tvoj task
+                        paleteMeni.Prikazi();
+                        break;
+
+                    case "5":
+                        pakovanjeMeni.Prikazi();
                         break;
 
                     case "0":
-                        nazad = true;
-                        break;
-
-                    default:
-                        Console.WriteLine("Nepoznata opcija.");
+                        izlaz = true;
                         break;
                 }
             }
         }
 
-        private void ZabeleziProizvedenoVino()
+        private void PrikaziSveEvidencije()
         {
+            Console.Clear();
+            Console.WriteLine("--- SVE EVIDENCIJE PROIZVODNJE ---");
+
+            IEnumerable<EvidencijaProizvodnjeVina> evidencije = evidencijaVinaServis.PregledSvihEvidencija();
+
+            int brojac = 0;
+            foreach (var e in evidencije)
+            {
+                brojac++;
+                Console.WriteLine($"{brojac}) {FormatEvidencija(e)}");
+            }
+
+            if (brojac == 0)
+                Console.WriteLine("Nema evidentiranih proizvodnji.");
+
+            Console.WriteLine("\nPritisni ENTER...");
+            Console.ReadLine();
+        }
+
+        private void PrikaziEvidencijeZaFermentaciju()
+        {
+            Console.Clear();
+            Console.WriteLine("--- EVIDENCIJE ZA FERMENTACIJU ---");
+
             Console.Write("Unesi FermentacijaId (GUID): ");
-            if (!Guid.TryParse(Console.ReadLine(), out Guid fid))
+            string unos = Console.ReadLine() ?? "";
+
+            if (!Guid.TryParse(unos, out Guid fermentacijaId))
             {
                 Console.WriteLine("Neispravan GUID.");
+                Console.WriteLine("\nPritisni ENTER...");
+                Console.ReadLine();
+                return;
+            }
+
+            IEnumerable<EvidencijaProizvodnjeVina> evidencije = evidencijaVinaServis.PregledEvidencijaZaFermentaciju(fermentacijaId);
+
+            int brojac = 0;
+            foreach (var e in evidencije)
+            {
+                brojac++;
+                Console.WriteLine($"{brojac}) {FormatEvidencija(e)}");
+            }
+
+            if (brojac == 0)
+                Console.WriteLine("Nema evidencija za datu fermentaciju.");
+
+            Console.WriteLine("\nPritisni ENTER...");
+            Console.ReadLine();
+        }
+
+        private void ZabeleziProizvodnju()
+        {
+            Console.Clear();
+            Console.WriteLine("--- ZABELEŽI PROIZVODNJU ---");
+
+            Console.Write("FermentacijaId (GUID): ");
+            string ferStr = Console.ReadLine() ?? "";
+            if (!Guid.TryParse(ferStr, out Guid fermentacijaId))
+            {
+                Console.WriteLine("Neispravan GUID.");
+                Console.WriteLine("\nPritisni ENTER...");
+                Console.ReadLine();
                 return;
             }
 
             Console.Write("Naziv vina: ");
-            string? naziv = Console.ReadLine();
-
-            Console.Write("Broj flaša: ");
-            if (!int.TryParse(Console.ReadLine(), out int brojFlasa))
+            string naziv = Console.ReadLine() ?? "";
+            if (string.IsNullOrWhiteSpace(naziv))
             {
-                Console.WriteLine("Neispravan broj.");
+                Console.WriteLine("Naziv ne sme biti prazan.");
+                Console.WriteLine("\nPritisni ENTER...");
+                Console.ReadLine();
                 return;
             }
 
-            Console.Write("Zapremina flaše (L, npr. 0.75 ili 1.5): ");
-            if (!double.TryParse(Console.ReadLine(), out double zapremina))
+            Console.Write("Broj flasa: ");
+            if (!int.TryParse(Console.ReadLine(), out int brojFlasa) || brojFlasa <= 0)
             {
-                Console.WriteLine("Neispravna zapremina.");
+                Console.WriteLine("Broj flasa mora biti > 0.");
+                Console.WriteLine("\nPritisni ENTER...");
+                Console.ReadLine();
+                return;
+            }
+
+            Console.Write("Zapremina flase (litara, npr 0.75): ");
+            if (!double.TryParse(Console.ReadLine(), out double zapremina) || zapremina <= 0)
+            {
+                Console.WriteLine("Zapremina mora biti > 0.");
+                Console.WriteLine("\nPritisni ENTER...");
+                Console.ReadLine();
                 return;
             }
 
             Console.Write("Napomena (opciono): ");
-            string? napomena = Console.ReadLine();
+            string napomena = Console.ReadLine() ?? "";
 
             try
             {
                 var e = evidencijaVinaServis.ZabeleziProizvodnju(
-                    fid,
-                    naziv ?? "",
+                    fermentacijaId,
+                    naziv,
                     brojFlasa,
                     zapremina,
-                    napomena ?? ""
+                    napomena
                 );
 
-                Console.WriteLine($"Zabeleženo: {e.NazivVina} | {e.UkupnoLitara} L ({e.BrojFlasa} × {e.ZapreminaFlaseLitara} L)");
+                Console.WriteLine("\nProizvodnja je evidentirana:");
+                Console.WriteLine(FormatEvidencija(e));
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Greška: {ex.Message}");
+                Console.WriteLine("\nGreška: " + ex.Message);
             }
+
+            Console.WriteLine("\nPritisni ENTER...");
+            Console.ReadLine();
         }
 
-        private void PregledSvih()
+        private static string FormatEvidencija(EvidencijaProizvodnjeVina e)
         {
-            var lista = evidencijaVinaServis.PregledSvihEvidencija();
+            if (e == null) return "(null evidencija)";
 
-            Console.WriteLine("\n--- Svi gotovi proizvodi ---");
-            int i = 0;
-            foreach (var e in lista)
-            {
-                i++;
-                Console.WriteLine($"{i}) {e.DatumVreme} | {e.NazivVina} | {e.UkupnoLitara} L | Fermentacija={e.FermentacijaId}");
-            }
-
-            if (i == 0)
-                Console.WriteLine("Nema zabeleženih proizvoda.");
-        }
-
-        private void PregledPoFermentaciji()
-        {
-            Console.Write("Unesi FermentacijaId (GUID): ");
-            if (!Guid.TryParse(Console.ReadLine(), out Guid fid))
-            {
-                Console.WriteLine("Neispravan GUID.");
-                return;
-            }
-
-            var lista = evidencijaVinaServis.PregledEvidencijaZaFermentaciju(fid);
-
-            Console.WriteLine("\n--- Gotovi proizvodi za fermentaciju ---");
-            int i = 0;
-            foreach (var e in lista)
-            {
-                i++;
-                Console.WriteLine($"{i}) {e.DatumVreme} | {e.NazivVina} | {e.UkupnoLitara} L ({e.BrojFlasa} × {e.ZapreminaFlaseLitara} L)");
-            }
-
-            if (i == 0)
-                Console.WriteLine("Nema zabeleženih proizvoda za ovu fermentaciju.");
+            
+            return
+                $"Id={e.Id} | FermentacijaId={e.FermentacijaId} | Vino={e.NazivVina} | " +
+                $"Flase={e.BrojFlasa} | Zapremina={e.ZapreminaFlaseLitara}L | Ukupno={e.UkupnoLitara}L | " +
+                $"Datum={e.DatumVreme}";
         }
     }
 }
