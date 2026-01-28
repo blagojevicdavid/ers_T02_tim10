@@ -6,6 +6,7 @@ using Domain.BazaPodataka;
 using Domain.Modeli;
 using Domain.Repozitorijumi;
 using Domain.Servisi;
+using Domain.Enumeracije;
 
 using Presentation.Authentifikacija;
 using Presentation.Meni;
@@ -79,8 +80,22 @@ namespace Loger_Bloger
             var skladMeni = new SkladistenjeMeni(skladistenjeServis);
             skladMeni.Prikazi();
 
-            // ✅ IZMIJENJENO: dodali smo paleteMeni kao 4. parametar
-            OpcijeMeni meni = new OpcijeMeni(fermentacijaServis, merenjeSeceraServis, evidencijaVinaServis, paleteMeni,berbaLozeServis, proracunGrozdjaServis, vinovaLozaServis);
+            var nacin = skladistenjeServis.PreuzmiNacinSkladistenja();
+            
+            var vinskiMeni = new VinskiPodrumMeni(vinskiPodrumRepozitorijum, skladistenjeServis);
+            var lokalniMeni = new LokalniPodrumMeni(vinskiPodrumRepozitorijum, skladistenjeServis);
+
+            if (nacin == NacinSkladistenja.VinskiPodrum)
+            {
+                vinskiMeni.Prikazi();
+            }
+            else if (nacin == NacinSkladistenja.LokalniPodrum)
+            {
+                lokalniMeni.Prikazi();
+
+            }
+                // ✅ IZMIJENJENO: dodali smo paleteMeni kao 4. parametar
+                OpcijeMeni meni = new OpcijeMeni(fermentacijaServis, merenjeSeceraServis, evidencijaVinaServis, paleteMeni,berbaLozeServis, proracunGrozdjaServis, vinovaLozaServis);
             meni.PrikaziMeni();
         }
     }
