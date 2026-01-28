@@ -13,5 +13,9 @@ namespace Domain.Servisi
         IList<Paleta> PosaljiPaleteUVinskiPodrum(Guid vinskiPodrumId, int brojPaleta);
 
         Paleta KreirajNovuPaletu(string adresaOdredista);
+
+        bool DodajProizvedenoVinoNaPaletu(Guid paletaId, Guid evidencijaProizvodnjevinaId);
+
+        Paleta PregledPalete(Guid paletaId);
     }
 }

@@ -26,14 +26,14 @@ namespace Loger_Bloger
             IVinoRepozitorijum vinoRepozitorijum = new VinoRepozitorijum(bazaPodataka);
             IVinovaLozaRepozitorijum vinovaLozaRepozitorijum = new VinoveLozeRepozitorijum(bazaPodataka);
 
-            // ✅ BITNO: tačno ime varijable koristimo kasnije
+            
             IVinskiPodrumRepozitorijum vinskiPodrumRepozitorijum = new VinskiPodrumRepozitorijum(bazaPodataka);
 
             IFermentacijaRepozitorijum fermentacijaRepozitorijum = new FermentacijaRepozitorijum(bazaPodataka);
             IMerenjeSeceraRepozitorijum merenjeSeceraRepozitorijum = new MerenjeSeceraRepozitorijum(bazaPodataka);
             IEvidencijaProizvodnjeVinaRepozitorijum evidencijaVinaRepo = new EvidencijaProizvodnjeVinaRepozitorijum(bazaPodataka);
 
-            // ✅ DODATO: palete repo
+           
             IPaleteRepozitorijum paleteRepozitorijum = new PaleteRepozitorijum(bazaPodataka);
 
             IFermentacijaServis fermentacijaServis = new FermentacijaServis(fermentacijaRepozitorijum);
@@ -45,11 +45,11 @@ namespace Loger_Bloger
             IBerbaLozeRepozitorijum berbaLozeRepo = new BerbaLozeRepozitorijum(bazaPodataka);
 
 
-            // ✅ DODATO: logger (ako se tvoja klasa ne zove LoggerServis, preimenuj OVDJE)
+            
             ILoggerServis loggerServis = new LoggerServis();
 
-            // ✅ DODATO: palete servis
-            IPaleteServis paleteServis = new PaleteServis(paleteRepozitorijum, vinskiPodrumRepozitorijum, loggerServis);
+            
+            IPaleteServis paleteServis = new PaleteServis(paleteRepozitorijum, vinskiPodrumRepozitorijum, loggerServis, evidencijaVinaRepo);
 
             IBerbaLozeServis berbaLozeServis = new BerbaLozeServis(berbaLozeRepo, loggerServis);
 

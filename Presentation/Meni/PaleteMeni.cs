@@ -21,8 +21,9 @@ namespace Presentation.Meni
             while (!nazad)
             {
                 Console.WriteLine("\n--- PALETE ---");
-                Console.WriteLine("1) Kreiranje nove palete (SCRUM-82)");
-                Console.WriteLine("2) Slanje paleta u podrum (SCRUM-81)");
+                Console.WriteLine("1) Kreiranje nove palete");
+                Console.WriteLine("2) Slanje paleta u podrum");
+                Console.WriteLine("3) Zapakuj vino u paletu");
                 Console.WriteLine("0) Nazad");
                 Console.Write("Izbor: ");
 
@@ -36,6 +37,10 @@ namespace Presentation.Meni
 
                     case "2":
                         PosaljiPaleteUVinskiPodrum();
+                        break;
+
+                    case "3":
+                        ZapakujVinoUPaletu();
                         break;
 
                     case "0":
@@ -52,7 +57,7 @@ namespace Presentation.Meni
 
         private void KreirajNovuPaletu()
         {
-            Console.WriteLine("\n--- KREIRANJE NOVE PALETE (SCRUM-82) ---");
+            Console.WriteLine("\n--- KREIRANJE NOVE PALETE---");
             Console.Write("Unesi adresu odredišta: ");
             string? adresa = Console.ReadLine();
 
@@ -77,7 +82,7 @@ namespace Presentation.Meni
 
         private void PosaljiPaleteUVinskiPodrum()
         {
-            Console.WriteLine("\n--- SLANJE PALETA U PODRUM (SCRUM-81) ---");
+            Console.WriteLine("\n--- SLANJE PALETA U PODRUM ---");
 
             Console.Write("Unesi ID vinskog podruma (GUID): ");
             if (!Guid.TryParse(Console.ReadLine(), out Guid podrumId))
@@ -110,6 +115,26 @@ namespace Presentation.Meni
 
             Console.WriteLine("Pritisni ENTER za nastavak...");
             Console.ReadLine();
+        }
+
+        private void ZapakujVinoUPaletu()
+        {
+            Console.Write("Unesi PaletaId (GUID): ");
+            if (!Guid.TryParse(Console.ReadLine(), out Guid paletaId))
+            {
+                Console.WriteLine("Neispravan GUID.");
+                return;
+            }
+
+            Console.Write("Unesi ID proizvedenog vina (EvidencijaProizvodnjeVinaId) (GUID): ");
+            if (!Guid.TryParse(Console.ReadLine(), out Guid evidencijaId))
+            {
+                Console.WriteLine("Neispravan GUID.");
+                return;
+            }
+
+            bool ok = paleteServis.DodajProizvedenoVinoNaPaletu(paletaId, evidencijaId);
+            Console.WriteLine(ok ? "Vino je zapakovano u paletu." : "Neuspešno (paleta ili evidencija ne postoji / već dodato).");
         }
 
 

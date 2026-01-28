@@ -17,15 +17,18 @@ namespace Services.VinogradServisi
         private readonly IPaleteRepozitorijum paleteRepozitorijum;
         private readonly IVinskiPodrumRepozitorijum vinskiPodrumRepozitorijum;
         private readonly ILoggerServis loggerServis;
+        private readonly IEvidencijaProizvodnjeVinaRepozitorijum evidencijaVinaRepo;
 
         public PaleteServis(
             IPaleteRepozitorijum paleteRepozitorijum,
             IVinskiPodrumRepozitorijum vinskiPodrumRepozitorijum,
-            ILoggerServis loggerServis)
+            ILoggerServis loggerServis,
+            IEvidencijaProizvodnjeVinaRepozitorijum evidencijaVinaRepo)
         {
             this.paleteRepozitorijum = paleteRepozitorijum;
             this.vinskiPodrumRepozitorijum = vinskiPodrumRepozitorijum;
             this.loggerServis = loggerServis;
+            this.evidencijaVinaRepo = evidencijaVinaRepo;
         }
 
         public IList<Paleta> PosaljiPaleteUVinskiPodrum(Guid vinskiPodrumId, int brojPaleta)
@@ -134,6 +137,37 @@ namespace Services.VinogradServisi
 
             return sacuvana;
         }
+
+        public Paleta PregledPalete(Guid paletaId)
+        {
+            return paleteRepozitorijum.PronadjiPaletuPoId(paletaId);
+        }
+
+        public bool DodajProizvedenoVinoNaPaletu(Guid paletaId, Guid evidencijaProizvodnjeVinaId)
+        {
+            var paleta = paleteRepozitorijum.PronadjiPaletuPoId(paletaId);
+            if (paleta == null || paleta.Id == Guid.Empty)
+                return false;
+
+            var evidencije = evidencijaVinaRepo.SveEvidencije();
+            var evidencija = evidencije.FirstOrDefault(e => e.Id == evidencijaProizvodnjeVinaId);
+            if (evidencija == null)
+                return false;
+
+            if (paleta.VinaIds == null)
+                paleta.VinaIds = new List<Guid>();
+
+
+            if (paleta.VinaIds.Contains(evidencijaProizvodnjeVinaId))
+                return false;
+
+
+            paleta.VinaIds.Add(evidencijaProizvodnjeVinaId);
+
+
+            return paleteRepozitorijum.AzurirajPaletu(paleta);
+        }
+
 
     }
 }
