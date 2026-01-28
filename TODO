@@ -1,4 +1,4 @@
-Izdvojiti konstante u fajl za iste, pogledati kod Sijalice
+Izdvojiti konstante u fajl za iste
 Svako iz svojih taskova izdvojiti pomocne metode i staviti ih u istoimeni fajl
 Trebamo reorganizovati fajlove za servise, sad su nam sve klase u VinogradServisi.cs, trebamo malo razdvojiti bar jos za prodaju i skladistenje
 Faktura.cs napomena (moje, Marija)
