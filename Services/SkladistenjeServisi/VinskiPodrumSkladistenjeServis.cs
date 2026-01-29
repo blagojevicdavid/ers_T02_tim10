@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using System;
-using System.Collections.Generic;
 using System.Threading;
 using Domain.Enumeracije;
 using Domain.Modeli;
@@ -22,12 +16,66 @@ namespace Services.SkladistenjeServisi
         private readonly IPaleteRepozitorijum paleteRepo;
         private readonly ILoggerServis logger;
 
+        // ✅ DODATO: izbor načina/podruma (da interfejs bude zadovoljen)
+        private NacinSkladistenja? izabraniNacin;
+        private Guid? izabraniVinskiPodrumId;
+        private Guid? izabraniLokalniPodrumId;
+
         public VinskiPodrumSkladistenjeServis(IPaleteRepozitorijum paleteRepo, ILoggerServis logger)
         {
             this.paleteRepo = paleteRepo;
             this.logger = logger;
         }
 
+        // -------------------- ISkladistenjeServis: izbor načina --------------------
+        public void PostaviNacinSkladistenja(NacinSkladistenja nacin)
+        {
+            izabraniNacin = nacin;
+        }
+
+        public NacinSkladistenja PreuzmiNacinSkladistenja()
+        {
+            if (izabraniNacin == null)
+                throw new InvalidOperationException("Način skladištenja nije izabran.");
+            return izabraniNacin.Value;
+        }
+
+        // -------------------- ISkladistenjeServis: izbor podruma --------------------
+        public void PostaviVinskiPodrum(Guid vinskiPodrumId)
+        {
+            if (vinskiPodrumId == Guid.Empty)
+                throw new ArgumentException("Neispravan ID vinskog podruma.");
+
+            izabraniVinskiPodrumId = vinskiPodrumId;
+            izabraniLokalniPodrumId = null; // biram jedno ili drugo
+        }
+
+        public Guid PreuzmiVinskiPodrum()
+        {
+            if (izabraniVinskiPodrumId == null)
+                throw new InvalidOperationException("Vinski podrum nije izabran.");
+
+            return izabraniVinskiPodrumId.Value;
+        }
+
+        public void PostaviLokalniPodrum(Guid lokalniPodrumId)
+        {
+            if (lokalniPodrumId == Guid.Empty)
+                throw new ArgumentException("Neispravan ID lokalnog podruma.");
+
+            izabraniLokalniPodrumId = lokalniPodrumId;
+            izabraniVinskiPodrumId = null; // biram jedno ili drugo
+        }
+
+        public Guid PreuzmiLokalniPodrum()
+        {
+            if (izabraniLokalniPodrumId == null)
+                throw new InvalidOperationException("Lokalni podrum nije izabran.");
+
+            return izabraniLokalniPodrumId.Value;
+        }
+
+        // -------------------- POSTOJECA LOGIKA (tvoja) --------------------
         public bool PrihvatiOtpremljenuPaletu(Paleta paleta)
         {
             try

@@ -1,6 +1,4 @@
-﻿using Domain.Modeli;
-using Domain.Repozitorijumi;
-using Domain.Servisi;
+﻿using Domain.Servisi;
 using System;
 
 namespace Presentation.Meni
@@ -16,9 +14,6 @@ namespace Presentation.Meni
 
         public void Prikazi()
         {
-<<<<<<< HEAD
-            Console.WriteLine("\n--- SLANJE PALETA U PODRUM---");
-=======
             bool nazad = false;
 
             while (!nazad)
@@ -57,10 +52,9 @@ namespace Presentation.Meni
             }
         }
 
-
         private void KreirajNovuPaletu()
         {
-            Console.WriteLine("\n--- KREIRANJE NOVE PALETE---");
+            Console.WriteLine("\n--- KREIRANJE NOVE PALETE ---");
             Console.Write("Unesi adresu odredišta: ");
             string? adresa = Console.ReadLine();
 
@@ -79,14 +73,12 @@ namespace Presentation.Meni
                 Console.WriteLine($"Greška: {ex.Message}");
             }
 
-            Console.WriteLine("Pritisni ENTER za nastavak...");
-            Console.ReadLine();
+            Pauza();
         }
 
         private void PosaljiPaleteUVinskiPodrum()
         {
             Console.WriteLine("\n--- SLANJE PALETA U PODRUM ---");
->>>>>>> 7d356f703eacf9bf164455f1f8b479e0d8615f72
 
             Console.Write("Unesi ID vinskog podruma (GUID): ");
             if (!Guid.TryParse(Console.ReadLine(), out Guid podrumId))
@@ -106,7 +98,7 @@ namespace Presentation.Meni
             {
                 var poslate = paleteServis.PosaljiPaleteUVinskiPodrum(podrumId, broj);
 
-                Console.WriteLine($"Uspesno poslato: {poslate.Count} paleta.");
+                Console.WriteLine($"Uspešno poslato: {poslate.Count} paleta.");
                 foreach (var p in poslate)
                 {
                     Console.WriteLine($"- {p.Sifra} | Status: {p.Status} | PodrumId: {p.VinskiPodrumId}");
@@ -114,11 +106,10 @@ namespace Presentation.Meni
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Greska: {ex.Message}");
+                Console.WriteLine($"Greška: {ex.Message}");
             }
 
-            Console.WriteLine("Pritisni ENTER za nastavak...");
-            Console.ReadLine();
+            Pauza();
         }
 
         private void ZapakujVinoUPaletu()
@@ -130,7 +121,7 @@ namespace Presentation.Meni
                 return;
             }
 
-            Console.Write("Unesi ID proizvedenog vina (EvidencijaProizvodnjeVinaId) (GUID): ");
+            Console.Write("Unesi ID proizvedenog vina (GUID): ");
             if (!Guid.TryParse(Console.ReadLine(), out Guid evidencijaId))
             {
                 Console.WriteLine("Neispravan GUID.");
@@ -138,10 +129,17 @@ namespace Presentation.Meni
             }
 
             bool ok = paleteServis.DodajProizvedenoVinoNaPaletu(paletaId, evidencijaId);
-            Console.WriteLine(ok ? "Vino je zapakovano u paletu." : "Neuspešno (paleta ili evidencija ne postoji / već dodato).");
+            Console.WriteLine(ok
+                ? "Vino je zapakovano u paletu."
+                : "Neuspešno (paleta ili evidencija ne postoji / već dodato).");
+
+            Pauza();
         }
 
-
-
+        private static void Pauza()
+        {
+            Console.WriteLine("\nPritisni ENTER za nastavak...");
+            Console.ReadLine();
+        }
     }
 }

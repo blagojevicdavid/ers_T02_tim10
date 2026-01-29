@@ -11,9 +11,9 @@ namespace Presentation.Meni
 {
     public class SkladistenjeMeni
     {
-        private readonly ISKladistenjeServis skladistenjeServis;
+        private readonly ISkladistenjeServis skladistenjeServis;
 
-        public SkladistenjeMeni(ISKladistenjeServis skladistenjeServis)
+        public SkladistenjeMeni(ISkladistenjeServis skladistenjeServis)
         {
             this.skladistenjeServis = skladistenjeServis;
         }

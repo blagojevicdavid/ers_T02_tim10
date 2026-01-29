@@ -14,11 +14,11 @@ namespace Presentation.Meni
     public class LokalniPodrumMeni
     {
         private readonly IVinskiPodrumRepozitorijum vinskiPodrumRepo;
-        private readonly ISKladistenjeServis skladistenjeServis;
+        private readonly ISkladistenjeServis skladistenjeServis;
 
         public LokalniPodrumMeni(
             IVinskiPodrumRepozitorijum lokalniPodrumRepo,
-            ISKladistenjeServis skladistenjeServis)
+            ISkladistenjeServis skladistenjeServis)
         {
             this.vinskiPodrumRepo = lokalniPodrumRepo;
             this.skladistenjeServis = skladistenjeServis;
