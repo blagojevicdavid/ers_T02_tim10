@@ -13,6 +13,7 @@ using Services.LoggerServisi;
 using Services.PakovanjeServisi;
 using Services.SkladistenjeServisi;
 using Services.VinogradServisi;
+using Services.VinoServisi;
 
 namespace Loger_Bloger
 {
@@ -116,8 +117,6 @@ namespace Loger_Bloger
                 try { izborServis.PreuzmiLokalniPodrum(); }
                 catch
                 {
-                    Console.WriteLine("Niste izabrali lokalni podrum. Enter za povratak...");
-                    Console.ReadLine();
                     return;
                 }
             }
@@ -134,6 +133,10 @@ namespace Loger_Bloger
 
             PakovanjeMeni pakovanjeMeni = new PakovanjeMeni(pakovanjeServis);
 
+            IPonudaVinaServis ponudaVinaServis =
+                new PonudaVinaServis(vinoRepozitorijum);
+            PonudaVinaMeni ponudaVinaMeni = new PonudaVinaMeni(ponudaVinaServis);
+
             // -------------------- GLAVNI MENI --------------------
             OpcijeMeni meni = new OpcijeMeni(
                 evidencijaVinaServis,
@@ -141,7 +144,8 @@ namespace Loger_Bloger
                 pakovanjeMeni,
                 berbaLozeServis,
                 proracunGrozdjaServis,
-                vinovaLozaServis
+                vinovaLozaServis,
+                ponudaVinaMeni
             );
 
             meni.Prikazi();

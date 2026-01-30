@@ -13,13 +13,16 @@ namespace Presentation.Meni
         private readonly IProracunGrozdjaServis proracunGrozdjaServis;
         private readonly IVinovaLozaServis vinovaLozaServis;
 
+        private readonly PonudaVinaMeni ponudaVinaMeni;
+
         public OpcijeMeni(
             IEvidencijaProizvodnjeVinaServis evidencijaVinaServis,
             PaleteMeni paleteMeni,
             PakovanjeMeni pakovanjeMeni,
             IBerbaLozeServis berbaLozeServis,
             IProracunGrozdjaServis proracunGrozdjaServis,
-            IVinovaLozaServis vinovaLozaServis)
+            IVinovaLozaServis vinovaLozaServis,
+            PonudaVinaMeni ponudaVinaMeni)
         {
             this.evidencijaVinaServis = evidencijaVinaServis;
             this.paleteMeni = paleteMeni;
@@ -28,6 +31,7 @@ namespace Presentation.Meni
             this.berbaLozeServis = berbaLozeServis;
             this.proracunGrozdjaServis = proracunGrozdjaServis;
             this.vinovaLozaServis = vinovaLozaServis;
+            this.ponudaVinaMeni = ponudaVinaMeni;
         }
 
         public void Prikazi()
@@ -46,6 +50,7 @@ namespace Presentation.Meni
                 Console.WriteLine("4) Berba loze");
                 Console.WriteLine("5) Proracun grozdja");
                 Console.WriteLine("6) Vinova loza (sadnja / pregled)");
+                Console.WriteLine("7) Pregled ponude vina");
                 Console.WriteLine("0) Izlaz");
                 Console.Write("\nIzbor: ");
 
@@ -84,6 +89,11 @@ namespace Presentation.Meni
 
                     case "6":
                         new VinovaLozaMeni(vinovaLozaServis).Prikazi();
+                        Pauza();
+                        break;
+
+                    case "7":
+                        ponudaVinaMeni.Prikazi();
                         Pauza();
                         break;
 
