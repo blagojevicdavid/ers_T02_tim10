@@ -1,5 +1,6 @@
-﻿using System;
-using Domain.Servisi;
+﻿using Domain.Servisi;
+using Services.IsporukaServis;
+using System;
 
 namespace Presentation.Meni
 {
@@ -12,6 +13,9 @@ namespace Presentation.Meni
         private readonly IBerbaLozeServis berbaLozeServis;
         private readonly IProracunGrozdjaServis proracunGrozdjaServis;
         private readonly IVinovaLozaServis vinovaLozaServis;
+        private readonly IIsporukaVinaServis isporukaVinaServis;
+
+
 
         public OpcijeMeni(
             IEvidencijaProizvodnjeVinaServis evidencijaVinaServis,
@@ -19,7 +23,8 @@ namespace Presentation.Meni
             PakovanjeMeni pakovanjeMeni,
             IBerbaLozeServis berbaLozeServis,
             IProracunGrozdjaServis proracunGrozdjaServis,
-            IVinovaLozaServis vinovaLozaServis)
+            IVinovaLozaServis vinovaLozaServis,
+            IIsporukaVinaServis isporukaVinaServis)
         {
             this.evidencijaVinaServis = evidencijaVinaServis;
             this.paleteMeni = paleteMeni;
@@ -28,6 +33,7 @@ namespace Presentation.Meni
             this.berbaLozeServis = berbaLozeServis;
             this.proracunGrozdjaServis = proracunGrozdjaServis;
             this.vinovaLozaServis = vinovaLozaServis;
+            this.isporukaVinaServis = isporukaVinaServis;
         }
 
         public void Prikazi()
@@ -46,6 +52,7 @@ namespace Presentation.Meni
                 Console.WriteLine("4) Berba loze");
                 Console.WriteLine("5) Proracun grozdja");
                 Console.WriteLine("6) Vinova loza (sadnja / pregled)");
+                Console.WriteLine("7) Isporuka vina (zahtjev servisu prodaje)");
                 Console.WriteLine("0) Izlaz");
                 Console.Write("\nIzbor: ");
 
@@ -86,6 +93,11 @@ namespace Presentation.Meni
                         new VinovaLozaMeni(vinovaLozaServis).Prikazi();
                         Pauza();
                         break;
+                    case "7":
+                        new IsporukaVinaMeni(isporukaVinaServis).Prikazi();
+                        Pauza();
+                        break;
+
 
                     case "0":
                         izlaz = true;
