@@ -90,6 +90,38 @@ namespace Loger_Bloger
             Console.WriteLine($"Uspešno ste prijavljeni kao: {prijavljen.ImePrezime} ({prijavljen.Uloga})");
 
             // -------------------- SKLADISTENJE + PAKOVANJE --------------------
+            ISkladistenjeServis izborServis = new SkladistenjeServis();
+            var skladMeni = new SkladistenjeMeni(izborServis);
+            skladMeni.Prikazi();
+
+            var nacin = izborServis.PreuzmiNacinSkladistenja();
+
+            var vinskiMeni = new VinskiPodrumMeni(vinskiPodrumRepozitorijum, izborServis);
+            var lokalniMeni = new LokalniPodrumMeni(vinskiPodrumRepozitorijum, izborServis);
+            if (nacin == NacinSkladistenja.VinskiPodrum)
+            {
+                vinskiMeni.Prikazi();
+                try { izborServis.PreuzmiVinskiPodrum(); }
+                catch
+                {
+                    Console.WriteLine("Niste izabrali vinski podrum. Enter za povratak...");
+                    Console.ReadLine();
+                    return;
+                }
+            }
+            else
+            {
+                lokalniMeni.Prikazi();
+
+                try { izborServis.PreuzmiLokalniPodrum(); }
+                catch
+                {
+                    Console.WriteLine("Niste izabrali lokalni podrum. Enter za povratak...");
+                    Console.ReadLine();
+                    return;
+                }
+            }
+
             ISkladistenjeServis skladistenjeServis;
 
             if (prijavljen.Uloga == TipKorisnika.GlavniEnolog)
