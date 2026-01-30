@@ -15,6 +15,10 @@ namespace Presentation.Meni
 
         private readonly PonudaVinaMeni ponudaVinaMeni;
 
+        private readonly ProdajaMeni prodajaMeni;
+
+        private readonly FaktureMeni faktureMeni;
+
         public OpcijeMeni(
             IEvidencijaProizvodnjeVinaServis evidencijaVinaServis,
             PaleteMeni paleteMeni,
@@ -22,7 +26,9 @@ namespace Presentation.Meni
             IBerbaLozeServis berbaLozeServis,
             IProracunGrozdjaServis proracunGrozdjaServis,
             IVinovaLozaServis vinovaLozaServis,
-            PonudaVinaMeni ponudaVinaMeni)
+            PonudaVinaMeni ponudaVinaMeni,
+            ProdajaMeni prodajaMeni,
+            FaktureMeni faktureMeni)
         {
             this.evidencijaVinaServis = evidencijaVinaServis;
             this.paleteMeni = paleteMeni;
@@ -32,6 +38,8 @@ namespace Presentation.Meni
             this.proracunGrozdjaServis = proracunGrozdjaServis;
             this.vinovaLozaServis = vinovaLozaServis;
             this.ponudaVinaMeni = ponudaVinaMeni;
+            this.prodajaMeni = prodajaMeni;
+            this.faktureMeni = faktureMeni;
         }
 
         public void Prikazi()
@@ -51,6 +59,8 @@ namespace Presentation.Meni
                 Console.WriteLine("5) Proracun grozdja");
                 Console.WriteLine("6) Vinova loza (sadnja / pregled)");
                 Console.WriteLine("7) Pregled ponude vina");
+                Console.WriteLine("8) Isporuka vina kupcu");
+                Console.WriteLine("9) Pregled faktura");
                 Console.WriteLine("0) Izlaz");
                 Console.Write("\nIzbor: ");
 
@@ -95,6 +105,14 @@ namespace Presentation.Meni
                     case "7":
                         ponudaVinaMeni.Prikazi();
                         Pauza();
+                        break;
+
+                    case "8":
+                        prodajaMeni.Prikazi();
+                        break;
+
+                    case "9":
+                        faktureMeni.Prikazi();
                         break;
 
                     case "0":

@@ -14,6 +14,8 @@ using Services.PakovanjeServisi;
 using Services.SkladistenjeServisi;
 using Services.VinogradServisi;
 using Services.VinoServisi;
+using Services.ProdajaServisi;
+using Services.FaktureServisi;
 
 namespace Loger_Bloger
 {
@@ -40,6 +42,8 @@ namespace Loger_Bloger
 
             IBerbaLozeRepozitorijum berbaLozeRepozitorijum = new BerbaLozeRepozitorijum(bazaPodataka);
 
+
+
             // -------------------- POCETNI PODACI --------------------
             PocetniPodaci.UbaciInicijalnePodatke(
                 korisniciRepozitorijum,
@@ -63,7 +67,7 @@ namespace Loger_Bloger
 
             IAutentifikacijaServis autentifikacijaServis = new AutentifikacioniServis(korisniciRepozitorijum);
 
-            // ✅ TAČNO prema tvom PaleteServis konstruktoru (4 parametra, redoslijed isti!)
+            
             IPaleteServis paleteServis = new PaleteServis(
                 paleteRepozitorijum,
                 vinskiPodrumRepozitorijum,
@@ -75,8 +79,19 @@ namespace Loger_Bloger
             IProracunGrozdjaServis proracunGrozdjaServis = new ProracunGrozdjaServis();
             IVinovaLozaServis vinovaLozaServis = new VinovaLozaServis(vinovaLozaRepozitorijum);
 
+            IProdajaServis prodajaServis = new ProdajaServis(
+             paleteRepozitorijum,
+             faktureRepozitorijum,
+             loggerServis
+            );
+
+            IFakturePregledServis fakturePregledServis = new FakturePregledServis(faktureRepozitorijum);
+
             // -------------------- MENIJI --------------------
             PaleteMeni paleteMeni = new PaleteMeni(paleteServis);
+            ProdajaMeni prodajaMeni = new ProdajaMeni(prodajaServis);
+
+            FaktureMeni faktureMeni = new FaktureMeni(fakturePregledServis);
 
             // -------------------- LOGIN --------------------
             AutentifikacioniMeni am = new AutentifikacioniMeni(autentifikacijaServis);
@@ -145,7 +160,9 @@ namespace Loger_Bloger
                 berbaLozeServis,
                 proracunGrozdjaServis,
                 vinovaLozaServis,
-                ponudaVinaMeni
+                ponudaVinaMeni,
+                prodajaMeni,
+                faktureMeni
             );
 
             meni.Prikazi();
