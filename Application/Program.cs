@@ -65,9 +65,10 @@ namespace Loger_Bloger
             IEvidencijaProizvodnjeVinaServis evidencijaVinaServis =
                 new EvidencijaProizvodnjeVinaServis(evidencijaVinaRepozitorijum, fermentacijaRepozitorijum);
 
-            IAutentifikacijaServis autentifikacijaServis = new AutentifikacioniServis(korisniciRepozitorijum);
+            IAutentifikacijaServis autentifikacijaServis =new AutentifikacioniServis(korisniciRepozitorijum, loggerServis);
 
-            
+
+
             IPaleteServis paleteServis = new PaleteServis(
                 paleteRepozitorijum,
                 vinskiPodrumRepozitorijum,

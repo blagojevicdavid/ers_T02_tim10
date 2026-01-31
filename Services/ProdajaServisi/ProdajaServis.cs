@@ -42,7 +42,14 @@ namespace Services.ProdajaServisi
 
             // 3) mora biti otpremljena da bi se isporucila kupcu
             if (paleta.Status != StatusPalete.Otpremljena)
+            {
+                loggerServis.Evidentiraj(
+                    TipEvidencije.ERROR,
+                    $"Pokušaj isporuke palete koja nije spremna. Paleta={paleta.Sifra}, Status={paleta.Status}"
+                );
+
                 throw new InvalidOperationException("Paleta nije spremna za isporuku (mora biti Otpremljena).");
+            }
 
             if (paleta.VinaIds == null || paleta.VinaIds.Count == 0)
                 throw new InvalidOperationException("Paleta nema vina.");
@@ -68,7 +75,7 @@ namespace Services.ProdajaServisi
             // 7) log
             loggerServis.Evidentiraj(
                 TipEvidencije.INFO,
-                $"[SCRUM-87] Isporucena paleta {paleta.Sifra} kupcu {kupac}. Faktura={faktura.Id}"
+                $" Isporucena paleta {paleta.Sifra} kupcu {kupac}. Faktura={faktura.Id}"
             );
 
             return faktura.Id;
