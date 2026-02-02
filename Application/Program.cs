@@ -153,6 +153,11 @@ namespace Loger_Bloger
                 new PonudaVinaServis(vinoRepozitorijum);
             PonudaVinaMeni ponudaVinaMeni = new PonudaVinaMeni(ponudaVinaServis);
 
+            IOdabirKolicineVinaServis odabirKolicineVinaServis = new OdabirKolicineVinaServis(ponudaVinaServis);
+
+            OdabirKolicineVinaMeni odabirKolicineVinaMeni =
+                new OdabirKolicineVinaMeni(ponudaVinaServis, odabirKolicineVinaServis);
+
             // -------------------- GLAVNI MENI --------------------
             OpcijeMeni meni = new OpcijeMeni(
                 evidencijaVinaServis,
@@ -162,6 +167,7 @@ namespace Loger_Bloger
                 proracunGrozdjaServis,
                 vinovaLozaServis,
                 ponudaVinaMeni,
+                odabirKolicineVinaMeni,
                 prodajaMeni,
                 faktureMeni
             );

@@ -15,6 +15,8 @@ namespace Presentation.Meni
 
         private readonly PonudaVinaMeni ponudaVinaMeni;
 
+        private readonly OdabirKolicineVinaMeni odabirKolicineVinaMeni;
+
         private readonly ProdajaMeni prodajaMeni;
 
         private readonly FaktureMeni faktureMeni;
@@ -27,6 +29,7 @@ namespace Presentation.Meni
             IProracunGrozdjaServis proracunGrozdjaServis,
             IVinovaLozaServis vinovaLozaServis,
             PonudaVinaMeni ponudaVinaMeni,
+            OdabirKolicineVinaMeni odabirKolicineVinaMeni,
             ProdajaMeni prodajaMeni,
             FaktureMeni faktureMeni)
         {
@@ -38,6 +41,7 @@ namespace Presentation.Meni
             this.proracunGrozdjaServis = proracunGrozdjaServis;
             this.vinovaLozaServis = vinovaLozaServis;
             this.ponudaVinaMeni = ponudaVinaMeni;
+            this.odabirKolicineVinaMeni = odabirKolicineVinaMeni;
             this.prodajaMeni = prodajaMeni;
             this.faktureMeni = faktureMeni;
         }
@@ -59,8 +63,9 @@ namespace Presentation.Meni
                 Console.WriteLine("5) Proracun grozdja");
                 Console.WriteLine("6) Vinova loza (sadnja / pregled)");
                 Console.WriteLine("7) Pregled ponude vina");
-                Console.WriteLine("8) Isporuka vina kupcu");
-                Console.WriteLine("9) Pregled faktura");
+                Console.WriteLine("8) Odabir kolicine vina");
+                Console.WriteLine("9) Isporuka vina kupcu");
+                Console.WriteLine("10) Pregled faktura");
                 Console.WriteLine("0) Izlaz");
                 Console.Write("\nIzbor: ");
 
@@ -108,10 +113,15 @@ namespace Presentation.Meni
                         break;
 
                     case "8":
-                        prodajaMeni.Prikazi();
+                        odabirKolicineVinaMeni.Prikazi();
+                        Pauza();
                         break;
 
                     case "9":
+                        prodajaMeni.Prikazi();
+                        break;
+
+                    case "10":
                         faktureMeni.Prikazi();
                         break;
 
