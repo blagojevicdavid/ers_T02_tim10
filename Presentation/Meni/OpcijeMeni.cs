@@ -1,56 +1,60 @@
 ﻿using System;
-using Domain.Servisi;
-using Services.IsporukaServis;
 
 namespace Presentation.Meni
 {
     public class OpcijeMeni
     {
-        private readonly IEvidencijaProizvodnjeVinaServis evidencijaVinaServis;
-        private readonly PaleteMeni paleteMeni;
-        private readonly PakovanjeMeni pakovanjeMeni;
-
-        private readonly IBerbaLozeServis berbaLozeServis;
-        private readonly IProracunGrozdjaServis proracunGrozdjaServis;
-        private readonly IVinovaLozaServis vinovaLozaServis;
-
-        private readonly IIsporukaVinaServis isporukaVinaServis;
-
+        
         private readonly PonudaVinaMeni ponudaVinaMeni;
         private readonly OdabirKolicineVinaMeni odabirKolicineVinaMeni;
         private readonly ProdajaMeni prodajaMeni;
         private readonly FaktureMeni faktureMeni;
 
+        private readonly VinovaLozaMeni vinovaLozaMeni;
+        private readonly BerbaLozeMeni berbaLozeMeni;
+        private readonly ProracunGrozdjaMeni proracunGrozdjaMeni;
+
+        
+        private readonly FermentacijaMeni fermentacijaMeni;
+        private readonly ProizvodnjaVinaMeni proizvodnjaVinaMeni;
+        private readonly PakovanjeMeni pakovanjeMeni;
+        private readonly PaleteMeni paleteMeni;
+        private readonly SkladistenjeMeni skladistenjeMeni;
+        private readonly IsporukaVinaMeni isporukaVinaMeni;
 
         public OpcijeMeni(
-            IEvidencijaProizvodnjeVinaServis evidencijaVinaServis,
-            PaleteMeni paleteMeni,
-            PakovanjeMeni pakovanjeMeni,
-            IBerbaLozeServis berbaLozeServis,
-            IProracunGrozdjaServis proracunGrozdjaServis,
-            IVinovaLozaServis vinovaLozaServis,
-            IIsporukaVinaServis isporukaVinaServis,
             PonudaVinaMeni ponudaVinaMeni,
             OdabirKolicineVinaMeni odabirKolicineVinaMeni,
             ProdajaMeni prodajaMeni,
-            FaktureMeni faktureMeni)
+            FaktureMeni faktureMeni,
+            VinovaLozaMeni vinovaLozaMeni,
+            BerbaLozeMeni berbaLozeMeni,
+            ProracunGrozdjaMeni proracunGrozdjaMeni,
+            FermentacijaMeni fermentacijaMeni,
+            ProizvodnjaVinaMeni proizvodnjaVinaMeni,
+            PakovanjeMeni pakovanjeMeni,
+            PaleteMeni paleteMeni,
+            SkladistenjeMeni skladistenjeMeni,
+            IsporukaVinaMeni isporukaVinaMeni)
         {
-            this.evidencijaVinaServis = evidencijaVinaServis;
-            this.paleteMeni = paleteMeni;
-            this.pakovanjeMeni = pakovanjeMeni;
-
-            this.berbaLozeServis = berbaLozeServis;
-            this.proracunGrozdjaServis = proracunGrozdjaServis;
-            this.vinovaLozaServis = vinovaLozaServis;
-
-            this.isporukaVinaServis = isporukaVinaServis;
-
             this.ponudaVinaMeni = ponudaVinaMeni;
             this.odabirKolicineVinaMeni = odabirKolicineVinaMeni;
             this.prodajaMeni = prodajaMeni;
             this.faktureMeni = faktureMeni;
+
+            this.vinovaLozaMeni = vinovaLozaMeni;
+            this.berbaLozeMeni = berbaLozeMeni;
+            this.proracunGrozdjaMeni = proracunGrozdjaMeni;
+
+            this.fermentacijaMeni = fermentacijaMeni;
+            this.proizvodnjaVinaMeni = proizvodnjaVinaMeni;
+            this.pakovanjeMeni = pakovanjeMeni;
+            this.paleteMeni = paleteMeni;
+            this.skladistenjeMeni = skladistenjeMeni;
+            this.isporukaVinaMeni = isporukaVinaMeni;
         }
 
+        
         public void PrikaziEnolog()
         {
             bool izlaz = false;
@@ -58,44 +62,32 @@ namespace Presentation.Meni
             while (!izlaz)
             {
                 Console.Clear();
-                Console.WriteLine($"Prijavljeni ste kao -> Glavni enolog");
-                Console.WriteLine("============================================");
-                Console.WriteLine("                 GLAVNI MENI               ");
-                Console.WriteLine("============================================");
+                Console.WriteLine("Prijavljeni ste kao -> Glavni enolog");
+                Console.WriteLine("===================================");
                 Console.WriteLine("1) Ponuda vina");
                 Console.WriteLine("2) Vina na stanju");
                 Console.WriteLine("3) Prodaja vina");
-                Console.WriteLine("4) Pregled faktura"); // ovo ostaje
-                Console.WriteLine("5) Ostale opcije");
-
-
-                //Console.WriteLine("3) Pakovanje / slanje u skladiste");
-                //Console.WriteLine("4) Berba loze");
-                
-                //Console.WriteLine("7) Isporuka vina (zahtjev servisu prodaje)");
-                //Console.WriteLine("8) Pregled ponude vina");
-                //Console.WriteLine("9) Odabir kolicine vina");
-                //Console.WriteLine("10) Isporuka vina kupcu");
-
-
+                Console.WriteLine("4) Pregled faktura");
+                Console.WriteLine("5) Vinograd i berba");
                 Console.WriteLine("0) Izlaz");
                 Console.Write("\nIzbor: ");
 
-                string? izbor = Console.ReadLine();
-
-                switch (izbor)
+                switch (Console.ReadLine())
                 {
                     case "1":
+
                         ponudaVinaMeni.Prikazi();   
+
+                     
                         break;
 
                     case "2":
-                        // isto kao 1, samo vina koja su na stanju
+                        odabirKolicineVinaMeni.Prikazi();
                         Pauza();
                         break;
 
                     case "3":
-                        //vodi ka prodaji vina
+                        prodajaMeni.Prikazi();
                         Pauza();
                         break;
 
@@ -105,53 +97,59 @@ namespace Presentation.Meni
                         break;
 
                     case "5":
-                        //dodati ostale opcije kao poseban meni
-                        Pauza();
+                        PrikaziVinogradMeni();
                         break;
-
-                        /*
-                    case "6":
-                        new VinovaLozaMeni(vinovaLozaServis).Prikazi();
-                        Pauza();
-                        break;
-
-                    case "7":
-                        new IsporukaVinaMeni(isporukaVinaServis).Prikazi();
-                        Pauza();
-                        break;
-
-                    case "8":
-                        ponudaVinaMeni.Prikazi();
-                        Pauza();
-                        break;
-
-                    case "9":
-                        odabirKolicineVinaMeni.Prikazi();
-                        Pauza();
-                        break;
-
-                    case "10":
-                        prodajaMeni.Prikazi();
-                        break;
-
-                    case "11":
-                        faktureMeni.Prikazi();
-                        break;
-                        */
 
                     case "0":
                         izlaz = true;
                         break;
 
                     default:
-                        Console.WriteLine("\nNepoznata opcija. Pokušaj ponovo.");
                         Pauza();
                         break;
                 }
             }
         }
 
+        private void PrikaziVinogradMeni()
+        {
+            bool izlaz = false;
 
+            while (!izlaz)
+            {
+                Console.Clear();
+                Console.WriteLine("=== VINOGRAD I BERBA ===");
+                Console.WriteLine("1) Vinova loza");
+                Console.WriteLine("2) Berba loze");
+                Console.WriteLine("3) Proračun grožđa");
+                Console.WriteLine("0) Nazad");
+                Console.Write("\nIzbor: ");
+
+                switch (Console.ReadLine())
+                {
+                    case "1":
+                        vinovaLozaMeni.Prikazi();
+                        Pauza();
+                        break;
+
+                    case "2":
+                        berbaLozeMeni.Prikazi();
+                        Pauza();
+                        break;
+
+                    case "3":
+                        proracunGrozdjaMeni.Prikazi();
+                        Pauza();
+                        break;
+
+                    case "0":
+                        izlaz = true;
+                        break;
+                }
+            }
+        }
+
+        
         public void PrikaziKelarMajstor()
         {
             bool izlaz = false;
@@ -159,35 +157,52 @@ namespace Presentation.Meni
             while (!izlaz)
             {
                 Console.Clear();
-                Console.WriteLine($"Prijavljeni ste kao -> Kelar majstor");
-                Console.WriteLine("============================================");
-                Console.WriteLine("                 GLAVNI MENI               ");
-                Console.WriteLine("============================================");
-                Console.WriteLine("1) "); //prva opcija kelar majstora
-                Console.WriteLine();
-
-
-
+                Console.WriteLine("Prijavljeni ste kao -> Kelar majstor");
+                Console.WriteLine("===================================");
+                Console.WriteLine("1) Fermentacija");
+                Console.WriteLine("2) Proizvodnja vina");
+                Console.WriteLine("3) Pakovanje");
+                Console.WriteLine("4) Palete");
+                Console.WriteLine("5) Skladištenje");
+                Console.WriteLine("6) Isporuka vina");
                 Console.WriteLine("0) Izlaz");
                 Console.Write("\nIzbor: ");
 
-                string? izbor = Console.ReadLine();
-
-                switch (izbor)
+                switch (Console.ReadLine())
                 {
                     case "1":
-                        //prva opcija kelar majstora
+                        fermentacijaMeni.Prikazi();
                         Pauza();
                         break;
 
+                    case "2":
+                        proizvodnjaVinaMeni.Prikazi();
+                        Pauza();
+                        break;
+
+                    case "3":
+                        pakovanjeMeni.Prikazi();
+                        Pauza();
+                        break;
+
+                    case "4":
+                        paleteMeni.Prikazi();
+                        Pauza();
+                        break;
+
+                    case "5":
+                        skladistenjeMeni.Prikazi();
+                        Pauza();
+                        break;
+
+                    case "6":
+                        isporukaVinaMeni.Prikazi();
+                        Pauza();
+
+                        break;
 
                     case "0":
                         izlaz = true;
-                        break;
-
-                    default:
-                        Console.WriteLine("\nNepoznata opcija. Pokušaj ponovo.");
-                        Pauza();
                         break;
                 }
             }
