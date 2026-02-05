@@ -38,13 +38,9 @@ namespace Services.PakovanjeServisi
             try
             {
                 logger.Evidentiraj(TipEvidencije.INFO, "Pakovanje: zapoceto pakovanje vina.");
-                logger.Evidentiraj(TipEvidencije.INFO, $"DEBUG: trazim naziv='{nazivVina}', kat={kategorija}, zap={zapreminaFlase}");
+                
 
-                foreach (var v in vinoRepo.PronadjiVinaPoKategoriji(kategorija))
-                {
-                    logger.Evidentiraj(TipEvidencije.INFO,
-                        $"DEBUG: iz repo -> '{v.Naziv}' | kat={v.Kategorija} | zap={v.ZapreminaLitara}");
-                }
+                
 
 
                 if (brojFlasa <= 0)

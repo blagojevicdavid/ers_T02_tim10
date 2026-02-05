@@ -34,10 +34,19 @@ namespace Services.VinogradServisi
         public IList<Paleta> PosaljiPaleteUVinskiPodrum(Guid vinskiPodrumId, int brojPaleta)
         {
             if (brojPaleta <= 0)
+            {
+                loggerServis.Evidentiraj(TipEvidencije.ERROR, $"[PALETE] Nevalidan broj paleta: {brojPaleta}");
                 throw new ArgumentException("Broj paleta mora biti veci od 0.");
+            }
 
             if (brojPaleta > MAX_PALETE_PO_ISPORUCI)
+            {
+                loggerServis.Evidentiraj(
+                    TipEvidencije.ERROR,
+                    $"[PALETE] Prekoracen limit po isporuci: trazeno={brojPaleta}, max={MAX_PALETE_PO_ISPORUCI}"
+                );
                 throw new ArgumentException($"U jednoj isporuci je moguce poslati najvise {MAX_PALETE_PO_ISPORUCI} paleta.");
+            }
 
             var podrum = vinskiPodrumRepozitorijum.PronadjiVinskiPodrumPoId(vinskiPodrumId);
             if (podrum == null)
@@ -68,7 +77,16 @@ namespace Services.VinogradServisi
                     );
 
                     paleta = KreirajNovuUpakovanuPaletu();
-                    paleteRepozitorijum.DodajPaletu(paleta);  //da li je uspjesno dodata?
+                    var sacuvana = paleteRepozitorijum.DodajPaletu(paleta);
+                    if (sacuvana == null || sacuvana.Id == Guid.Empty)
+                    {
+                        loggerServis.Evidentiraj(
+                            TipEvidencije.ERROR,
+                            "[PALETE] Neuspelo kreiranje nove palete tokom slanja u podrum."
+                        );
+                        throw new InvalidOperationException("Neuspelo kreiranje palete.");
+                    }
+                    paleta = sacuvana;
                 }
 
                 
@@ -124,7 +142,13 @@ namespace Services.VinogradServisi
         public Paleta KreirajNovuPaletu(string adresaOdredista)
         {
             if (string.IsNullOrWhiteSpace(adresaOdredista))
+            {
+                loggerServis.Evidentiraj(
+                    TipEvidencije.ERROR,
+                    "[PALETE] Kreiranje palete neuspesno – adresa odredista nije unijeta."
+                );
                 throw new ArgumentException("Adresa odredišta je obavezna.");
+            }
 
             Paleta paleta = KreirajNovuUpakovanuPaletu();
 
@@ -147,7 +171,13 @@ namespace Services.VinogradServisi
         {
             var paleta = paleteRepozitorijum.PronadjiPaletuPoId(paletaId);
             if (paleta == null || paleta.Id == Guid.Empty)
+            {
+                loggerServis.Evidentiraj(
+                    TipEvidencije.WARNING,
+                    $"[PALETE] Dodavanje vina neuspesno – paleta ne postoji (ID={paletaId})."
+                );
                 return false;
+            }
 
             var evidencije = evidencijaVinaRepo.SveEvidencije();
             var evidencija = evidencije.FirstOrDefault(e => e.Id == evidencijaProizvodnjeVinaId);

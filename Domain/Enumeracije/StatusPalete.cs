@@ -10,7 +10,8 @@ namespace Domain.Enumeracije
     {
         Upakovana,
         Otpremljena,
-        Raspakovana
+        Raspakovana,
+        Isporucena
     }
 }
 

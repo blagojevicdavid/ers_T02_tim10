@@ -13,7 +13,13 @@ using Services.LoggerServisi;
 using Services.PakovanjeServisi;
 using Services.SkladistenjeServisi;
 using Services.VinogradServisi;
+<<<<<<< HEAD
 using Services.IsporukaServis;
+=======
+using Services.VinoServisi;
+using Services.ProdajaServisi;
+using Services.FaktureServisi;
+>>>>>>> 82166f8ee4ed67dfcd172bde87c58d3f8fe71ed5
 
 namespace Loger_Bloger
 {
@@ -40,6 +46,8 @@ namespace Loger_Bloger
 
             IBerbaLozeRepozitorijum berbaLozeRepozitorijum = new BerbaLozeRepozitorijum(bazaPodataka);
 
+
+
             // -------------------- POCETNI PODACI --------------------
             PocetniPodaci.UbaciInicijalnePodatke(
                 korisniciRepozitorijum,
@@ -61,9 +69,14 @@ namespace Loger_Bloger
             IEvidencijaProizvodnjeVinaServis evidencijaVinaServis =
                 new EvidencijaProizvodnjeVinaServis(evidencijaVinaRepozitorijum, fermentacijaRepozitorijum);
 
-            IAutentifikacijaServis autentifikacijaServis = new AutentifikacioniServis(korisniciRepozitorijum);
+            IAutentifikacijaServis autentifikacijaServis =new AutentifikacioniServis(korisniciRepozitorijum, loggerServis);
 
+
+
+<<<<<<< HEAD
             
+=======
+>>>>>>> 82166f8ee4ed67dfcd172bde87c58d3f8fe71ed5
             IPaleteServis paleteServis = new PaleteServis(
                 paleteRepozitorijum,
                 vinskiPodrumRepozitorijum,
@@ -75,8 +88,19 @@ namespace Loger_Bloger
             IProracunGrozdjaServis proracunGrozdjaServis = new ProracunGrozdjaServis();
             IVinovaLozaServis vinovaLozaServis = new VinovaLozaServis(vinovaLozaRepozitorijum);
 
+            IProdajaServis prodajaServis = new ProdajaServis(
+             paleteRepozitorijum,
+             faktureRepozitorijum,
+             loggerServis
+            );
+
+            IFakturePregledServis fakturePregledServis = new FakturePregledServis(faktureRepozitorijum);
+
             // -------------------- MENIJI --------------------
             PaleteMeni paleteMeni = new PaleteMeni(paleteServis);
+            ProdajaMeni prodajaMeni = new ProdajaMeni(prodajaServis);
+
+            FaktureMeni faktureMeni = new FaktureMeni(fakturePregledServis);
 
             // -------------------- LOGIN --------------------
             AutentifikacioniMeni am = new AutentifikacioniMeni(autentifikacijaServis);
@@ -91,6 +115,36 @@ namespace Loger_Bloger
             Console.WriteLine($"Uspešno ste prijavljeni kao: {prijavljen.ImePrezime} ({prijavljen.Uloga})");
 
             // -------------------- SKLADISTENJE + PAKOVANJE --------------------
+            ISkladistenjeServis izborServis = new SkladistenjeServis();
+            var skladMeni = new SkladistenjeMeni(izborServis);
+            skladMeni.Prikazi();
+
+            var nacin = izborServis.PreuzmiNacinSkladistenja();
+
+            var vinskiMeni = new VinskiPodrumMeni(vinskiPodrumRepozitorijum, izborServis);
+            var lokalniMeni = new LokalniPodrumMeni(vinskiPodrumRepozitorijum, izborServis);
+            if (nacin == NacinSkladistenja.VinskiPodrum)
+            {
+                vinskiMeni.Prikazi();
+                try { izborServis.PreuzmiVinskiPodrum(); }
+                catch
+                {
+                    Console.WriteLine("Niste izabrali vinski podrum. Enter za povratak...");
+                    Console.ReadLine();
+                    return;
+                }
+            }
+            else
+            {
+                lokalniMeni.Prikazi();
+
+                try { izborServis.PreuzmiLokalniPodrum(); }
+                catch
+                {
+                    return;
+                }
+            }
+
             ISkladistenjeServis skladistenjeServis;
 
             if (prijavljen.Uloga == TipKorisnika.GlavniEnolog)
@@ -107,6 +161,15 @@ namespace Loger_Bloger
 
             PakovanjeMeni pakovanjeMeni = new PakovanjeMeni(pakovanjeServis);
 
+            IPonudaVinaServis ponudaVinaServis =
+                new PonudaVinaServis(vinoRepozitorijum);
+            PonudaVinaMeni ponudaVinaMeni = new PonudaVinaMeni(ponudaVinaServis);
+
+            IOdabirKolicineVinaServis odabirKolicineVinaServis = new OdabirKolicineVinaServis(ponudaVinaServis);
+
+            OdabirKolicineVinaMeni odabirKolicineVinaMeni =
+                new OdabirKolicineVinaMeni(ponudaVinaServis, odabirKolicineVinaServis);
+
             // -------------------- GLAVNI MENI --------------------
             OpcijeMeni meni = new OpcijeMeni(
                 evidencijaVinaServis,
@@ -115,7 +178,14 @@ namespace Loger_Bloger
                 berbaLozeServis,
                 proracunGrozdjaServis,
                 vinovaLozaServis,
+<<<<<<< HEAD
                 isporukaVinaServis
+=======
+                ponudaVinaMeni,
+                odabirKolicineVinaMeni,
+                prodajaMeni,
+                faktureMeni
+>>>>>>> 82166f8ee4ed67dfcd172bde87c58d3f8fe71ed5
             );
 
             meni.Prikazi();

@@ -18,6 +18,8 @@ namespace Domain.Repozitorijumi
         Faktura PronadjiFakturuPoId(Guid id);
 
         IEnumerable<Faktura> PronadjiFakturePoTipuProdaje(TipProdaje tipProdaje);
+
+        IEnumerable<Faktura> PreuzmiSveFakture();
     }
 }
 
