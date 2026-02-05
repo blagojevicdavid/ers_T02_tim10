@@ -108,6 +108,9 @@ namespace Loger_Bloger
             Console.Clear();
             Console.WriteLine($"Uspešno ste prijavljeni kao: {prijavljen.ImePrezime} ({prijavljen.Uloga})");
 
+
+            /* Grujic dodao
+
             // -------------------- SKLADISTENJE + PAKOVANJE --------------------
             ISkladistenjeServis izborServis = new SkladistenjeServis();
             var skladMeni = new SkladistenjeMeni(izborServis);
@@ -138,6 +141,7 @@ namespace Loger_Bloger
                     return;
                 }
             }
+            */
 
             ISkladistenjeServis skladistenjeServis;
 
@@ -164,6 +168,7 @@ namespace Loger_Bloger
             OdabirKolicineVinaMeni odabirKolicineVinaMeni =
                 new OdabirKolicineVinaMeni(ponudaVinaServis, odabirKolicineVinaServis);
 
+
             // -------------------- GLAVNI MENI --------------------
             OpcijeMeni meni = new OpcijeMeni(
                 evidencijaVinaServis,
@@ -179,8 +184,10 @@ namespace Loger_Bloger
                 faktureMeni
             );
 
-
-            meni.Prikazi();
+            if(prijavljen.Uloga == TipKorisnika.GlavniEnolog)
+                meni.PrikaziEnolog();
+            else if(prijavljen.Uloga == TipKorisnika.KelarMajstor)
+                meni.PrikaziKelarMajstor();
         }
     }
 }

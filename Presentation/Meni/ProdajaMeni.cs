@@ -18,7 +18,7 @@ namespace Presentation.Meni
 
         public void Prikazi()
         {
-            Console.WriteLine("\n=== SCRUM-87: Isporuka vina kupcu ===");
+            Console.WriteLine("\n=== Isporuka vina kupcu ===");
 
             Console.Write("Unesi ID palete (GUID): ");
             string? sId = Console.ReadLine();

@@ -18,7 +18,7 @@ namespace Presentation.Meni
 
         public void Prikazi()
         {
-            Console.WriteLine("\n=== SCRUM-88: Pregled izdatih računa ===");
+            Console.WriteLine("\n=== Pregled izdatih računa ===");
 
             var fakture = fakturePregledServis.PreuzmiSveFakture();
 
