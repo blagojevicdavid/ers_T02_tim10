@@ -1,9 +1,7 @@
-﻿using Domain.Servisi;
+﻿using Domain.Modeli;
+using Domain.PomocneMetode;
+using Domain.Servisi;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Presentation.Meni
 {
@@ -19,40 +17,48 @@ namespace Presentation.Meni
         public void Prikazi()
         {
             Console.Clear();
-            Console.WriteLine("=== PREGLED PONUDE VINA ===");
 
-            var ponuda = ponudaServis.VratiPonudu();
-            if (ponuda.Count == 0)
+            Console.WriteLine(new string('=', 95));
+            Console.WriteLine("                 P R E G L E D   P O N U D E   V I N A");
+            Console.WriteLine(new string('=', 95));
+            Console.WriteLine();
+
+            var vina = ponudaServis.VratiPonudu();
+            if (vina == null || vina.Count == 0)
             {
                 Console.WriteLine("Nema vina u ponudi.");
-                Console.WriteLine("Pritisni ENTER za nastavak");
                 Console.ReadLine();
                 return;
             }
 
-            Console.WriteLine("Dostupna vina:");
-            foreach (var v in ponuda)
+            var ponuda = PonudaVinaPomocne.FormirajPonudu(vina);
+
+            // zaglavlje tabele
+            Console.WriteLine(
+                $"{"Naziv",-30} | {"Kategorija",-14} | {"Zapremina",-9} | {"Cena",-6} | {"Kolicina",-8}"
+            );
+            Console.WriteLine(new string('-', 95));
+
+            foreach (var kv in ponuda)
             {
-                Console.WriteLine($"- Sifra: {v.Sifra} | {v.Naziv} | {v.Kategorija}");
+                Vino v = kv.Key;
+                StavkaFakture s = kv.Value;
+
+                string zap = v.ZapreminaLitara.ToString("0.##").Replace('.', ',');
+
+                Console.WriteLine(
+                    $"{Skrati(v.Naziv, 30),-30} | {v.Kategorija,-14} | {zap,-9} | {s.CenaPoKomadu,-6} | {s.Kolicina,-8}"
+                );
             }
 
-            Console.WriteLine();
-            Console.Write("Unesi SIFRU vina koje želiš za prodaju (ili ENTER za izlaz): ");
-            var sifra = Console.ReadLine();
-            if (string.IsNullOrWhiteSpace(sifra))
-                return;
-            sifra = sifra.Trim();
+            Console.WriteLine(new string('-', 95));
+            Console.ReadLine(); // samo da se ekran ne zatvori odmah
+        }
 
-            var izabrano = ponudaServis.PronadjiPoSifri(sifra);
-            if (izabrano == null)
-            {
-                Console.WriteLine("Ne postoji vino sa tom šifrom.");
-                Console.WriteLine("Pritisni ENTER za nastavak");
-                Console.ReadLine();
-                return;
-            }
-
-            Console.WriteLine($"Izabrali ste: {izabrano.Naziv} (Sifra: {izabrano.Sifra})");
+        private static string Skrati(string s, int max)
+        {
+            if (string.IsNullOrEmpty(s)) return "";
+            return s.Length <= max ? s : s.Substring(0, max - 3) + "...";
         }
     }
 }

@@ -86,8 +86,7 @@ namespace Presentation.Meni
                 switch (izbor)
                 {
                     case "1":
-                        //dodati prikaz ponude vina, dodati poziv na prikaz ponude vina, lista vina u ponudi
-                        Pauza();
+                        ponudaVinaMeni.Prikazi();   
                         break;
 
                     case "2":

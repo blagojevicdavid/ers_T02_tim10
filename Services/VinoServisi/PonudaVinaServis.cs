@@ -5,8 +5,6 @@ using Domain.Servisi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services.VinoServisi
 {
@@ -22,13 +20,16 @@ namespace Services.VinoServisi
         public List<Vino> VratiPonudu()
         {
             var sve = new List<Vino>();
-            foreach (KategorijaVina kat in System.Enum.GetValues(typeof(KategorijaVina)))
+
+            foreach (KategorijaVina kat in Enum.GetValues(typeof(KategorijaVina)))
             {
-                sve.AddRange(vinoRepo.PronadjiVinaPoKategoriji(kat));
+                var lista = vinoRepo.PronadjiVinaPoKategoriji(kat) ?? new List<Vino>();
+                sve.AddRange(lista);
             }
 
-            // ukloni duplikate 
+            // ukloni duplikate po ID-u i sortiraj
             return sve
+                .Where(v => v != null)
                 .GroupBy(v => v.Id)
                 .Select(g => g.First())
                 .OrderBy(v => v.Naziv)
@@ -37,7 +38,15 @@ namespace Services.VinoServisi
 
         public Vino? PronadjiPoSifri(string sifra)
         {
-            return VratiPonudu().FirstOrDefault(v => v.Sifra == sifra);
+            if (string.IsNullOrWhiteSpace(sifra))
+                return null;
+
+            sifra = sifra.Trim();
+
+            // Traži po šifri (to je ono što prikazuješ u meniju)
+            return VratiPonudu()
+                .FirstOrDefault(v => !string.IsNullOrWhiteSpace(v.Sifra) &&
+                                     string.Equals(v.Sifra.Trim(), sifra, StringComparison.OrdinalIgnoreCase));
         }
     }
 }
