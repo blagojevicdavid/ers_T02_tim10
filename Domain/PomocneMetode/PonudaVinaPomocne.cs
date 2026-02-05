@@ -23,7 +23,8 @@ namespace Domain.PomocneMetode
             foreach (var v in cista)
             {
                 decimal cena = IzracunajCenu(v.Kategorija, v.ZapreminaLitara);
-                int kolicina = IzracunajKolicinu(v.ZapreminaLitara);
+                int kolicina = IzracunajKolicinu(v.ZapreminaLitara, v.Naziv, v.Kategorija);
+
 
                 ponuda[v] = new StavkaFakture(v.Id, kolicina, cena);
             }
@@ -31,8 +32,15 @@ namespace Domain.PomocneMetode
             return ponuda;
         }
 
-        private static int IzracunajKolicinu(double zapreminaLitra)
+        private static int IzracunajKolicinu(double zapreminaLitra, string naziv, KategorijaVina kategorija)
         {
+            // simulacija rasprodatih vina
+            if (kategorija.ToString() == "Premium" && Math.Abs(zapreminaLitra - 0.75) < 0.01)
+                return 0;
+
+            if (naziv.Contains("Reserve"))
+                return 0;
+
             if (Math.Abs(zapreminaLitra - 0.75) < 0.01)
                 return 24;
 
@@ -42,8 +50,9 @@ namespace Domain.PomocneMetode
             if (Math.Abs(zapreminaLitra - 1.5) < 0.01)
                 return 12;
 
-            return 10; // fallback
+            return 10;
         }
+
 
 
         private static decimal IzracunajCenu(KategorijaVina kategorija, double zapreminaLitra)
