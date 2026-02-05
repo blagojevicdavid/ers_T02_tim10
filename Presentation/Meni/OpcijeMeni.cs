@@ -1,6 +1,6 @@
-﻿using Domain.Servisi;
+﻿using System;
+using Domain.Servisi;
 using Services.IsporukaServis;
-using System;
 
 namespace Presentation.Meni
 {
@@ -13,16 +13,12 @@ namespace Presentation.Meni
         private readonly IBerbaLozeServis berbaLozeServis;
         private readonly IProracunGrozdjaServis proracunGrozdjaServis;
         private readonly IVinovaLozaServis vinovaLozaServis;
+
         private readonly IIsporukaVinaServis isporukaVinaServis;
 
-
-
         private readonly PonudaVinaMeni ponudaVinaMeni;
-
         private readonly OdabirKolicineVinaMeni odabirKolicineVinaMeni;
-
         private readonly ProdajaMeni prodajaMeni;
-
         private readonly FaktureMeni faktureMeni;
 
         public OpcijeMeni(
@@ -32,14 +28,11 @@ namespace Presentation.Meni
             IBerbaLozeServis berbaLozeServis,
             IProracunGrozdjaServis proracunGrozdjaServis,
             IVinovaLozaServis vinovaLozaServis,
-<<<<<<< HEAD
-            IIsporukaVinaServis isporukaVinaServis)
-=======
+            IIsporukaVinaServis isporukaVinaServis,
             PonudaVinaMeni ponudaVinaMeni,
             OdabirKolicineVinaMeni odabirKolicineVinaMeni,
             ProdajaMeni prodajaMeni,
             FaktureMeni faktureMeni)
->>>>>>> 82166f8ee4ed67dfcd172bde87c58d3f8fe71ed5
         {
             this.evidencijaVinaServis = evidencijaVinaServis;
             this.paleteMeni = paleteMeni;
@@ -48,14 +41,13 @@ namespace Presentation.Meni
             this.berbaLozeServis = berbaLozeServis;
             this.proracunGrozdjaServis = proracunGrozdjaServis;
             this.vinovaLozaServis = vinovaLozaServis;
-<<<<<<< HEAD
+
             this.isporukaVinaServis = isporukaVinaServis;
-=======
+
             this.ponudaVinaMeni = ponudaVinaMeni;
             this.odabirKolicineVinaMeni = odabirKolicineVinaMeni;
             this.prodajaMeni = prodajaMeni;
             this.faktureMeni = faktureMeni;
->>>>>>> 82166f8ee4ed67dfcd172bde87c58d3f8fe71ed5
         }
 
         public void Prikazi()
@@ -74,14 +66,11 @@ namespace Presentation.Meni
                 Console.WriteLine("4) Berba loze");
                 Console.WriteLine("5) Proracun grozdja");
                 Console.WriteLine("6) Vinova loza (sadnja / pregled)");
-<<<<<<< HEAD
                 Console.WriteLine("7) Isporuka vina (zahtjev servisu prodaje)");
-=======
-                Console.WriteLine("7) Pregled ponude vina");
-                Console.WriteLine("8) Odabir kolicine vina");
-                Console.WriteLine("9) Isporuka vina kupcu");
-                Console.WriteLine("10) Pregled faktura");
->>>>>>> 82166f8ee4ed67dfcd172bde87c58d3f8fe71ed5
+                Console.WriteLine("8) Pregled ponude vina");
+                Console.WriteLine("9) Odabir kolicine vina");
+                Console.WriteLine("10) Isporuka vina kupcu");
+                Console.WriteLine("11) Pregled faktura");
                 Console.WriteLine("0) Izlaz");
                 Console.Write("\nIzbor: ");
 
@@ -122,27 +111,27 @@ namespace Presentation.Meni
                         new VinovaLozaMeni(vinovaLozaServis).Prikazi();
                         Pauza();
                         break;
+
                     case "7":
                         new IsporukaVinaMeni(isporukaVinaServis).Prikazi();
                         Pauza();
                         break;
 
-
-                    case "7":
+                    case "8":
                         ponudaVinaMeni.Prikazi();
                         Pauza();
                         break;
 
-                    case "8":
+                    case "9":
                         odabirKolicineVinaMeni.Prikazi();
                         Pauza();
                         break;
 
-                    case "9":
+                    case "10":
                         prodajaMeni.Prikazi();
                         break;
 
-                    case "10":
+                    case "11":
                         faktureMeni.Prikazi();
                         break;
 

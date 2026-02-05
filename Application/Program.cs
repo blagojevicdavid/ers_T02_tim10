@@ -13,13 +13,12 @@ using Services.LoggerServisi;
 using Services.PakovanjeServisi;
 using Services.SkladistenjeServisi;
 using Services.VinogradServisi;
-<<<<<<< HEAD
 using Services.IsporukaServis;
-=======
+
 using Services.VinoServisi;
 using Services.ProdajaServisi;
 using Services.FaktureServisi;
->>>>>>> 82166f8ee4ed67dfcd172bde87c58d3f8fe71ed5
+
 
 namespace Loger_Bloger
 {
@@ -72,11 +71,6 @@ namespace Loger_Bloger
             IAutentifikacijaServis autentifikacijaServis =new AutentifikacioniServis(korisniciRepozitorijum, loggerServis);
 
 
-
-<<<<<<< HEAD
-            
-=======
->>>>>>> 82166f8ee4ed67dfcd172bde87c58d3f8fe71ed5
             IPaleteServis paleteServis = new PaleteServis(
                 paleteRepozitorijum,
                 vinskiPodrumRepozitorijum,
@@ -178,15 +172,13 @@ namespace Loger_Bloger
                 berbaLozeServis,
                 proracunGrozdjaServis,
                 vinovaLozaServis,
-<<<<<<< HEAD
-                isporukaVinaServis
-=======
+                isporukaVinaServis,
                 ponudaVinaMeni,
                 odabirKolicineVinaMeni,
                 prodajaMeni,
                 faktureMeni
->>>>>>> 82166f8ee4ed67dfcd172bde87c58d3f8fe71ed5
             );
+
 
             meni.Prikazi();
         }
