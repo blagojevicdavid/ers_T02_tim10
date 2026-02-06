@@ -68,7 +68,7 @@ namespace Presentation.Meni
                 Console.WriteLine("2) Vina na stanju");
                 Console.WriteLine("3) Prodaja vina");
                 Console.WriteLine("4) Pregled faktura");
-                Console.WriteLine("5) Vinograd i berba");
+                //Console.WriteLine("5) Vinograd i berba");
                 Console.WriteLine("0) Izlaz");
                 Console.Write("\nIzbor: ");
 
@@ -95,11 +95,11 @@ namespace Presentation.Meni
                         faktureMeni.Prikazi();
                         Pauza();
                         break;
-
+                        /*
                     case "5":
                         PrikaziVinogradMeni();
                         break;
-
+                        */
                     case "0":
                         izlaz = true;
                         break;

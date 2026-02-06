@@ -18,10 +18,12 @@ namespace Presentation.Meni
 
         public void Prikazi()
         {
-            Console.WriteLine("\n=== Isporuka vina kupcu ===");
+            Console.WriteLine("\n=== Popuni zahtjev za prodaju ===");
 
+            //trenutno krsi solid
             Guid paletaId = Guid.NewGuid();
-            Console.WriteLine($"ID palete: {paletaId}");
+            Console.WriteLine($"ID zahtjeva: {paletaId}");
+            
 
 
             Console.Write("Unesi kupca (naziv/adresa): ");
