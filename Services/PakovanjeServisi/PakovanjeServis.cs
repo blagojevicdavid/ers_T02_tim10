@@ -14,34 +14,35 @@ namespace Services.PakovanjeServisi
         private readonly IPaleteRepozitorijum paleteRepo;
         private readonly ISkladistenjeServis skladistenjeServis;
         private readonly ILoggerServis logger;
+        private readonly IProizvodnjaVinaServis proizvodnjaServis;
+
 
         public PakovanjeServis(
             IVinoRepozitorijum vinoRepo,
             IPaleteRepozitorijum paleteRepo,
             ISkladistenjeServis skladistenjeServis,
+            IProizvodnjaVinaServis proizvodnjaServis,
             ILoggerServis logger)
         {
             this.vinoRepo = vinoRepo;
             this.paleteRepo = paleteRepo;
             this.skladistenjeServis = skladistenjeServis;
+            this.proizvodnjaServis = proizvodnjaServis;
             this.logger = logger;
         }
 
+
         public (bool, Paleta) UpakujVinaUPaletu(
-            string nazivVina,
-            KategorijaVina kategorija,
-            int brojFlasa,
-            double zapreminaFlase,
-            string adresaOdredista,
-            Guid vinskiPodrumId)
+    string nazivVina,
+    KategorijaVina kategorija,
+    int brojFlasa,
+    double zapreminaFlase,
+    string adresaOdredista,
+    Guid vinskiPodrumId)
         {
             try
             {
                 logger.Evidentiraj(TipEvidencije.INFO, "Pakovanje: zapoceto pakovanje vina.");
-                
-
-                
-
 
                 if (brojFlasa <= 0)
                 {
@@ -52,30 +53,16 @@ namespace Services.PakovanjeServisi
                 string trazeniNaziv = (nazivVina ?? string.Empty).Trim();
                 string adresa = (adresaOdredista ?? string.Empty).Trim();
 
-                // 1) Nadji JEDNO vino koje odgovara (u bazi imas 1 zapis po tipu vina)
-                Vino? pronadjeno = null;
+                var proizvedena = proizvodnjaServis.ProizvediVina(
+                    trazeniNaziv,
+                    kategorija,
+                    brojFlasa,
+                    zapreminaFlase
+                );
 
-                foreach (var vino in vinoRepo.PronadjiVinaPoKategoriji(kategorija))
-                {
-                    string nazivIzBaze = (vino.Naziv ?? string.Empty).Trim();
-
-                    bool istiNaziv = string.Equals(nazivIzBaze, trazeniNaziv, StringComparison.OrdinalIgnoreCase);
-                    bool istaZapremina = Math.Abs(vino.ZapreminaLitara - zapreminaFlase) < 0.0001;
-
-                    if (istiNaziv && istaZapremina)
-                    {
-                        pronadjeno = vino;
-                        break;
-                    }
-                }
-
-                if (pronadjeno == null || pronadjeno.Id == Guid.Empty)
-                {
-                    logger.Evidentiraj(TipEvidencije.WARNING, "Pakovanje: vino ne postoji (naziv/kategorija/zapremina ne poklapa).");
+                if (proizvedena == null || proizvedena.Count != brojFlasa)
                     return (false, new Paleta());
-                }
 
-                // 2) Formiraj paletu
                 Paleta paleta = new Paleta
                 {
                     Id = Guid.NewGuid(),
@@ -86,9 +73,8 @@ namespace Services.PakovanjeServisi
                     VinaIds = new List<Guid>()
                 };
 
-                // 3) Dodaj isti ID onoliko puta koliko je broj flasa
                 for (int i = 0; i < brojFlasa; i++)
-                    paleta.VinaIds.Add(pronadjeno.Id);
+                    paleta.VinaIds.Add(proizvedena[i].Id);
 
                 var sacuvana = paleteRepo.DodajPaletu(paleta);
                 if (sacuvana == null)
@@ -110,6 +96,7 @@ namespace Services.PakovanjeServisi
                 return (false, new Paleta());
             }
         }
+
 
         public (bool, Paleta) PosaljiPrvuDostupnuUpakovanuPaletu(
             string nazivVina,

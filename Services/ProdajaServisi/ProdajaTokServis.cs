@@ -16,19 +16,22 @@ namespace Services.ProdajaServisi
 
         private readonly IVinoRepozitorijum _vinoRepo;
         private readonly IPaleteRepozitorijum _paleteRepo;
+        private readonly ISkladistenjeServis _skladistenje;
 
         public ProdajaTokServis(
             IPakovanjeServis pakovanje,
+            ISkladistenjeServis skladistenje,
             IProdajaServis prodaja,
             ILoggerServis logger,
             IVinoRepozitorijum vinoRepo,
             IPaleteRepozitorijum paleteRepo)
         {
-            _pakovanje = pakovanje ?? throw new ArgumentNullException(nameof(pakovanje));
-            _prodaja = prodaja ?? throw new ArgumentNullException(nameof(prodaja));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _vinoRepo = vinoRepo ?? throw new ArgumentNullException(nameof(vinoRepo));
-            _paleteRepo = paleteRepo ?? throw new ArgumentNullException(nameof(paleteRepo));
+            _pakovanje = pakovanje;
+            _skladistenje = skladistenje;
+            _prodaja = prodaja;
+            _logger = logger;
+            _vinoRepo = vinoRepo;
+            _paleteRepo = paleteRepo;
         }
 
         public Guid IzvrsiProdaju(
@@ -47,26 +50,40 @@ namespace Services.ProdajaServisi
             if (Math.Abs(zapremina - 0.75) > 0.0001 && Math.Abs(zapremina - 1.5) > 0.0001)
                 throw new ArgumentException("Zapremina može biti samo 0.75 ili 1.5.");
 
-            Vino vino = PronadjiVino(nazivVina, kategorija, zapremina);
-            int dostupno = PrebrojDostupno(vino.Id);
+            Vino vinoTip = PronadjiVinoIliNapraviTip(nazivVina, kategorija, zapremina);
+
+            int dostupno = PrebrojDostupno(vinoTip);
 
             if (dostupno < brojFlasa)
-                throw new InvalidOperationException($"Nema dovoljno flaša na stanju. Dostupno: {dostupno}, traženo: {brojFlasa}.");
+            {
+                int potrebno = brojFlasa - dostupno;
 
-            SkiniSaStanja(vino.Id, brojFlasa);
+                while (potrebno > 0)
+                {
+                    var (ok, _) = _pakovanje.PosaljiPrvuDostupnuUpakovanuPaletu(
+                        vinoTip.Naziv,
+                        vinoTip.Kategorija,
+                        potrebno,
+                        vinoTip.ZapreminaLitara,
+                        adresaOdredista,
+                        vinskiPodrumId
+                    );
 
-            var (ok, paleta) = _pakovanje.UpakujVinaUPaletu(
-                vino.Naziv,
-                kategorija,
-                brojFlasa,
-                zapremina,
-                adresaOdredista,
-                vinskiPodrumId
-            );
+                    if (!ok)
+                        throw new InvalidOperationException("Nije moguće proizvesti i dopuniti stanje.");
 
-            if (!ok || paleta == null || paleta.Id == Guid.Empty)
-                throw new InvalidOperationException("Neuspešno pakovanje palete.");
+                    var isporucene = _skladistenje.IsporuciPaleteZaProdaju(1);
+                    if (isporucene == null || !isporucene.Any())
+                        throw new InvalidOperationException("Paleta proizvedena ali nije mogla biti raspakovana.");
 
+                    dostupno = PrebrojDostupno(vinoTip);
+                    potrebno = brojFlasa - dostupno;
+                }
+            }
+
+            var vinoIdsZaKupca = UzmiSaStanja(vinoTip, brojFlasa);
+
+            Paleta paleta = KreirajPaletuZaKupca(vinoIdsZaKupca, adresaOdredista, vinskiPodrumId);
             paleta.Status = StatusPalete.Otpremljena;
             _paleteRepo.AzurirajPaletu(paleta);
 
@@ -82,71 +99,139 @@ namespace Services.ProdajaServisi
 
             _logger.Evidentiraj(
                 TipEvidencije.INFO,
-                $"[PRODAJA TOK] Prodaja OK. Vino={vino.Naziv}, Kolicina={brojFlasa}, Paleta={paleta.Sifra}, Faktura={fakturaId}, Tip={tipProdaje}, Placanje={nacinPlacanja}"
+                $"[PRODAJA TOK] Prodaja OK. Vino={vinoTip.Naziv}, Kolicina={brojFlasa}, Paleta={paleta.Sifra}, Faktura={fakturaId}, Tip={tipProdaje}, Placanje={nacinPlacanja}"
             );
 
             return fakturaId;
         }
 
-        private Vino PronadjiVino(string nazivVina, KategorijaVina kategorija, double zapremina)
+        private Vino PronadjiVinoIliNapraviTip(string nazivVina, KategorijaVina kategorija, double zapremina)
         {
-            string trazeni = nazivVina.Trim();
+            string trazeni = (nazivVina ?? string.Empty).Trim();
 
             foreach (var v in _vinoRepo.PronadjiVinaPoKategoriji(kategorija) ?? Enumerable.Empty<Vino>())
             {
-                if (string.Equals((v.Naziv ?? "").Trim(), trazeni, StringComparison.OrdinalIgnoreCase) &&
-                    Math.Abs(v.ZapreminaLitara - zapremina) < 0.0001)
-                {
+                if (OdgovaraTipu(v, trazeni, kategorija, zapremina))
                     return v;
-                }
             }
 
-            throw new InvalidOperationException("Vino ne postoji (naziv/kategorija/zapremina se ne poklapaju).");
+            return new Vino
+            {
+                Id = Guid.Empty,
+                Naziv = trazeni,
+                Kategorija = kategorija,
+                ZapreminaLitara = zapremina
+            };
         }
 
-        private int PrebrojDostupno(Guid vinoId)
+        private int PrebrojDostupno(Vino vinoTip)
         {
             var raspakovane = _paleteRepo.PronadjiPaletePoStatusu(StatusPalete.Raspakovana) ?? Enumerable.Empty<Paleta>();
 
             int suma = 0;
+
             foreach (var p in raspakovane)
             {
-                if (p?.VinaIds == null) continue;
-                suma += p.VinaIds.Count(id => id == vinoId);
+                if (p?.VinaIds == null || p.VinaIds.Count == 0) continue;
+
+                foreach (var id in p.VinaIds)
+                {
+                    Vino v;
+                    try
+                    {
+                        v = _vinoRepo.PronadjiVinoPoId(id);
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+
+                    if (OdgovaraTipu(v, vinoTip.Naziv, vinoTip.Kategorija, vinoTip.ZapreminaLitara))
+                        suma++;
+                }
             }
 
             return suma;
         }
 
-        private void SkiniSaStanja(Guid vinoId, int kolicina)
+        private List<Guid> UzmiSaStanja(Vino vinoTip, int kolicina)
         {
             var raspakovane = (_paleteRepo.PronadjiPaletePoStatusu(StatusPalete.Raspakovana) ?? Enumerable.Empty<Paleta>())
                 .ToList();
 
             int preostalo = kolicina;
+            List<Guid> uzeto = new List<Guid>(kolicina);
 
             foreach (var p in raspakovane)
             {
                 if (preostalo <= 0) break;
                 if (p?.VinaIds == null || p.VinaIds.Count == 0) continue;
 
-                int imaUOvoj = p.VinaIds.Count(id => id == vinoId);
-                if (imaUOvoj == 0) continue;
-
-                int skidam = Math.Min(preostalo, imaUOvoj);
-
-                for (int i = 0; i < skidam; i++)
+                for (int i = p.VinaIds.Count - 1; i >= 0 && preostalo > 0; i--)
                 {
-                    int idx = p.VinaIds.FindIndex(id => id == vinoId);
-                    if (idx >= 0) p.VinaIds.RemoveAt(idx);
+                    Guid id = p.VinaIds[i];
+
+                    Vino v;
+                    try
+                    {
+                        v = _vinoRepo.PronadjiVinoPoId(id);
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+
+                    if (!OdgovaraTipu(v, vinoTip.Naziv, vinoTip.Kategorija, vinoTip.ZapreminaLitara))
+                        continue;
+
+                    uzeto.Add(id);
+                    p.VinaIds.RemoveAt(i);
+                    preostalo--;
                 }
 
                 _paleteRepo.AzurirajPaletu(p);
-                preostalo -= skidam;
             }
 
             if (preostalo > 0)
                 throw new InvalidOperationException("Greška pri skidanju sa stanja (nedovoljno vina u raspakovanim paletama).");
+
+            return uzeto;
+        }
+
+        private Paleta KreirajPaletuZaKupca(List<Guid> vinoIds, string adresaOdredista, Guid vinskiPodrumId)
+        {
+            if (vinoIds == null || vinoIds.Count == 0)
+                throw new InvalidOperationException("Ne mogu kreirati paletu bez vina.");
+
+            Paleta paleta = new Paleta
+            {
+                Id = Guid.NewGuid(),
+                Sifra = $"PL-{DateTime.UtcNow:yyyyMMddHHmmss}-{Guid.NewGuid().ToString().Substring(0, 8)}",
+                AdresaOdredista = (adresaOdredista ?? string.Empty).Trim(),
+                VinskiPodrumId = vinskiPodrumId,
+                Status = StatusPalete.Upakovana,
+                VinaIds = new List<Guid>(vinoIds)
+            };
+
+            var sacuvana = _paleteRepo.DodajPaletu(paleta);
+            if (sacuvana == null || sacuvana.Id == Guid.Empty)
+                throw new InvalidOperationException("Neuspješno čuvanje palete za kupca.");
+
+            return sacuvana;
+        }
+
+        private bool OdgovaraTipu(Vino v, string naziv, KategorijaVina kategorija, double zapremina)
+        {
+            if (v == null) return false;
+
+            string n1 = (v.Naziv ?? string.Empty).Trim();
+            string n2 = (naziv ?? string.Empty).Trim();
+
+            if (!string.Equals(n1, n2, StringComparison.OrdinalIgnoreCase)) return false;
+            if (v.Kategorija != kategorija) return false;
+            if (Math.Abs(v.ZapreminaLitara - zapremina) > 0.0001) return false;
+
+            return true;
         }
 
         private decimal IzracunajCenu(TipProdaje tipProdaje)

@@ -31,7 +31,7 @@ namespace Presentation.Meni
                 return;
             }
 
-            // Formiraj ponudu (cena+kolicina) i filtriraj samo ona koja su NA STANJU (kolicina > 0)
+           
             var mapa = PonudaVinaPomocne.FormirajPonudu(svaVina);
 
             var lista = mapa

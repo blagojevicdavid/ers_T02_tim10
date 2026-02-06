@@ -17,19 +17,19 @@ namespace Database.Repozitorijumi
         {
             try
             {
-                // Provera da li korisnik već postoji
+
                 Korisnik postoji = PronadjiKorisnikaPoKorisnickomImenu(korisnik.KorisnickoIme);
 
                 // Ako korisnik sa tim korisničkim imenom već postoji, ne dodaje se
                 if (postoji.KorisnickoIme == string.Empty)
                 {
-                    // Jedinstveni ID se generiše na osnovu trenutnog vremena
+
                     korisnik.Id = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
-                    // Ne postoji korisnik sa datim korisničkim imenom - dodati
+              
                     bazaPodataka.Tabele.Korisnici.Add(korisnik);
 
-                    // Čuvanje promena
+   
                     bazaPodataka.SacuvajPromene();
 
                     return korisnik;
@@ -40,7 +40,7 @@ namespace Database.Repozitorijumi
             }
             catch
             {
-                // U slučaju greške vraća se prazan objekat
+
                 return new Korisnik();
             }
         }
@@ -56,7 +56,6 @@ namespace Database.Repozitorijumi
                         return korisnik;
                 }
 
-                // Ako nije pronađen nijedan korisnik sa tim korisničkim imenom vraća se prazan objekat
                 return new Korisnik();
             }
             catch

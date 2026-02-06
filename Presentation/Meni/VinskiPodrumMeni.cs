@@ -64,7 +64,7 @@ namespace Presentation.Meni
                 return;
             }
 
-            // 4) Provera da li postoji takav podrum
+            // Provera da li postoji takav podrum
             var izabrani = vinskiPodrumRepo.PronadjiVinskiPodrumPoId(id);
             if (izabrani == null)
             {
@@ -72,7 +72,7 @@ namespace Presentation.Meni
                 return;
             }
 
-            // 5) Sačuvaj izbor
+            // Sačuvaj izbor
             skladistenjeServis.PostaviVinskiPodrum(id);
 
             Console.WriteLine($" Izabran vinski podrum: {izabrani.Naziv}");

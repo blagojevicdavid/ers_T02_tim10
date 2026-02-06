@@ -27,7 +27,7 @@ namespace Services.VinoServisi
                 sve.AddRange(lista);
             }
 
-            // ukloni duplikate po ID-u i sortiraj
+            
             return sve
                 .Where(v => v != null)
                 .GroupBy(v => v.Id)
@@ -43,7 +43,7 @@ namespace Services.VinoServisi
 
             sifra = sifra.Trim();
 
-            // Traži po šifri (to je ono što prikazuješ u meniju)
+            //
             return VratiPonudu()
                 .FirstOrDefault(v => !string.IsNullOrWhiteSpace(v.Sifra) &&
                                      string.Equals(v.Sifra.Trim(), sifra, StringComparison.OrdinalIgnoreCase));

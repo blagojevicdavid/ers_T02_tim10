@@ -39,8 +39,7 @@ namespace Database.Repozitorijumi
         {
             try
             {
-                // Id je Guid -> ne postavljamo ga ovde.
-                // (Obično je već postavljen u modelu: Guid.NewGuid()).
+
 
                 bazaPodataka.Tabele.VinoveLoze.Add(loza);
                 bool uspesno = bazaPodataka.SacuvajPromene();

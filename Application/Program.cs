@@ -77,6 +77,8 @@ namespace Loger_Bloger
             IBerbaLozeServis berbaLozeServis = new BerbaLozeServis(berbaLozeRepozitorijum, loggerServis);
             IProracunGrozdjaServis proracunGrozdjaServis = new ProracunGrozdjaServis();
             IVinovaLozaServis vinovaLozaServis = new VinovaLozaServis(vinovaLozaRepozitorijum);
+            IProizvodnjaVinaServis proizvodnjaVinaServis = new ProizvodnjaVinaServis(vinovaLozaRepozitorijum, vinoRepozitorijum, vinovaLozaServis, loggerServis);
+
 
             IProdajaServis prodajaServis = new ProdajaServis(
                 paleteRepozitorijum,
@@ -101,7 +103,7 @@ namespace Loger_Bloger
             Console.Clear();
             Console.WriteLine($"Uspešno ste prijavljeni kao: {prijavljen.ImePrezime} ({prijavljen.Uloga})");
 
-            // -------------------- SKLADISTENJE (DI po ulozi) --------------------
+            // -------------------- SKLADISTENJE  --------------------
             ISkladistenjeServis skladistenjeServis;
 
             if (prijavljen.Uloga == TipKorisnika.GlavniEnolog)
@@ -110,7 +112,8 @@ namespace Loger_Bloger
                 skladistenjeServis = new LokalniKelarSkladistenjeServis(paleteRepozitorijum, loggerServis);
 
             IPakovanjeServis pakovanjeServis =
-                new PakovanjeServis(vinoRepozitorijum, paleteRepozitorijum, skladistenjeServis, loggerServis);
+                new PakovanjeServis(vinoRepozitorijum, paleteRepozitorijum, skladistenjeServis, proizvodnjaVinaServis, loggerServis);
+
 
             IIsporukaVinaServis isporukaVinaServis =
                 new IsporukaVinaServis(skladistenjeServis, loggerServis);
@@ -119,13 +122,8 @@ namespace Loger_Bloger
 
 
 
-            IProdajaTokServis prodajaTokServis = new ProdajaTokServis(
-                pakovanjeServis,
-                prodajaServis,
-                loggerServis,
-                vinoRepozitorijum,
-                paleteRepozitorijum
-            );
+            IProdajaTokServis prodajaTokServis = new ProdajaTokServis(pakovanjeServis, skladistenjeServis, prodajaServis, loggerServis, vinoRepozitorijum, paleteRepozitorijum);
+
 
 
 
@@ -156,7 +154,7 @@ namespace Loger_Bloger
             FermentacijaMeni fermentacijaMeni = new FermentacijaMeni(fermentacijaServis, merenjeSeceraServis);
             ProizvodnjaVinaMeni proizvodnjaVinaMeni = new ProizvodnjaVinaMeni(evidencijaVinaServis, paleteMeni, pakovanjeMeni);
 
-            // -------------------- GLAVNI MENI (2 menija) --------------------
+            // -------------------- GLAVNI MENI --------------------
             OpcijeMeni meni = new OpcijeMeni(
                 ponudaVinaMeni,
                 odabirKolicineVinaMeni,

@@ -22,7 +22,7 @@ namespace Services.VinogradServisi
 
         public VinovaLoza ZasadiLozu(string naziv)
         {
-            double brix = Math.Round(15.0 + _random.NextDouble() * (20.8 - 15.0), 2);
+            double brix = Math.Round(15.0 + _random.NextDouble() * (28.0 - 15.0), 2);
             int godinaSadnje = DateTime.Now.Year;
             string region = "Toskana";
 

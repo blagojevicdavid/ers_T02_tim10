@@ -10,13 +10,12 @@ namespace Services.SkladistenjeServisi
 {
     public class LokalniKelarSkladistenjeServis : ISkladistenjeServis
     {
-        private const int MaxPaletaPoIsporuci = 2;     // spec: do 2
-        private const double SekundiPoPaleti = 1.8;    // spec: 1.8s po paleti
+        private const int MaxPaletaPoIsporuci = 2;
+        private const double SekundiPoPaleti = 1.8;
 
         private readonly IPaleteRepozitorijum paleteRepo;
         private readonly ILoggerServis logger;
 
-        // ✅ DODATO: izbor načina/podruma (da interfejs bude zadovoljen)
         private NacinSkladistenja? izabraniNacin;
         private Guid? izabraniVinskiPodrumId;
         private Guid? izabraniLokalniPodrumId;
@@ -27,7 +26,6 @@ namespace Services.SkladistenjeServisi
             this.logger = logger;
         }
 
-        // -------------------- ISkladistenjeServis: izbor načina --------------------
         public void PostaviNacinSkladistenja(NacinSkladistenja nacin)
         {
             izabraniNacin = nacin;
@@ -40,7 +38,6 @@ namespace Services.SkladistenjeServisi
             return izabraniNacin.Value;
         }
 
-        // -------------------- ISkladistenjeServis: izbor podruma --------------------
         public void PostaviVinskiPodrum(Guid vinskiPodrumId)
         {
             if (vinskiPodrumId == Guid.Empty)
@@ -75,7 +72,6 @@ namespace Services.SkladistenjeServisi
             return izabraniLokalniPodrumId.Value;
         }
 
-        // -------------------- POSTOJECA LOGIKA (tvoja) --------------------
         public bool PrihvatiOtpremljenuPaletu(Paleta paleta)
         {
             try

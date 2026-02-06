@@ -68,21 +68,18 @@ namespace Presentation.Meni
                 Console.WriteLine("2) Vina na stanju");
                 Console.WriteLine("3) Prodaja vina");
                 Console.WriteLine("4) Pregled faktura");
-                //Console.WriteLine("5) Vinograd i berba");
                 Console.WriteLine("0) Izlaz");
                 Console.Write("\nIzbor: ");
 
                 switch (Console.ReadLine())
                 {
                     case "1":
-
-                        ponudaVinaMeni.Prikazi();   
-
-                     
+                        odabirKolicineVinaMeni.Prikazi();
+                        Pauza();
                         break;
 
                     case "2":
-                        odabirKolicineVinaMeni.Prikazi();
+                        ponudaVinaMeni.Prikazi();
                         Pauza();
                         break;
 
@@ -111,44 +108,6 @@ namespace Presentation.Meni
             }
         }
 
-        private void PrikaziVinogradMeni()
-        {
-            bool izlaz = false;
-
-            while (!izlaz)
-            {
-                Console.Clear();
-                Console.WriteLine("=== VINOGRAD I BERBA ===");
-                Console.WriteLine("1) Vinova loza");
-                Console.WriteLine("2) Berba loze");
-                //Console.WriteLine("3) Proračun grožđa");
-                Console.WriteLine("0) Nazad");
-                Console.Write("\nIzbor: ");
-
-                switch (Console.ReadLine())
-                {
-                    case "1":
-                        vinovaLozaMeni.Prikazi();
-                        Pauza();
-                        break;
-
-                    case "2":
-                        berbaLozeMeni.Prikazi();
-                        Pauza();
-                        break;
-                /*
-                    case "3":
-                        proracunGrozdjaMeni.Prikazi();
-                        Pauza();
-                        break;
-                */
-                    case "0":
-                        izlaz = true;
-                        break;
-                }
-            }
-        }
-
         
         public void PrikaziKelarMajstor()
         {
@@ -157,52 +116,37 @@ namespace Presentation.Meni
             while (!izlaz)
             {
                 Console.Clear();
-                Console.WriteLine("Prijavljeni ste kao -> Kelar majstor");
+                Console.WriteLine("Prijavljeni ste kao -> Glavni enolog");
                 Console.WriteLine("===================================");
-                Console.WriteLine("1) Fermentacija");
-                Console.WriteLine("2) Proizvodnja vina");
-                Console.WriteLine("3) Pakovanje");
-                Console.WriteLine("4) Palete");
-                Console.WriteLine("5) Skladištenje");
-                Console.WriteLine("6) Isporuka vina");
+                Console.WriteLine("1) Ponuda vina");
+                Console.WriteLine("2) Vina na stanju");
+                Console.WriteLine("3) Prodaja vina");
                 Console.WriteLine("0) Izlaz");
                 Console.Write("\nIzbor: ");
 
                 switch (Console.ReadLine())
                 {
                     case "1":
-                        fermentacijaMeni.Prikazi();
+                        odabirKolicineVinaMeni.Prikazi();
                         Pauza();
                         break;
 
                     case "2":
-                        proizvodnjaVinaMeni.Prikazi();
+                        ponudaVinaMeni.Prikazi();
                         Pauza();
                         break;
 
                     case "3":
-                        pakovanjeMeni.Prikazi();
+                        prodajaMeni.Prikazi();
                         Pauza();
-                        break;
-
-                    case "4":
-                        paleteMeni.Prikazi();
-                        Pauza();
-                        break;
-
-                    case "5":
-                        skladistenjeMeni.Prikazi();
-                        Pauza();
-                        break;
-
-                    case "6":
-                        isporukaVinaMeni.Prikazi();
-                        Pauza();
-
                         break;
 
                     case "0":
                         izlaz = true;
+                        break;
+
+                    default:
+                        Pauza();
                         break;
                 }
             }

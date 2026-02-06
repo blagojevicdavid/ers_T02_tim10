@@ -57,9 +57,6 @@ namespace Services.SkladistenjeServisi
             return izabraniLokalniPodrumId.Value;
         }
 
-        // ✅ DODATO: da bi SkladistenjeServis implementirao ISkladistenjeServis do kraja.
-        // Ovaj servis je "izbor/konfiguracija", pa ovdje može stub (da kompilira).
-        // Realnu logiku već imaju VinskiPodrumSkladistenjeServis i LokalniKelarSkladistenjeServis.
         public bool PrihvatiOtpremljenuPaletu(Paleta paleta)
         {
             return true;
