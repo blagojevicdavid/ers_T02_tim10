@@ -32,8 +32,8 @@ namespace Presentation.Meni
                 Console.WriteLine("1) Pregled svih evidencija proizvodnje");
                 Console.WriteLine("2) Pregled evidencija za fermentaciju");
                 Console.WriteLine("3) Zabeleži proizvodnju (kreiraj evidenciju)");
-                Console.WriteLine("4) Pregled paleta");
-                Console.WriteLine("5) Priprema vina za prodaju (pakovanje + slanje)");
+                //Console.WriteLine("4) Pregled paleta");
+                //Console.WriteLine("5) Priprema vina za prodaju (pakovanje + slanje)");
                 Console.WriteLine("0) Nazad");
                 Console.Write("Izbor: ");
 
@@ -53,14 +53,14 @@ namespace Presentation.Meni
                         ZabeleziProizvodnju();
                         break;
 
+                        /*
                     case "4":
                         paleteMeni.Prikazi();
                         break;
-
                     case "5":
                         pakovanjeMeni.Prikazi();
                         break;
-
+                        */
                     case "0":
                         izlaz = true;
                         break;

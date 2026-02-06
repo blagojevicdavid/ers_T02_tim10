@@ -84,7 +84,7 @@ namespace Presentation.Meni
             foreach (var f in sve)
             {
                 Console.WriteLine(
-                    $"ID={f.Id} | LozaId={f.LozaId} | Faza={f.Faza} | Pocetak={f.DatumPocetka} | Kraj={f.DatumZavrsetka}");
+                    $"ID={f.Id} | BerbaId={f.BerbaId} | Faza={f.Faza} | Pocetak={f.DatumPocetka} | Kraj={f.DatumZavrsetka}");
             }
         }
 
@@ -106,29 +106,29 @@ namespace Presentation.Meni
 
             Console.WriteLine("\n--- Detalji fermentacije ---");
             Console.WriteLine($"ID: {f.Id}");
-            Console.WriteLine($"LozaId: {f.LozaId}");
+            Console.WriteLine($"LozaId: {f.BerbaId}");
             Console.WriteLine($"Faza: {f.Faza}");
             Console.WriteLine($"Datum pocetka: {f.DatumPocetka}");
             Console.WriteLine($"Datum zavrsetka: {f.DatumZavrsetka}");
-            Console.WriteLine($"Napomena: {f.Napomena}");
+            //Console.WriteLine($"Napomena: {f.Napomena}");
         }
 
         private void Zapocni()
         {
-            Console.Write("Unesi LozaId (GUID): ");
-            if (!Guid.TryParse(Console.ReadLine(), out Guid lozaId))
+            Console.Write("Unesi ID berbe: ");
+            if (!Guid.TryParse(Console.ReadLine(), out Guid berbaId))
             {
                 Console.WriteLine("Neispravan GUID.");
                 return;
             }
 
-            var nova = fermentacijaServis.ZapocniFermentaciju(lozaId);
+            var nova = fermentacijaServis.ZapocniFermentaciju(berbaId);
             Console.WriteLine($"Započeta fermentacija: ID={nova.Id}, Faza={nova.Faza}");
         }
 
         private void PromeniFazu()
         {
-            Console.Write("Unesi FermentacijaId (GUID): ");
+            Console.Write("Unesi Fermentacija Id (GUID): ");
             if (!Guid.TryParse(Console.ReadLine(), out Guid fid))
             {
                 Console.WriteLine("Neispravan GUID.");

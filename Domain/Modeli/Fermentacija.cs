@@ -11,7 +11,7 @@ namespace Domain.Modeli
     {
         public Guid Id { get; set; }
 
-        public Guid LozaId { get; set; }
+        public Guid BerbaId { get; set; }
 
         public Guid? VinoId { get; set; }
 

@@ -20,12 +20,12 @@ namespace Services.VinogradServisi
             fermentacijaRepo = repo;
         }
 
-        public Fermentacija ZapocniFermentaciju(Guid lozaId)
+        public Fermentacija ZapocniFermentaciju(Guid berbaId)
         {
             var f = new Fermentacija
             {
                 Id = Guid.NewGuid(),
-                LozaId = lozaId,
+                BerbaId = berbaId,
                 DatumPocetka = DateTime.UtcNow,
                 Faza = FazaFermentacije.Pokrenuta
             };

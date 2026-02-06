@@ -121,7 +121,7 @@ namespace Presentation.Meni
                 Console.WriteLine("=== VINOGRAD I BERBA ===");
                 Console.WriteLine("1) Vinova loza");
                 Console.WriteLine("2) Berba loze");
-                Console.WriteLine("3) Proračun grožđa");
+                //Console.WriteLine("3) Proračun grožđa");
                 Console.WriteLine("0) Nazad");
                 Console.Write("\nIzbor: ");
 
@@ -136,12 +136,12 @@ namespace Presentation.Meni
                         berbaLozeMeni.Prikazi();
                         Pauza();
                         break;
-
+                /*
                     case "3":
                         proracunGrozdjaMeni.Prikazi();
                         Pauza();
                         break;
-
+                */
                     case "0":
                         izlaz = true;
                         break;

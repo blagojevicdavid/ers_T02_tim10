@@ -20,14 +20,9 @@ namespace Presentation.Meni
         {
             Console.WriteLine("\n=== Isporuka vina kupcu ===");
 
-            Console.Write("Unesi ID palete (GUID): ");
-            string? sId = Console.ReadLine();
+            Guid paletaId = Guid.NewGuid();
+            Console.WriteLine($"ID palete: {paletaId}");
 
-            if (!Guid.TryParse(sId, out Guid paletaId))
-            {
-                Console.WriteLine("Neispravan GUID.");
-                return;
-            }
 
             Console.Write("Unesi kupca (naziv/adresa): ");
             string? kupac = Console.ReadLine();
