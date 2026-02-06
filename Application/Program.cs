@@ -120,11 +120,13 @@ namespace Loger_Bloger
 
 
             IProdajaTokServis prodajaTokServis = new ProdajaTokServis(
-pakovanjeServis,
-skladistenjeServis,
-prodajaServis,
-loggerServis
-);
+                pakovanjeServis,
+                prodajaServis,
+                loggerServis,
+                vinoRepozitorijum,
+                paleteRepozitorijum
+            );
+
 
 
 

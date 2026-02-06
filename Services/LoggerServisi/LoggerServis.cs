@@ -17,7 +17,6 @@ namespace Services.LoggerServisi
 
         public void Upisi(LogZapis zapis)
         {
-            Console.WriteLine(zapis.ToString());
             File.AppendAllText(putanja, zapis.ToString() + Environment.NewLine);
         }
     }
