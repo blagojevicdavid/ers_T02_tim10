@@ -11,6 +11,7 @@ namespace Domain.Servisi
     {
         List<Paleta> IsporuciPalete(int brojPaleta);
         void PosaljiZahtjev(ZahtjevZaIsporuku zahtjev);
+        
 
     }
 }

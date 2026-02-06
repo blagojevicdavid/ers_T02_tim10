@@ -9,7 +9,7 @@ namespace Domain.Enumeracije
     public enum NacinPlacanja
     {
         Gotovina,
-        Kartica,
-        Racun
+        Predracun,
+        GotovinskiRacun
     }
 }

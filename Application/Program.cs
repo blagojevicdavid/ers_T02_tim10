@@ -73,6 +73,7 @@ namespace Loger_Bloger
                 evidencijaVinaRepozitorijum
             );
 
+
             IBerbaLozeServis berbaLozeServis = new BerbaLozeServis(berbaLozeRepozitorijum, loggerServis);
             IProracunGrozdjaServis proracunGrozdjaServis = new ProracunGrozdjaServis();
             IVinovaLozaServis vinovaLozaServis = new VinovaLozaServis(vinovaLozaRepozitorijum);
@@ -114,11 +115,29 @@ namespace Loger_Bloger
             IIsporukaVinaServis isporukaVinaServis =
                 new IsporukaVinaServis(skladistenjeServis, loggerServis);
 
+
+
+
+
+            IProdajaTokServis prodajaTokServis = new ProdajaTokServis(
+pakovanjeServis,
+skladistenjeServis,
+prodajaServis,
+loggerServis
+);
+
+
+
+
+
+
+
             // -------------------- MENIJI --------------------
             // Prodaja / pregled (enolog)
             PonudaVinaMeni ponudaVinaMeni = new PonudaVinaMeni(ponudaVinaServis);
             OdabirKolicineVinaMeni odabirKolicineVinaMeni = new OdabirKolicineVinaMeni(ponudaVinaServis, odabirKolicineVinaServis);
-            ProdajaMeni prodajaMeni = new ProdajaMeni(prodajaServis);
+            ProdajaMeni prodajaMeni = new ProdajaMeni(prodajaTokServis);
+
             FaktureMeni faktureMeni = new FaktureMeni(fakturePregledServis);
 
             // Vinograd/berba (enolog)

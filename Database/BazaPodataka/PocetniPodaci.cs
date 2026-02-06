@@ -1,7 +1,7 @@
-﻿using Domain.Enumeracije;
+﻿using System;
+using Domain.Enumeracije;
 using Domain.Modeli;
 using Domain.Repozitorijumi;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,24 +13,22 @@ namespace Database.BazaPodataka
         private static readonly Guid PodrumB_Id = new Guid("bb222222-cccc-5555-9999-000000000002");
         private static readonly Guid PodrumC_Id = new Guid("cc333333-dddd-6666-aaaa-000000000003");
 
-        // 15 vinovih loza
-        private static readonly Guid Loza01_Id = new Guid("11111111-aaaa-4444-8888-000000000010"); // Prokupac
-        private static readonly Guid Loza02_Id = new Guid("22222222-bbbb-5555-9999-000000000020"); // Tamjanika
-        private static readonly Guid Loza03_Id = new Guid("33333333-cccc-6666-aaaa-000000000030"); // Vranac
-        private static readonly Guid Loza04_Id = new Guid("44444444-dddd-7777-bbbb-000000000040"); // Chardonnay
-        private static readonly Guid Loza05_Id = new Guid("55555555-eeee-8888-cccc-000000000050"); // Cabernet Sauvignon
-        private static readonly Guid Loza06_Id = new Guid("66666666-ffff-9999-dddd-000000000060"); // Merlot
-        private static readonly Guid Loza07_Id = new Guid("77777777-1111-2222-3333-000000000070"); // Pinot Noir
-        private static readonly Guid Loza08_Id = new Guid("88888888-2222-3333-4444-000000000080"); // Sauvignon Blanc
-        private static readonly Guid Loza09_Id = new Guid("99999999-3333-4444-5555-000000000090"); // Riesling
-        private static readonly Guid Loza10_Id = new Guid("aaaaaaaa-4444-5555-6666-0000000000a0"); // Syrah
-        private static readonly Guid Loza11_Id = new Guid("bbbbbbbb-5555-6666-7777-0000000000b0"); // Malbec
-        private static readonly Guid Loza12_Id = new Guid("cccccccc-6666-7777-8888-0000000000c0"); // Graševina
-        private static readonly Guid Loza13_Id = new Guid("dddddddd-7777-8888-9999-0000000000d0"); // Žilavka
-        private static readonly Guid Loza14_Id = new Guid("eeeeeeee-8888-9999-aaaa-0000000000e0"); // Muscat
-        private static readonly Guid Loza15_Id = new Guid("ffffffff-9999-aaaa-bbbb-0000000000f0"); // Rose blend
+        private static readonly Guid Loza01_Id = new Guid("11111111-aaaa-4444-8888-000000000010");
+        private static readonly Guid Loza02_Id = new Guid("22222222-bbbb-5555-9999-000000000020");
+        private static readonly Guid Loza03_Id = new Guid("33333333-cccc-6666-aaaa-000000000030");
+        private static readonly Guid Loza04_Id = new Guid("44444444-dddd-7777-bbbb-000000000040");
+        private static readonly Guid Loza05_Id = new Guid("55555555-eeee-8888-cccc-000000000050");
+        private static readonly Guid Loza06_Id = new Guid("66666666-ffff-9999-dddd-000000000060");
+        private static readonly Guid Loza07_Id = new Guid("77777777-1111-2222-3333-000000000070");
+        private static readonly Guid Loza08_Id = new Guid("88888888-2222-3333-4444-000000000080");
+        private static readonly Guid Loza09_Id = new Guid("99999999-3333-4444-5555-000000000090");
+        private static readonly Guid Loza10_Id = new Guid("aaaaaaaa-4444-5555-6666-0000000000a0");
+        private static readonly Guid Loza11_Id = new Guid("bbbbbbbb-5555-6666-7777-0000000000b0");
+        private static readonly Guid Loza12_Id = new Guid("cccccccc-6666-7777-8888-0000000000c0");
+        private static readonly Guid Loza13_Id = new Guid("dddddddd-7777-8888-9999-0000000000d0");
+        private static readonly Guid Loza14_Id = new Guid("eeeeeeee-8888-9999-aaaa-0000000000e0");
+        private static readonly Guid Loza15_Id = new Guid("ffffffff-9999-aaaa-bbbb-0000000000f0");
 
-        // 15 vina
         private static readonly Guid Vino01_Id = new Guid("10000000-0000-0000-0000-000000000001");
         private static readonly Guid Vino02_Id = new Guid("10000000-0000-0000-0000-000000000002");
         private static readonly Guid Vino03_Id = new Guid("10000000-0000-0000-0000-000000000003");
@@ -47,19 +45,16 @@ namespace Database.BazaPodataka
         private static readonly Guid Vino14_Id = new Guid("10000000-0000-0000-0000-000000000014");
         private static readonly Guid Vino15_Id = new Guid("10000000-0000-0000-0000-000000000015");
 
-        // Palete
         private static readonly Guid Paleta1_Id = new Guid("20000000-0000-0000-0000-000000000001");
         private static readonly Guid Paleta2_Id = new Guid("20000000-0000-0000-0000-000000000002");
         private static readonly Guid Paleta3_Id = new Guid("20000000-0000-0000-0000-000000000003");
 
-        // Fakture
         private static readonly Guid Faktura1_Id = new Guid("30000000-0000-0000-0000-000000000001");
         private static readonly Guid Faktura2_Id = new Guid("30000000-0000-0000-0000-000000000002");
         private static readonly Guid Faktura3_Id = new Guid("30000000-0000-0000-0000-000000000003");
 
         private static readonly DateTime DatumSeedovanja = new DateTime(2026, 3, 1, 9, 30, 0);
 
-        // Šifra serije mora biti: VN-2025-ID_VINA
         private static string Serija(Guid idVina) => $"VN-2025-{idVina}";
 
         public static void UbaciInicijalnePodatke(
@@ -111,21 +106,21 @@ namespace Database.BazaPodataka
 
             var lozeZaSeed = new List<VinovaLoza>
             {
-                new VinovaLoza(Loza01_Id, "Prokupac", 23.5, 2018, "Toplicki vinogradarski rejon", FazaZrelostiLoze.SpremnaZaBerbu),
-                new VinovaLoza(Loza02_Id, "Tamjanika", 22.1, 2019, "Zupski vinogradarski rejon", FazaZrelostiLoze.SpremnaZaBerbu),
-                new VinovaLoza(Loza03_Id, "Vranac", 24.0, 2017, "Crnogorski vinogradarski rejon", FazaZrelostiLoze.SpremnaZaBerbu),
-                new VinovaLoza(Loza04_Id, "Chardonnay", 21.7, 2020, "Sremski vinogradarski rejon", FazaZrelostiLoze.SpremnaZaBerbu),
-                new VinovaLoza(Loza05_Id, "Cabernet Sauvignon", 24.2, 2016, "Sumadijski vinogradarski rejon", FazaZrelostiLoze.SpremnaZaBerbu),
-                new VinovaLoza(Loza06_Id, "Merlot", 23.2, 2016, "Sremski vinogradarski rejon", FazaZrelostiLoze.SpremnaZaBerbu),
-                new VinovaLoza(Loza07_Id, "Pinot Noir", 22.0, 2021, "Fruškogorski vinogradarski rejon", FazaZrelostiLoze.SpremnaZaBerbu),
-                new VinovaLoza(Loza08_Id, "Sauvignon Blanc", 21.5, 2020, "Banatski vinogradarski rejon", FazaZrelostiLoze.SpremnaZaBerbu),
-                new VinovaLoza(Loza09_Id, "Riesling", 21.0, 2019, "Fruškogorski vinogradarski rejon", FazaZrelostiLoze.SpremnaZaBerbu),
-                new VinovaLoza(Loza10_Id, "Syrah", 24.5, 2018, "Sumadijski vinogradarski rejon", FazaZrelostiLoze.SpremnaZaBerbu),
-                new VinovaLoza(Loza11_Id, "Malbec", 24.3, 2017, "Zupski vinogradarski rejon", FazaZrelostiLoze.SpremnaZaBerbu),
-                new VinovaLoza(Loza12_Id, "Graševina", 20.9, 2020, "Sremski vinogradarski rejon", FazaZrelostiLoze.SpremnaZaBerbu),
-                new VinovaLoza(Loza13_Id, "Žilavka", 21.2, 2019, "Hercegovacki vinogradarski rejon", FazaZrelostiLoze.SpremnaZaBerbu),
-                new VinovaLoza(Loza14_Id, "Muscat", 20.8, 2021, "Zupski vinogradarski rejon", FazaZrelostiLoze.SpremnaZaBerbu),
-                new VinovaLoza(Loza15_Id, "Rose blend", 22.3, 2022, "Sumadijski vinogradarski rejon", FazaZrelostiLoze.SpremnaZaBerbu),
+                new VinovaLoza(Loza01_Id, "Prokupac", 23.5, 2018, "Toplicki vinogradarski reon", FazaZrelostiLoze.SpremnaZaBerbu),
+                new VinovaLoza(Loza02_Id, "Tamjanika", 22.1, 2019, "Zupski vinogradarski reon", FazaZrelostiLoze.SpremnaZaBerbu),
+                new VinovaLoza(Loza03_Id, "Vranac", 24.0, 2017, "Crnogorski vinogradarski reon", FazaZrelostiLoze.SpremnaZaBerbu),
+                new VinovaLoza(Loza04_Id, "Chardonnay", 21.7, 2020, "Sremski vinogradarski reon", FazaZrelostiLoze.SpremnaZaBerbu),
+                new VinovaLoza(Loza05_Id, "Cabernet Sauvignon", 24.2, 2016, "Sumadijski vinogradarski reon", FazaZrelostiLoze.SpremnaZaBerbu),
+                new VinovaLoza(Loza06_Id, "Merlot", 23.2, 2016, "Sremski vinogradarski reon", FazaZrelostiLoze.SpremnaZaBerbu),
+                new VinovaLoza(Loza07_Id, "Pinot Noir", 22.0, 2021, "Fruškogorski vinogradarski reon", FazaZrelostiLoze.SpremnaZaBerbu),
+                new VinovaLoza(Loza08_Id, "Sauvignon Blanc", 21.5, 2020, "Banatski vinogradarski reon", FazaZrelostiLoze.SpremnaZaBerbu),
+                new VinovaLoza(Loza09_Id, "Riesling", 21.0, 2019, "Fruškogorski vinogradarski reon", FazaZrelostiLoze.SpremnaZaBerbu),
+                new VinovaLoza(Loza10_Id, "Syrah", 24.5, 2018, "Sumadijski vinogradarski reon", FazaZrelostiLoze.SpremnaZaBerbu),
+                new VinovaLoza(Loza11_Id, "Malbec", 24.3, 2017, "Zupski vinogradarski reon", FazaZrelostiLoze.SpremnaZaBerbu),
+                new VinovaLoza(Loza12_Id, "Graševina", 20.9, 2020, "Sremski vinogradarski reon", FazaZrelostiLoze.SpremnaZaBerbu),
+                new VinovaLoza(Loza13_Id, "Žilavka", 21.2, 2019, "Hercegovacki vinogradarski reon", FazaZrelostiLoze.SpremnaZaBerbu),
+                new VinovaLoza(Loza14_Id, "Muscat", 20.8, 2021, "Zupski vinogradarski reon", FazaZrelostiLoze.SpremnaZaBerbu),
+                new VinovaLoza(Loza15_Id, "Rose blend", 22.3, 2022, "Sumadijski vinogradarski reon", FazaZrelostiLoze.SpremnaZaBerbu),
             };
 
             try
@@ -146,26 +141,23 @@ namespace Database.BazaPodataka
 
             var vinaZaSeed = new List<Vino>
             {
-                // PREMIUM (5)
                 new Vino(Vino01_Id, "Prokupac Reserve", KategorijaVina.Premium, 0.75, Serija(Vino01_Id), Loza01_Id, DatumSeedovanja),
                 new Vino(Vino02_Id, "Vranac Barrique", KategorijaVina.Premium, 0.75, Serija(Vino02_Id), Loza03_Id, DatumSeedovanja),
                 new Vino(Vino03_Id, "Cabernet Sauvignon Grand", KategorijaVina.Premium, 0.75, Serija(Vino03_Id), Loza05_Id, DatumSeedovanja),
                 new Vino(Vino04_Id, "Chardonnay Reserve", KategorijaVina.Premium, 0.75, Serija(Vino04_Id), Loza04_Id, DatumSeedovanja),
                 new Vino(Vino05_Id, "Syrah Reserve", KategorijaVina.Premium, 0.75, Serija(Vino05_Id), Loza10_Id, DatumSeedovanja),
 
-                // KVALITETNO (5)
                 new Vino(Vino06_Id, "Tamjanika Classic", KategorijaVina.Kvalitetno, 0.75, Serija(Vino06_Id), Loza02_Id, DatumSeedovanja),
                 new Vino(Vino07_Id, "Merlot Classic", KategorijaVina.Kvalitetno, 0.75, Serija(Vino07_Id), Loza06_Id, DatumSeedovanja),
                 new Vino(Vino08_Id, "Pinot Noir Classic", KategorijaVina.Kvalitetno, 0.75, Serija(Vino08_Id), Loza07_Id, DatumSeedovanja),
                 new Vino(Vino09_Id, "Sauvignon Blanc Classic", KategorijaVina.Kvalitetno, 0.75, Serija(Vino09_Id), Loza08_Id, DatumSeedovanja),
                 new Vino(Vino10_Id, "Riesling Classic", KategorijaVina.Kvalitetno, 0.75, Serija(Vino10_Id), Loza09_Id, DatumSeedovanja),
 
-                // STOLNO (5)
                 new Vino(Vino11_Id, "Prokupac Stolno", KategorijaVina.Stolno, 1.5, Serija(Vino11_Id), Loza01_Id, DatumSeedovanja),
-                new Vino(Vino12_Id, "Graševina Stolno", KategorijaVina.Stolno, 1.0, Serija(Vino12_Id), Loza12_Id, DatumSeedovanja),
-                new Vino(Vino13_Id, "Žilavka Stolno", KategorijaVina.Stolno, 1.0, Serija(Vino13_Id), Loza13_Id, DatumSeedovanja),
-                new Vino(Vino14_Id, "Muscat Stolno", KategorijaVina.Stolno, 1.0, Serija(Vino14_Id), Loza14_Id, DatumSeedovanja),
-                new Vino(Vino15_Id, "Rose Stolno", KategorijaVina.Stolno, 1.0, Serija(Vino15_Id), Loza15_Id, DatumSeedovanja),
+                new Vino(Vino12_Id, "Graševina Stolno", KategorijaVina.Stolno, 1.5, Serija(Vino12_Id), Loza12_Id, DatumSeedovanja),
+                new Vino(Vino13_Id, "Žilavka Stolno", KategorijaVina.Stolno, 1.5, Serija(Vino13_Id), Loza13_Id, DatumSeedovanja),
+                new Vino(Vino14_Id, "Muscat Stolno", KategorijaVina.Stolno, 1.5, Serija(Vino14_Id), Loza14_Id, DatumSeedovanja),
+                new Vino(Vino15_Id, "Rose Stolno", KategorijaVina.Stolno, 1.5, Serija(Vino15_Id), Loza15_Id, DatumSeedovanja),
             };
 
             try
@@ -258,7 +250,7 @@ namespace Database.BazaPodataka
                 Faktura1_Id,
                 DatumSeedovanja,
                 TipProdaje.Restoranska,
-                NacinPlacanja.Kartica,
+                NacinPlacanja.Predracun,
                 new List<StavkaFakture>
                 {
                     new StavkaFakture(Vino01_Id, 2, 1650m),
@@ -284,7 +276,7 @@ namespace Database.BazaPodataka
                 Faktura3_Id,
                 DatumSeedovanja.AddDays(5),
                 TipProdaje.Restoranska,
-                NacinPlacanja.Kartica,
+                NacinPlacanja.Predracun,
                 new List<StavkaFakture>
                 {
                     new StavkaFakture(Vino02_Id, 2, 1750m),

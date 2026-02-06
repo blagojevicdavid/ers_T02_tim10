@@ -18,14 +18,18 @@ namespace Services.ProdajaServisi
             IFaktureRepozitorijum faktureRepozitorijum,
             ILoggerServis loggerServis)
         {
-            this.paleteRepozitorijum = paleteRepozitorijum;
-            this.faktureRepozitorijum = faktureRepozitorijum;
-            this.loggerServis = loggerServis;
+            this.paleteRepozitorijum = paleteRepozitorijum ?? throw new ArgumentNullException(nameof(paleteRepozitorijum));
+            this.faktureRepozitorijum = faktureRepozitorijum ?? throw new ArgumentNullException(nameof(faktureRepozitorijum));
+            this.loggerServis = loggerServis ?? throw new ArgumentNullException(nameof(loggerServis));
         }
 
-        public Guid IsporuciVinoKupcu(Guid paletaId, string kupac, decimal cenaPoKomadu)
+        public Guid IsporuciVinoKupcu(
+            Guid paletaId,
+            string kupac,
+            decimal cenaPoKomadu,
+            TipProdaje tipProdaje,
+            NacinPlacanja nacinPlacanja)
         {
-            // 1) validacija ulaza
             if (paletaId == Guid.Empty)
                 throw new ArgumentException("PaletaId je obavezan.");
 
@@ -35,47 +39,42 @@ namespace Services.ProdajaServisi
             if (cenaPoKomadu <= 0)
                 throw new ArgumentException("Cena po komadu mora biti > 0.");
 
-            // 2) ucitaj paletu
             Paleta paleta = paleteRepozitorijum.PronadjiPaletuPoId(paletaId);
-            if (paleta == null)
+            if (paleta == null || paleta.Id == Guid.Empty)
                 throw new InvalidOperationException("Paleta ne postoji.");
 
-            // 3) mora biti otpremljena da bi se isporucila kupcu
-            if (paleta.Status != StatusPalete.Otpremljena)
+            if (paleta.Status != StatusPalete.Otpremljena && paleta.Status != StatusPalete.Raspakovana)
             {
                 loggerServis.Evidentiraj(
                     TipEvidencije.ERROR,
-                    $"Pokušaj isporuke palete koja nije spremna. Paleta={paleta.Sifra}, Status={paleta.Status}"
+                    $"Pokušaj prodaje palete koja nije spremna. Paleta={paleta.Sifra}, Status={paleta.Status}"
                 );
-
-                throw new InvalidOperationException("Paleta nije spremna za isporuku (mora biti Otpremljena).");
+                throw new InvalidOperationException("Paleta nije spremna za prodaju (mora biti Otpremljena ili Raspakovana).");
             }
 
             if (paleta.VinaIds == null || paleta.VinaIds.Count == 0)
                 throw new InvalidOperationException("Paleta nema vina.");
 
-            // 4) napravi stavke fakture iz VinaIds (grupisanje po vinu)
             var stavke = paleta.VinaIds
                 .GroupBy(id => id)
                 .Select(g => new StavkaFakture(g.Key, g.Count(), cenaPoKomadu))
                 .ToList();
 
-            // 5) kreiraj i sacuvaj fakturu
             Faktura faktura = new Faktura
             {
+                TipProdaje = tipProdaje,
+                NacinPlacanja = nacinPlacanja,
                 Stavke = stavke
             };
 
             faktureRepozitorijum.DodajFakturu(faktura);
 
-            // 6) azuriraj status palete -> ISPORUCENA (SCRUM-87)
             paleta.Status = StatusPalete.Isporucena;
             paleteRepozitorijum.AzurirajPaletu(paleta);
 
-            // 7) log
             loggerServis.Evidentiraj(
                 TipEvidencije.INFO,
-                $" Isporucena paleta {paleta.Sifra} kupcu {kupac}. Faktura={faktura.Id}"
+                $"Isporucena paleta {paleta.Sifra} kupcu {kupac}. Faktura={faktura.Id}, TipProdaje={tipProdaje}, Placanje={nacinPlacanja}"
             );
 
             return faktura.Id;

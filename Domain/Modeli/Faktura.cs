@@ -16,19 +16,6 @@ namespace Domain.Modeli
         public NacinPlacanja NacinPlacanja { get; set; }
         public List<StavkaFakture> Stavke { get; set; } = new();
 
-
-        public decimal UkupanIznos   //ovo ne bi trebalo da se nalazi ovde? pomocna metoda?
-        {
-            get
-            {
-                decimal suma = 0;
-                foreach (var s in Stavke)
-                    suma += s.CenaPoKomadu * s.Kolicina;
-                return suma;
-            }
-        }
-
-
         public Faktura()
         {
             Id = Guid.NewGuid();
