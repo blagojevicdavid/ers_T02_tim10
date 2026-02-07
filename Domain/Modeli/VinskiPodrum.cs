@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Enumeracije;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,8 @@ namespace Domain.Modeli
         public double TemperaturaSkladistenja { get; set; }
         public int MaksimalanBrojPaleta { get; set; }
 
+        public TipPodrum Tip { get; set; }
+
        
         public VinskiPodrum()
         {
@@ -25,15 +28,10 @@ namespace Domain.Modeli
             Naziv = naziv;
             TemperaturaSkladistenja = temperaturaSkladistenja;
             MaksimalanBrojPaleta = maksimalanBrojPaleta;
+           
         }
 
-        public TipPodrum Tip { get; set; }
 
-        public enum TipPodrum
-        {
-            Vinski,
-            Lokalni
-        }
     }
 }
 

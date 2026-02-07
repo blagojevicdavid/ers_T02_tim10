@@ -1,16 +1,27 @@
-﻿using System;
-using Domain.Enumeracije;
+﻿using Domain.Enumeracije;
+using Domain.Repozitorijumi;
 using Domain.Servisi;
+using Services.SkladistenjeServisi;
+using System;
+using System.Globalization;
+using System.Linq;
 
 namespace Presentation.Meni
 {
     public class ProdajaMeni
     {
         private readonly IProdajaTokServis _prodajaTok;
+        private readonly ISkladistenjeServis _skladistenjeServis;
+        private readonly IVinskiPodrumRepozitorijum _vinskiPodrumRepo;
 
-        public ProdajaMeni(IProdajaTokServis prodajaTok)
+        public ProdajaMeni(
+            IProdajaTokServis prodajaTok,
+            ISkladistenjeServis skladistenjeServis,
+            IVinskiPodrumRepozitorijum vinskiPodrumRepo)
         {
-            _prodajaTok = prodajaTok ?? throw new ArgumentNullException(nameof(prodajaTok));
+            _prodajaTok = prodajaTok;
+            _skladistenjeServis = skladistenjeServis;
+            _vinskiPodrumRepo = vinskiPodrumRepo;
         }
 
         public void Prikazi()
@@ -18,10 +29,11 @@ namespace Presentation.Meni
             Console.WriteLine("\n=== PRODAJA VINA ===");
 
             Console.Write("Unesite naziv vina: ");
-            string nazivVina = (Console.ReadLine() ?? "").Trim();
+            string nazivVina = (Console.ReadLine() ?? string.Empty).Trim();
             if (string.IsNullOrWhiteSpace(nazivVina))
             {
                 Console.WriteLine("Naziv vina je obavezan.");
+                Pauza();
                 return;
             }
 
@@ -33,6 +45,7 @@ namespace Presentation.Meni
             if (!int.TryParse(Console.ReadLine(), out int katOpt) || katOpt < 1 || katOpt > 3)
             {
                 Console.WriteLine("Neispravna kategorija.");
+                Pauza();
                 return;
             }
             KategorijaVina kategorija = (KategorijaVina)(katOpt - 1);
@@ -41,16 +54,17 @@ namespace Presentation.Meni
             if (!int.TryParse(Console.ReadLine(), out int brojFlasa) || brojFlasa <= 0)
             {
                 Console.WriteLine("Neispravan broj flasa.");
+                Pauza();
                 return;
             }
 
             Console.Write("Unesite zapreminu flase u litrima (0.75 ili 1.5): ");
-            string zap = (Console.ReadLine() ?? "").Trim();
-            zap = zap.Replace(',', '.');
-            if (!double.TryParse(zap, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double zapremina) ||
+            string zapTxt = (Console.ReadLine() ?? string.Empty).Trim().Replace(',', '.');
+            if (!double.TryParse(zapTxt, NumberStyles.Float, CultureInfo.InvariantCulture, out double zapremina) ||
                 (Math.Abs(zapremina - 0.75) > 0.0001 && Math.Abs(zapremina - 1.5) > 0.0001))
             {
                 Console.WriteLine("Neispravna zapremina.");
+                Pauza();
                 return;
             }
 
@@ -61,14 +75,10 @@ namespace Presentation.Meni
             if (!int.TryParse(Console.ReadLine(), out int tipOpt) || tipOpt < 1 || tipOpt > 2)
             {
                 Console.WriteLine("Neispravan tip prodaje.");
+                Pauza();
                 return;
             }
-            TipProdaje tipProdaje = tipOpt switch
-            {
-                1 => TipProdaje.Restoranska,
-                2 => TipProdaje.Diskont,
-                _ => throw new InvalidOperationException("Nepoznat tip prodaje.")
-            };
+            TipProdaje tipProdaje = (tipOpt == 1) ? TipProdaje.Restoranska : TipProdaje.Diskont;
 
             Console.WriteLine("Izaberite način placanja:");
             Console.WriteLine("1) Gotovina");
@@ -78,55 +88,101 @@ namespace Presentation.Meni
             if (!int.TryParse(Console.ReadLine(), out int placOpt) || placOpt < 1 || placOpt > 3)
             {
                 Console.WriteLine("Neispravan način placanja.");
+                Pauza();
                 return;
             }
-            NacinPlacanja nacinPlacanja = placOpt switch
-            {
-                1 => NacinPlacanja.Gotovina,
-                2 => NacinPlacanja.Predracun,
-                3 => NacinPlacanja.GotovinskiRacun,
-                _ => throw new InvalidOperationException("Nepoznat način placanja.")
-            };
+
+            NacinPlacanja nacinPlacanja;
+            if (placOpt == 1) nacinPlacanja = NacinPlacanja.Gotovina;
+            else if (placOpt == 2) nacinPlacanja = NacinPlacanja.Predracun;
+            else nacinPlacanja = NacinPlacanja.GotovinskiRacun;
 
             Console.Write("Unesite adresu odredista: ");
-            string adresa = (Console.ReadLine() ?? "").Trim();
+            string adresa = (Console.ReadLine() ?? string.Empty).Trim();
             if (string.IsNullOrWhiteSpace(adresa))
             {
                 Console.WriteLine("Adresa odredista je obavezna.");
+                Pauza();
                 return;
             }
 
             Console.Write("Unesite kupca (naziv/adresa): ");
-            string kupac = (Console.ReadLine() ?? "").Trim();
+            string kupac = (Console.ReadLine() ?? string.Empty).Trim();
             if (string.IsNullOrWhiteSpace(kupac))
             {
                 Console.WriteLine("Kupac je obavezan.");
+                Pauza();
                 return;
             }
 
-            Guid vinskiPodrumId = Guid.Empty;
-
-            try
+            // --- AUTOMATSKI ODABIR PODRUMA (ne trazimo od korisnika) ---
+            Guid vinskiPodrumId = PreuzmiIliPostaviPodrum();
+            if (vinskiPodrumId == Guid.Empty)
             {
-                Guid fakturaId = _prodajaTok.IzvrsiProdaju(
-                    nazivVina,
-                    kategorija,
-                    brojFlasa,
-                    zapremina,
-                    tipProdaje,
-                    nacinPlacanja,
-                    adresa,
-                    vinskiPodrumId,
-                    kupac
-                );
-
-                Console.WriteLine($"Prodaja uspješna! Kreirana faktura (Id): {fakturaId}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Greška: {ex.Message}");
+                Console.WriteLine("Nema nijednog podruma u sistemu. Ne mogu izvršiti prodaju.");
+                Pauza();
+                return;
             }
 
+            // --- POZIV PRODAJE ---
+            Guid fakturaId = _prodajaTok.IzvrsiProdaju(
+                nazivVina,
+                kategorija,
+                brojFlasa,
+                zapremina,
+                tipProdaje,
+                nacinPlacanja,
+                adresa,
+                vinskiPodrumId,
+                kupac
+            );
+
+            if (fakturaId == Guid.Empty)
+            {
+                Console.WriteLine("Prodaja NIJE izvršena. Provjerite da li vino postoji u katalogu i da li su podaci ispravni.");
+                Pauza();
+                return;
+            }
+
+            Console.WriteLine($"Prodaja uspješna! Kreirana faktura (Id): {fakturaId}");
+            Pauza();
+        }
+
+        private Guid PreuzmiIliPostaviPodrum()
+        {
+            if (_skladistenjeServis == null || _vinskiPodrumRepo == null)
+                return Guid.Empty;
+
+            Guid id = Guid.Empty;
+
+            var nacin = _skladistenjeServis.PreuzmiNacinSkladistenja();
+
+            // 1) pokušaj uzeti već postavljen podrum iz skladištenja
+            if (nacin == NacinSkladistenja.LokalniPodrum)
+                id = _skladistenjeServis.PreuzmiLokalniPodrum();
+            else
+                id = _skladistenjeServis.PreuzmiVinskiPodrum();
+
+            if (id != Guid.Empty)
+                return id;
+
+            // 2) fallback: uzmi prvi podrum iz baze i zapamti ga
+            var prvi = _vinskiPodrumRepo.SviVinskiPodrumi().FirstOrDefault();
+            if (prvi == null)
+                return Guid.Empty;
+
+            id = prvi.Id;
+
+            if (nacin == NacinSkladistenja.LokalniPodrum)
+                _skladistenjeServis.PostaviLokalniPodrum(id);
+            else
+                _skladistenjeServis.PostaviVinskiPodrum(id);
+
+            return id;
+        }
+
+        private void Pauza()
+        {
             Console.WriteLine("\nPritisni ENTER za nastavak...");
             Console.ReadLine();
         }

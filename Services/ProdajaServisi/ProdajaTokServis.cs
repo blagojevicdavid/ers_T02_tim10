@@ -45,7 +45,6 @@ namespace Services.ProdajaServisi
             Guid vinskiPodrumId,
             string kupac)
         {
-
             if (_pakovanje == null || _skladistenje == null || _prodaja == null || _logger == null || _vinoRepo == null || _paleteRepo == null)
                 return Guid.Empty;
 
@@ -64,14 +63,20 @@ namespace Services.ProdajaServisi
             if (brojFlasa <= 0)
                 return Guid.Empty;
 
-
             if (string.IsNullOrWhiteSpace(nazivVina)) throw new ArgumentException("Naziv vina je obavezan.");  //ne valja
             if (brojFlasa <= 0) throw new ArgumentException("Broj flaša mora biti > 0.");
 
             if (Math.Abs(zapremina - 0.75) > 0.0001 && Math.Abs(zapremina - 1.5) > 0.0001)
                 return Guid.Empty;
 
-            Vino vinoTip = PronadjiVinoIliNapraviTip(nazivVina, kategorija, zapremina);
+            Vino vinoTip;
+            if (!TryPronadjiVinoTip(nazivVina, kategorija, zapremina, out vinoTip))
+            {
+                Console.WriteLine("Vino sa tim nazivom ne postoji u bazi.");
+                _logger.Evidentiraj(TipEvidencije.ERROR, $"[PRODAJA TOK] Vino ne postoji: Naziv={nazivVina}, Kat={kategorija}, Zap={zapremina}");
+                return Guid.Empty;
+            }
+
             if (vinoTip == null || vinoTip.Naziv == null || vinoTip.Naziv.Trim().Length == 0)
                 return Guid.Empty;
 
@@ -149,28 +154,30 @@ namespace Services.ProdajaServisi
             return fakturaId;
         }
 
-        private Vino PronadjiVinoIliNapraviTip(string nazivVina, KategorijaVina kategorija, double zapremina)
+        private bool TryPronadjiVinoTip(string nazivVina, KategorijaVina kategorija, double zapremina, out Vino vino)
         {
-            string trazeni = nazivVina == null ? string.Empty : nazivVina.Trim();
+            vino = new Vino();
+
+            string trazeni = string.Empty;
+            if (!string.IsNullOrWhiteSpace(nazivVina))
+                trazeni = nazivVina.Trim();
 
             var lista = _vinoRepo.PronadjiVinaPoKategoriji(kategorija);
-            if (lista != null)
+            if (lista == null)
+                return false;
+
+            foreach (var v in lista)
             {
-                foreach (var v in lista)
+                if (OdgovaraTipu(v, trazeni, kategorija, zapremina))
                 {
-                    if (OdgovaraTipu(v, trazeni, kategorija, zapremina))
-                        return v;
+                    vino = v;
+                    return true;
                 }
             }
 
-            return new Vino
-            {
-                Id = Guid.Empty,
-                Naziv = trazeni,
-                Kategorija = kategorija,
-                ZapreminaLitara = zapremina
-            };
+            return false;
         }
+
 
         private int PrebrojDostupno(Vino vinoTip)
         {
@@ -190,8 +197,8 @@ namespace Services.ProdajaServisi
 
                 foreach (var id in p.VinaIds)
                 {
-                    Vino v = _vinoRepo.PronadjiVinoPoId(id);
-                    if (v == null)
+                    Vino v;
+                    if (!_vinoRepo.PronadjiVinoPoId(id, out v))
                         continue;
 
                     if (OdgovaraTipu(v, vinoTip.Naziv, vinoTip.Kategorija, vinoTip.ZapreminaLitara))
@@ -228,8 +235,8 @@ namespace Services.ProdajaServisi
                 {
                     Guid id = p.VinaIds[i];
 
-                    Vino v = _vinoRepo.PronadjiVinoPoId(id);
-                    if (v == null)
+                    Vino v;
+                    if (!_vinoRepo.PronadjiVinoPoId(id, out v))
                         continue;
 
                     if (!OdgovaraTipu(v, vinoTip.Naziv, vinoTip.Kategorija, vinoTip.ZapreminaLitara))

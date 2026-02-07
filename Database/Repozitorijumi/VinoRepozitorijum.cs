@@ -62,23 +62,30 @@ namespace Database.Repozitorijumi
             }
         }
 
-        public Vino PronadjiVinoPoId(Guid id)
+   
+            public bool PronadjiVinoPoId(Guid id, out Vino vino)
         {
+            vino = new Vino(); 
+
             try
             {
-                foreach (var vino in bazaPodataka.Tabele.Vina)
+                foreach (var v in bazaPodataka.Tabele.Vina)
                 {
-                    if (vino.Id == id)
-                        return vino;
+                    if (v.Id == id)
+                    {
+                        vino = v;
+                        return true;
+                    }
                 }
 
-                return new Vino();
+                return false;
             }
             catch
             {
-                return new Vino();
+                return false;
             }
         }
+        
 
         public IEnumerable<Vino> PronadjiVinaPoKategoriji(KategorijaVina kategorija)
         {

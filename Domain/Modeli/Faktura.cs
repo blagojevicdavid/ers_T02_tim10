@@ -15,7 +15,7 @@ namespace Domain.Modeli
         public TipProdaje TipProdaje { get; set; }
         public NacinPlacanja NacinPlacanja { get; set; }
         public List<StavkaFakture> Stavke { get; set; } = new();
-
+        
         public Faktura()
         {
             Id = Guid.NewGuid();
@@ -27,7 +27,7 @@ namespace Domain.Modeli
             DatumIzdavanja = datumIzdavanja;
             TipProdaje = tipProdaje;
             NacinPlacanja = nacinPlacanja;
-            Stavke = stavke ?? new List<StavkaFakture>();
+            Stavke = stavke;
         }
     }
 }

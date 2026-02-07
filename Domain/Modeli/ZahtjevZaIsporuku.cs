@@ -13,5 +13,18 @@ namespace Domain.Modeli
         public int BrojPaleta { get; set; }
         public DateTime VrijemeZahtjeva { get; set; } = DateTime.Now;
         public StatusZahtjeva Status { get; set; } = StatusZahtjeva.Kreiran;
+
+        public ZahtjevZaIsporuku()
+        {
+        }
+
+       public ZahtjevZaIsporuku(Guid id, int brojPaleta, DateTime vrijemeZahtjeva,StatusZahtjeva status)
+        {
+            Id = id;
+            BrojPaleta = brojPaleta;
+            VrijemeZahtjeva = vrijemeZahtjeva;
+            Status = status;
+        }
     }
+
 }

@@ -30,7 +30,7 @@ namespace Domain.Modeli
             Sifra = sifra;
             AdresaOdredista = adresaOdredista;
             VinskiPodrumId = vinskiPodrumId;
-            VinaIds = vinaIds ?? new List<Guid>();
+            VinaIds = vinaIds;
             Status = status;
         }
     }

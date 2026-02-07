@@ -12,7 +12,7 @@ namespace Domain.Modeli
     {
         public Guid Id { get; set; }
         public string Naziv { get; set; } = string.Empty;
-        public double NivoSeceraBrix { get; set; }  // 15.0–28.0
+        public double NivoSeceraBrix { get; set; }  
         public int GodinaSadnje { get; set; }
         public string RegionUzgoja { get; set; } = string.Empty;
         public FazaZrelostiLoze FazaZrelosti { get; set; }

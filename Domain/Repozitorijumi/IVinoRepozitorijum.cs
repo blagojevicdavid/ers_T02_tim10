@@ -15,7 +15,7 @@ namespace Domain.Repozitorijumi
 
         Vino DodajVino(Vino vino);
 
-        Vino PronadjiVinoPoId(Guid id);
+        bool PronadjiVinoPoId(Guid id, out Vino vino); //umjesto bool bilo Vino
 
         IEnumerable<Vino> PronadjiVinaPoKategoriji(KategorijaVina kategorija);
     }

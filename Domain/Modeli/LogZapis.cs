@@ -16,7 +16,7 @@ namespace Domain.Modeli
         public LogZapis(TipEvidencije tip, string poruka)
         {
             Tip = tip;
-            Poruka = poruka ?? "";
+            Poruka = poruka;
             DatumVreme = DateTime.Now;
         }
 

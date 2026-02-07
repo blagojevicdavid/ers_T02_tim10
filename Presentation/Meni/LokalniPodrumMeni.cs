@@ -38,7 +38,7 @@ namespace Presentation.Meni
                 return;
             }
 
-            var podrumi = vinskiPodrumRepo.SviVinskiPodrumi().Where(p => p.Tip == Domain.Modeli.VinskiPodrum.TipPodrum.Lokalni).ToList();
+            var podrumi = vinskiPodrumRepo.SviVinskiPodrumi().Where(p => p.Tip == Domain.Enumeracije.TipPodrum.Lokalni).ToList();
 
             if (podrumi.Count == 0)
             {

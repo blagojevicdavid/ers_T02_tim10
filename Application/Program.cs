@@ -136,7 +136,9 @@ namespace Loger_Bloger
             // Prodaja / pregled (enolog)
             PonudaVinaMeni ponudaVinaMeni = new PonudaVinaMeni(ponudaVinaServis);
             OdabirKolicineVinaMeni odabirKolicineVinaMeni = new OdabirKolicineVinaMeni(ponudaVinaServis, odabirKolicineVinaServis);
-            ProdajaMeni prodajaMeni = new ProdajaMeni(prodajaTokServis);
+            ProdajaMeni prodajaMeni = new ProdajaMeni(prodajaTokServis, skladistenjeServis, vinskiPodrumRepozitorijum);
+
+
 
             FaktureMeni faktureMeni = new FaktureMeni(fakturePregledServis);
 
