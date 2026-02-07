@@ -8,58 +8,72 @@ namespace Services.SkladistenjeServisi
 {
     public class SkladistenjeServis : ISkladistenjeServis
     {
-        private NacinSkladistenja? izabraniNacin;
+        private NacinSkladistenja izabraniNacin;
+        private Guid izabraniVinskiPodrumId;
+        private Guid izabraniLokalniPodrumId;
 
-        private Guid? izabraniVinskiPodrumId;
-        private Guid? izabraniLokalniPodrumId;
+        private bool imaNacin;
+        private bool imaVinski;
+        private bool imaLokalni;
+
+        public SkladistenjeServis()
+        {
+            imaNacin = false;
+            imaVinski = false;
+            imaLokalni = false;
+            izabraniVinskiPodrumId = Guid.Empty;
+            izabraniLokalniPodrumId = Guid.Empty;
+        }
 
         public void PostaviNacinSkladistenja(NacinSkladistenja nacin)
         {
             izabraniNacin = nacin;
+            imaNacin = true;
         }
 
         public NacinSkladistenja PreuzmiNacinSkladistenja()
         {
-            if (izabraniNacin == null)
-                throw new InvalidOperationException("Način skladištenja nije izabran.");
-            return izabraniNacin.Value;
+            if (!imaNacin) return default(NacinSkladistenja);
+            return izabraniNacin;
         }
 
         public void PostaviVinskiPodrum(Guid vinskiPodrumId)
         {
-            if (vinskiPodrumId == Guid.Empty)
-                throw new ArgumentException("Neispravan ID vinskog podruma.");
+            if (vinskiPodrumId == Guid.Empty) return;
 
             izabraniVinskiPodrumId = vinskiPodrumId;
-            izabraniLokalniPodrumId = null;
+            imaVinski = true;
+
+            imaLokalni = false;
+            izabraniLokalniPodrumId = Guid.Empty;
         }
 
         public Guid PreuzmiVinskiPodrum()
         {
-            if (izabraniVinskiPodrumId == null)
-                throw new InvalidOperationException("Vinski podrum nije izabran.");
-            return izabraniVinskiPodrumId.Value;
+            if (!imaVinski) return Guid.Empty;
+            return izabraniVinskiPodrumId;
         }
 
         public void PostaviLokalniPodrum(Guid lokalniPodrumId)
         {
-            if (lokalniPodrumId == Guid.Empty)
-                throw new ArgumentException("Neispravan ID lokalnog podruma.");
+            if (lokalniPodrumId == Guid.Empty) return;
 
             izabraniLokalniPodrumId = lokalniPodrumId;
-            izabraniVinskiPodrumId = null;
+            imaLokalni = true;
+
+            imaVinski = false;
+            izabraniVinskiPodrumId = Guid.Empty;
         }
 
         public Guid PreuzmiLokalniPodrum()
         {
-            if (izabraniLokalniPodrumId == null)
-                throw new InvalidOperationException("Lokalni podrum nije izabran.");
-            return izabraniLokalniPodrumId.Value;
+            if (!imaLokalni) return Guid.Empty;
+            return izabraniLokalniPodrumId;
         }
 
         public bool PrihvatiOtpremljenuPaletu(Paleta paleta)
         {
-            return true;
+            return paleta != null && paleta.Id != Guid.Empty;
         }
 
         public IEnumerable<Paleta> IsporuciPaleteZaProdaju(int brojPaleta)

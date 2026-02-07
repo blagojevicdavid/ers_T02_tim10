@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Domain.Modeli;
 using Domain.Repozitorijumi;
 using Domain.Servisi;
-
 
 namespace Services.VinogradServisi
 {
@@ -25,8 +21,12 @@ namespace Services.VinogradServisi
 
         public MerenjeSecera DodajMerenje(Guid fermentacijaId, double nivoSeceraBrix, string napomena = "")
         {
+            if (merenjeRepo == null || fermentacijaRepo == null) return new MerenjeSecera();
+            if (fermentacijaId == Guid.Empty) return new MerenjeSecera();
+
             var fermentacija = fermentacijaRepo.PronadjiFermentacijuPoId(fermentacijaId);
-            if(fermentacija == null) throw new Exception("Fermentacija nije pronadjena.");
+            if (fermentacija == null) return new MerenjeSecera();
+            if (fermentacija.Id == Guid.Empty) return new MerenjeSecera();
 
             var merenje = new MerenjeSecera
             {
@@ -34,20 +34,26 @@ namespace Services.VinogradServisi
                 FermentacijaId = fermentacijaId,
                 NivoSeceraBrix = nivoSeceraBrix,
                 DatumVreme = DateTime.UtcNow,
-                Napomena = napomena ?? ""
+                Napomena = napomena == null ? string.Empty : napomena
             };
 
             merenjeRepo.DodajMerenje(merenje);
 
-            //azuriram nivo i u fermentaciji kad sam vec tu
             fermentacija.PoslednjiBrix = nivoSeceraBrix;
             fermentacijaRepo.AzurirajFermentaciju(fermentacija);
 
             return merenje;
         }
+
         public IEnumerable<MerenjeSecera> PregledMerenja(Guid farmentacijaId)
         {
-            return merenjeRepo.MerenjaZaFermentaciju(farmentacijaId);
+            if (merenjeRepo == null) return new List<MerenjeSecera>();
+            if (farmentacijaId == Guid.Empty) return new List<MerenjeSecera>();
+
+            var lista = merenjeRepo.MerenjaZaFermentaciju(farmentacijaId);
+            if (lista == null) return new List<MerenjeSecera>();
+
+            return lista;
         }
     }
 }

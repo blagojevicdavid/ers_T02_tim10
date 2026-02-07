@@ -17,6 +17,7 @@ namespace Services.IsporukaServis
         public IsporukaVinaServis(ISkladistenjeServis skladistenje, ILoggerServis logger)
         {
             _skladistenje = skladistenje;
+            _logger = logger;
         }
 
         public void PosaljiZahtjev(ZahtjevZaIsporuku zahtjev)

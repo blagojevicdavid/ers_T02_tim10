@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Domain.Modeli;
 using Domain.Repozitorijumi;
 using Domain.Servisi;
@@ -30,37 +26,72 @@ namespace Services.VinogradServisi
             double zapreminaFlaseLitara,
             string napomena = "")
         {
-            // Provera fermentacije
+            if (evidencijaRepo == null || fermentacijaRepo == null)
+                return new EvidencijaProizvodnjeVina();
+
+            if (fermentacijaId == Guid.Empty)
+                return new EvidencijaProizvodnjeVina();
+
+            if (brojFlasa <= 0)
+                return new EvidencijaProizvodnjeVina();
+
+            if (zapreminaFlaseLitara <= 0)
+                return new EvidencijaProizvodnjeVina();
+
+            string naziv = nazivVina == null ? string.Empty : nazivVina.Trim();
+            if (naziv.Length == 0)
+                return new EvidencijaProizvodnjeVina();
+
             var fermentacija = fermentacijaRepo.PronadjiFermentacijuPoId(fermentacijaId);
             if (fermentacija == null)
-                throw new Exception("Fermentacija nije pronađena.");
+                return new EvidencijaProizvodnjeVina();
 
-            // racunanje ukupne količine
             double ukupnoLitara = brojFlasa * zapreminaFlaseLitara;
 
             var evidencija = new EvidencijaProizvodnjeVina
             {
                 Id = Guid.NewGuid(),
                 FermentacijaId = fermentacijaId,
-                NazivVina = nazivVina ?? "",
+                NazivVina = naziv,
                 BrojFlasa = brojFlasa,
                 ZapreminaFlaseLitara = zapreminaFlaseLitara,
                 UkupnoLitara = ukupnoLitara,
                 DatumVreme = DateTime.UtcNow,
-                napomena = napomena ?? ""
+                napomena = napomena == null ? string.Empty : napomena
             };
 
-            return evidencijaRepo.DodajEvidenciju(evidencija);
+            var sacuvana = evidencijaRepo.DodajEvidenciju(evidencija);
+            if (sacuvana == null || sacuvana.Id == Guid.Empty)
+                return new EvidencijaProizvodnjeVina();
+
+            return sacuvana;
         }
 
         public IEnumerable<EvidencijaProizvodnjeVina> PregledSvihEvidencija()
         {
-            return evidencijaRepo.SveEvidencije();
+            if (evidencijaRepo == null)
+                return new List<EvidencijaProizvodnjeVina>();
+
+            var sve = evidencijaRepo.SveEvidencije();
+            if (sve == null)
+                return new List<EvidencijaProizvodnjeVina>();
+
+            return sve;
         }
 
         public IEnumerable<EvidencijaProizvodnjeVina> PregledEvidencijaZaFermentaciju(Guid fermentacijaId)
         {
-            return evidencijaRepo.EvidencijeZaFermentaciju(fermentacijaId);
+            if (evidencijaRepo == null)
+                return new List<EvidencijaProizvodnjeVina>();
+
+            if (fermentacijaId == Guid.Empty)
+                return new List<EvidencijaProizvodnjeVina>();
+
+            var lista = evidencijaRepo.EvidencijeZaFermentaciju(fermentacijaId);
+            if (lista == null)
+                return new List<EvidencijaProizvodnjeVina>();
+
+            return lista;
         }
     }
 }

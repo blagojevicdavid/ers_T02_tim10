@@ -4,9 +4,6 @@ using Domain.Repozitorijumi;
 using Domain.Servisi;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services.VinogradServisi
 {
@@ -23,13 +20,16 @@ namespace Services.VinogradServisi
 
         public BerbaLoze EvidentirajBerbu(DateTime datumBerbe, double kolicinaKg)
         {
+            if (_repo == null || _logger == null) return new BerbaLoze();
+
             if (kolicinaKg <= 0)
             {
                 _logger.Evidentiraj(TipEvidencije.WARNING, "Količina berbe mora biti veća od 0.");
                 return new BerbaLoze();
             }
 
-            if (datumBerbe > DateTime.Now)
+            DateTime now = DateTime.Now;
+            if (datumBerbe > now)
             {
                 _logger.Evidentiraj(TipEvidencije.WARNING, "Datum berbe ne može biti u budućnosti.");
                 return new BerbaLoze();
@@ -38,7 +38,7 @@ namespace Services.VinogradServisi
             var berba = new BerbaLoze(Guid.NewGuid(), datumBerbe, kolicinaKg);
 
             var sacuvana = _repo.Dodaj(berba);
-            if (sacuvana.Id == Guid.Empty)
+            if (sacuvana == null || sacuvana.Id == Guid.Empty)
             {
                 _logger.Evidentiraj(TipEvidencije.ERROR, "Neuspešno čuvanje berbe.");
                 return new BerbaLoze();
@@ -49,21 +49,37 @@ namespace Services.VinogradServisi
 
         public IEnumerable<BerbaLoze> VratiSveBerbe()
         {
-            return _repo.Sve();
+            if (_repo == null) return new List<BerbaLoze>();
+
+            var sve = _repo.Sve();
+            if (sve == null) return new List<BerbaLoze>();
+
+            return sve;
         }
 
         public BerbaLoze Pronadji(Guid id)
         {
-            return _repo.PronadjiPoId(id);
+            if (_repo == null) return new BerbaLoze();
+            if (id == Guid.Empty) return new BerbaLoze();
+
+            var b = _repo.PronadjiPoId(id);
+            if (b == null) return new BerbaLoze();
+
+            return b;
         }
 
         public bool Azuriraj(Guid id, DateTime datumBerbe, double kolicinaKg)
         {
+            if (_repo == null) return false;
+
+            if (id == Guid.Empty) return false;
             if (kolicinaKg <= 0) return false;
-            if (datumBerbe > DateTime.Now) return false;
+
+            DateTime now = DateTime.Now;
+            if (datumBerbe > now) return false;
 
             var postojeca = _repo.PronadjiPoId(id);
-            if (postojeca.Id == Guid.Empty) return false;
+            if (postojeca == null || postojeca.Id == Guid.Empty) return false;
 
             postojeca.DatumBerbe = datumBerbe;
             postojeca.KolicinaKg = kolicinaKg;

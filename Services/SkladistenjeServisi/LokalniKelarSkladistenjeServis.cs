@@ -16,151 +16,147 @@ namespace Services.SkladistenjeServisi
         private readonly IPaleteRepozitorijum paleteRepo;
         private readonly ILoggerServis logger;
 
-        private NacinSkladistenja? izabraniNacin;
-        private Guid? izabraniVinskiPodrumId;
-        private Guid? izabraniLokalniPodrumId;
+        private NacinSkladistenja izabraniNacin;
+        private Guid izabraniVinskiPodrumId;
+        private Guid izabraniLokalniPodrumId;
+
+        private bool imaNacin;
+        private bool imaVinski;
+        private bool imaLokalni;
 
         public LokalniKelarSkladistenjeServis(IPaleteRepozitorijum paleteRepo, ILoggerServis logger)
         {
             this.paleteRepo = paleteRepo;
             this.logger = logger;
+            imaNacin = false;
+            imaVinski = false;
+            imaLokalni = false;
+            izabraniVinskiPodrumId = Guid.Empty;
+            izabraniLokalniPodrumId = Guid.Empty;
         }
 
         public void PostaviNacinSkladistenja(NacinSkladistenja nacin)
         {
             izabraniNacin = nacin;
+            imaNacin = true;
         }
 
         public NacinSkladistenja PreuzmiNacinSkladistenja()
         {
-            if (izabraniNacin == null)
-                throw new InvalidOperationException("Način skladištenja nije izabran.");
-            return izabraniNacin.Value;
+            if (!imaNacin) return default(NacinSkladistenja);
+            return izabraniNacin;
         }
 
         public void PostaviVinskiPodrum(Guid vinskiPodrumId)
         {
-            if (vinskiPodrumId == Guid.Empty)
-                throw new ArgumentException("Neispravan ID vinskog podruma.");
-
+            if (vinskiPodrumId == Guid.Empty) return;
             izabraniVinskiPodrumId = vinskiPodrumId;
-            izabraniLokalniPodrumId = null; // biram jedno ili drugo
+            imaVinski = true;
+            imaLokalni = false;
+            izabraniLokalniPodrumId = Guid.Empty;
         }
 
         public Guid PreuzmiVinskiPodrum()
         {
-            if (izabraniVinskiPodrumId == null)
-                throw new InvalidOperationException("Vinski podrum nije izabran.");
-
-            return izabraniVinskiPodrumId.Value;
+            if (!imaVinski) return Guid.Empty;
+            return izabraniVinskiPodrumId;
         }
 
         public void PostaviLokalniPodrum(Guid lokalniPodrumId)
         {
-            if (lokalniPodrumId == Guid.Empty)
-                throw new ArgumentException("Neispravan ID lokalnog podruma.");
-
+            if (lokalniPodrumId == Guid.Empty) return;
             izabraniLokalniPodrumId = lokalniPodrumId;
-            izabraniVinskiPodrumId = null; // biram jedno ili drugo
+            imaLokalni = true;
+            imaVinski = false;
+            izabraniVinskiPodrumId = Guid.Empty;
         }
 
         public Guid PreuzmiLokalniPodrum()
         {
-            if (izabraniLokalniPodrumId == null)
-                throw new InvalidOperationException("Lokalni podrum nije izabran.");
-
-            return izabraniLokalniPodrumId.Value;
+            if (!imaLokalni) return Guid.Empty;
+            return izabraniLokalniPodrumId;
         }
 
         public bool PrihvatiOtpremljenuPaletu(Paleta paleta)
         {
-            try
+            if (paleteRepo == null || logger == null) return false;
+
+            logger.Evidentiraj(TipEvidencije.INFO, "LokalniKelar: pokusaj prihvatanja otpremljene palete.");
+
+            if (paleta == null || paleta.Id == Guid.Empty)
             {
-                logger.Evidentiraj(TipEvidencije.INFO, "LokalniKelar: pokusaj prihvatanja otpremljene palete.");
-
-                if (paleta == null || paleta.Id == Guid.Empty)
-                {
-                    logger.Evidentiraj(TipEvidencije.WARNING, "LokalniKelar: paleta je null ili nema validan Id.");
-                    return false;
-                }
-
-                Paleta izRepo = paleteRepo.PronadjiPaletuPoId(paleta.Id);
-                if (izRepo == null || izRepo.Id == Guid.Empty)
-                {
-                    logger.Evidentiraj(TipEvidencije.WARNING, "LokalniKelar: paleta ne postoji u repozitorijumu.");
-                    return false;
-                }
-
-                if (izRepo.Status != StatusPalete.Otpremljena)
-                {
-                    logger.Evidentiraj(TipEvidencije.WARNING, $"LokalniKelar: paleta nije otpremljena (Status={izRepo.Status}).");
-                    return false;
-                }
-
-                logger.Evidentiraj(TipEvidencije.INFO, $"LokalniKelar: paleta prihvacena (Sifra={izRepo.Sifra}).");
-                return true;
-            }
-            catch (Exception ex)
-            {
-                logger.Evidentiraj(TipEvidencije.ERROR, "LokalniKelar: greska pri prihvatanju palete - " + ex.Message);
+                logger.Evidentiraj(TipEvidencije.WARNING, "LokalniKelar: paleta je null ili nema validan Id.");
                 return false;
             }
+
+            Paleta izRepo = paleteRepo.PronadjiPaletuPoId(paleta.Id);
+            if (izRepo == null || izRepo.Id == Guid.Empty)
+            {
+                logger.Evidentiraj(TipEvidencije.WARNING, "LokalniKelar: paleta ne postoji u repozitorijumu.");
+                return false;
+            }
+
+            if (izRepo.Status != StatusPalete.Otpremljena)
+            {
+                logger.Evidentiraj(TipEvidencije.WARNING, "LokalniKelar: paleta nije otpremljena (Status=" + izRepo.Status + ").");
+                return false;
+            }
+
+            logger.Evidentiraj(TipEvidencije.INFO, "LokalniKelar: paleta prihvacena (Sifra=" + izRepo.Sifra + ").");
+            return true;
         }
 
         public IEnumerable<Paleta> IsporuciPaleteZaProdaju(int brojPaleta)
         {
-            try
+            if (paleteRepo == null || logger == null) return new List<Paleta>();
+
+            logger.Evidentiraj(TipEvidencije.INFO, "LokalniKelar: zahtev za isporuku paleta (Trazeno=" + brojPaleta + ").");
+
+            if (brojPaleta <= 0)
             {
-                logger.Evidentiraj(TipEvidencije.INFO, $"LokalniKelar: zahtev za isporuku paleta (Trazeno={brojPaleta}).");
+                logger.Evidentiraj(TipEvidencije.WARNING, "LokalniKelar: brojPaleta mora biti > 0.");
+                return new List<Paleta>();
+            }
 
-                if (brojPaleta <= 0)
+            int trazeno = brojPaleta;
+            if (trazeno > MaxPaletaPoIsporuci) trazeno = MaxPaletaPoIsporuci;
+
+            if (trazeno != brojPaleta)
+                logger.Evidentiraj(TipEvidencije.WARNING, "LokalniKelar: trazeno vise od limita, smanjujem na " + trazeno + ".");
+
+            List<Paleta> rezultat = new List<Paleta>();
+
+            var lista = paleteRepo.PronadjiPaletePoStatusu(StatusPalete.Otpremljena);
+            if (lista != null)
+            {
+                foreach (Paleta p in lista)
                 {
-                    logger.Evidentiraj(TipEvidencije.WARNING, "LokalniKelar: brojPaleta mora biti > 0.");
-                    return new List<Paleta>();
-                }
-
-                int trazeno = Math.Min(brojPaleta, MaxPaletaPoIsporuci);
-                if (trazeno != brojPaleta)
-                    logger.Evidentiraj(TipEvidencije.WARNING, $"LokalniKelar: trazeno vise od limita, smanjujem na {trazeno}.");
-
-                List<Paleta> rezultat = new List<Paleta>();
-
-                foreach (Paleta p in paleteRepo.PronadjiPaletePoStatusu(StatusPalete.Otpremljena))
-                {
-                    if (rezultat.Count >= trazeno)
-                        break;
-
-                    if (p == null || p.Id == Guid.Empty)
-                        continue;
+                    if (rezultat.Count >= trazeno) break;
+                    if (p == null || p.Id == Guid.Empty) continue;
 
                     p.Status = StatusPalete.Raspakovana;
 
                     bool ok = paleteRepo.AzurirajPaletu(p);
                     if (!ok)
                     {
-                        logger.Evidentiraj(TipEvidencije.ERROR, $"LokalniKelar: neuspesno azuriranje palete (Sifra={p.Sifra}).");
+                        logger.Evidentiraj(TipEvidencije.ERROR, "LokalniKelar: neuspesno azuriranje palete (Sifra=" + p.Sifra + ").");
                         continue;
                     }
 
                     rezultat.Add(p);
-                    logger.Evidentiraj(TipEvidencije.INFO, $"LokalniKelar: paleta raspakovana (Sifra={p.Sifra}).");
+                    logger.Evidentiraj(TipEvidencije.INFO, "LokalniKelar: paleta raspakovana (Sifra=" + p.Sifra + ").");
                 }
-
-                int ms = (int)(rezultat.Count * SekundiPoPaleti * 1000);
-                if (ms > 0)
-                {
-                    logger.Evidentiraj(TipEvidencije.INFO, $"LokalniKelar: priprema paleta (ms={ms}).");
-                    Thread.Sleep(ms);
-                }
-
-                logger.Evidentiraj(TipEvidencije.INFO, $"LokalniKelar: isporuka zavrsena (Isporuceno={rezultat.Count}).");
-                return rezultat;
             }
-            catch (Exception ex)
+
+            int ms = (int)(rezultat.Count * SekundiPoPaleti * 1000);
+            if (ms > 0)
             {
-                logger.Evidentiraj(TipEvidencije.ERROR, "LokalniKelar: greska pri isporuci paleta - " + ex.Message);
-                return new List<Paleta>();
+                logger.Evidentiraj(TipEvidencije.INFO, "LokalniKelar: priprema paleta (ms=" + ms + ").");
+                Thread.Sleep(ms);
             }
+
+            logger.Evidentiraj(TipEvidencije.INFO, "LokalniKelar: isporuka zavrsena (Isporuceno=" + rezultat.Count + ").");
+            return rezultat;
         }
     }
 }

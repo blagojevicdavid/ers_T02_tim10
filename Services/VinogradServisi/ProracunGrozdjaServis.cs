@@ -13,8 +13,6 @@ namespace Services.VinogradServisi
 
         public int IzracunajPotrebnuKolicinuLoza(int brojFlasa, double zapreminaFlase)
         {
-            if (brojFlasa <= 0) throw new ArgumentException("Broj flaša mora biti veći od 0.");
-            if (zapreminaFlase <= 0) throw new ArgumentException("Zapremina flaše mora biti veća od 0.");
 
             double ukupnoLitara = brojFlasa * zapreminaFlase;
             return (int)Math.Ceiling(ukupnoLitara / LITARA_PO_LOZI);

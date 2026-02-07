@@ -12,7 +12,7 @@ namespace Services.VinogradServisi
     public class PaleteServis : IPaleteServis
     {
         private const int MAX_PALETE_PO_ISPORUCI = 5;
-        private const int PRIPREMA_MS = 300; // 0.3s
+        private const int PRIPREMA_MS = 300;
 
         private readonly IPaleteRepozitorijum paleteRepozitorijum;
         private readonly IVinskiPodrumRepozitorijum vinskiPodrumRepozitorijum;
@@ -33,43 +33,46 @@ namespace Services.VinogradServisi
 
         public IList<Paleta> PosaljiPaleteUVinskiPodrum(Guid vinskiPodrumId, int brojPaleta)
         {
+            if (paleteRepozitorijum == null || vinskiPodrumRepozitorijum == null || loggerServis == null)
+                return new List<Paleta>();
+
+            if (vinskiPodrumId == Guid.Empty)
+                return new List<Paleta>();
+
             if (brojPaleta <= 0)
             {
-                loggerServis.Evidentiraj(TipEvidencije.ERROR, $"[PALETE] Nevalidan broj paleta: {brojPaleta}");
-                throw new ArgumentException("Broj paleta mora biti veci od 0.");
+                loggerServis.Evidentiraj(TipEvidencije.ERROR, "[PALETE] Nevalidan broj paleta: " + brojPaleta);
+                return new List<Paleta>();
             }
 
             if (brojPaleta > MAX_PALETE_PO_ISPORUCI)
             {
                 loggerServis.Evidentiraj(
                     TipEvidencije.ERROR,
-                    $"[PALETE] Prekoracen limit po isporuci: trazeno={brojPaleta}, max={MAX_PALETE_PO_ISPORUCI}"
+                    "[PALETE] Prekoracen limit po isporuci: trazeno=" + brojPaleta + ", max=" + MAX_PALETE_PO_ISPORUCI
                 );
-                throw new ArgumentException($"U jednoj isporuci je moguce poslati najvise {MAX_PALETE_PO_ISPORUCI} paleta.");
+                return new List<Paleta>();
             }
 
             var podrum = vinskiPodrumRepozitorijum.PronadjiVinskiPodrumPoId(vinskiPodrumId);
             if (podrum == null)
             {
-                loggerServis.Evidentiraj(TipEvidencije.ERROR,
-                    $"Nepostojeci vinski podrum. ID={vinskiPodrumId}");
-                throw new ArgumentException("Nepostojeci vinski podrum.");
+                loggerServis.Evidentiraj(TipEvidencije.ERROR, "Nepostojeci vinski podrum. ID=" + vinskiPodrumId);
+                return new List<Paleta>();
             }
 
             loggerServis.Evidentiraj(
                 TipEvidencije.INFO,
-                $"Pocetak isporuke: podrum={podrum.Naziv} (ID={vinskiPodrumId}), brojPaleta={brojPaleta}"
+                "Pocetak isporuke: podrum=" + podrum.Naziv + " (ID=" + vinskiPodrumId + "), brojPaleta=" + brojPaleta
             );
 
             var poslate = new List<Paleta>();
 
             for (int i = 0; i < brojPaleta; i++)
             {
-                // prva dostupna upakovana paleta
                 var paleta = NadjiPrvuUpakovanu();
 
-                // ako nema, zapocinjem novu paletu
-                if (paleta == null)
+                if (paleta == null || paleta.Id == Guid.Empty)
                 {
                     loggerServis.Evidentiraj(
                         TipEvidencije.WARNING,
@@ -77,54 +80,51 @@ namespace Services.VinogradServisi
                     );
 
                     paleta = KreirajNovuUpakovanuPaletu();
+                    if (paleta == null || paleta.Id == Guid.Empty)
+                        return new List<Paleta>();
+
                     var sacuvana = paleteRepozitorijum.DodajPaletu(paleta);
                     if (sacuvana == null || sacuvana.Id == Guid.Empty)
                     {
-                        loggerServis.Evidentiraj(
-                            TipEvidencije.ERROR,
-                            "[PALETE] Neuspelo kreiranje nove palete tokom slanja u podrum."
-                        );
-                        throw new InvalidOperationException("Neuspelo kreiranje palete.");
+                        loggerServis.Evidentiraj(TipEvidencije.ERROR, "[PALETE] Neuspelo kreiranje nove palete tokom slanja u podrum.");
+                        return new List<Paleta>();
                     }
+
                     paleta = sacuvana;
                 }
 
-                
                 Thread.Sleep(PRIPREMA_MS);
 
-                
                 paleta.VinskiPodrumId = vinskiPodrumId;
-                paleta.Status = StatusPalete.Otpremljena; 
+                paleta.Status = StatusPalete.Otpremljena;
 
                 bool ok = paleteRepozitorijum.AzurirajPaletu(paleta);
                 if (!ok)
                 {
-                    loggerServis.Evidentiraj(
-                        TipEvidencije.ERROR,
-                        $"Neuspelo azuriranje palete {paleta.Sifra} (ID={paleta.Id})."
-                    );
-                    throw new InvalidOperationException("Neuspelo azuriranje palete.");
+                    loggerServis.Evidentiraj(TipEvidencije.ERROR, "Neuspelo azuriranje palete " + paleta.Sifra + " (ID=" + paleta.Id + ").");
+                    return new List<Paleta>();
                 }
 
                 poslate.Add(paleta);
 
                 loggerServis.Evidentiraj(
                     TipEvidencije.INFO,
-                    $"Otpremljena paleta {paleta.Sifra} u podrum '{podrum.Naziv}' (ID={vinskiPodrumId})."
+                    "Otpremljena paleta " + paleta.Sifra + " u podrum '" + podrum.Naziv + "' (ID=" + vinskiPodrumId + ")."
                 );
             }
 
-            loggerServis.Evidentiraj(
-                TipEvidencije.INFO,
-                $"Kraj isporuke: ukupno poslate={poslate.Count}"
-            );
+            loggerServis.Evidentiraj(TipEvidencije.INFO, "Kraj isporuke: ukupno poslate=" + poslate.Count);
 
             return poslate;
         }
 
-        private Paleta? NadjiPrvuUpakovanu()
+        private Paleta NadjiPrvuUpakovanu()
         {
+            if (paleteRepozitorijum == null) return null;
+
             var upakovane = paleteRepozitorijum.PronadjiPaletePoStatusu(StatusPalete.Upakovana);
+            if (upakovane == null) return null;
+
             return upakovane.FirstOrDefault();
         }
 
@@ -133,71 +133,81 @@ namespace Services.VinogradServisi
             return new Paleta
             {
                 Id = Guid.NewGuid(),
-                Sifra = $"PL-{DateTime.Now:yyyy}-{Guid.NewGuid().ToString()[..6].ToUpper()}",
+                Sifra = "PL-" + DateTime.Now.ToString("yyyy") + "-" + Guid.NewGuid().ToString().Substring(0, 6).ToUpper(),
                 Status = StatusPalete.Upakovana,
-                VinskiPodrumId = Guid.Empty
+                VinskiPodrumId = Guid.Empty,
+                VinaIds = new List<Guid>()
             };
         }
 
         public Paleta KreirajNovuPaletu(string adresaOdredista)
         {
-            if (string.IsNullOrWhiteSpace(adresaOdredista))
+            if (paleteRepozitorijum == null || loggerServis == null)
+                return new Paleta();
+
+            string adresa = adresaOdredista == null ? string.Empty : adresaOdredista.Trim();
+            if (adresa.Length == 0)
             {
-                loggerServis.Evidentiraj(
-                    TipEvidencije.ERROR,
-                    "[PALETE] Kreiranje palete neuspesno – adresa odredista nije unijeta."
-                );
-                throw new ArgumentException("Adresa odredišta je obavezna.");
+                loggerServis.Evidentiraj(TipEvidencije.ERROR, "[PALETE] Kreiranje palete neuspesno – adresa odredista nije unijeta.");
+                return new Paleta();
             }
 
             Paleta paleta = KreirajNovuUpakovanuPaletu();
+            if (paleta == null || paleta.Id == Guid.Empty)
+                return new Paleta();
 
-            paleta.AdresaOdredista = adresaOdredista.Trim();
+            paleta.AdresaOdredista = adresa;
 
             Paleta sacuvana = paleteRepozitorijum.DodajPaletu(paleta);
-
-            if (sacuvana == null)
-                throw new InvalidOperationException("Paleta nije sačuvana.");
+            if (sacuvana == null || sacuvana.Id == Guid.Empty)
+                return new Paleta();
 
             return sacuvana;
         }
 
         public Paleta PregledPalete(Guid paletaId)
         {
-            return paleteRepozitorijum.PronadjiPaletuPoId(paletaId);
+            if (paleteRepozitorijum == null) return new Paleta();
+            if (paletaId == Guid.Empty) return new Paleta();
+
+            var p = paleteRepozitorijum.PronadjiPaletuPoId(paletaId);
+            if (p == null) return new Paleta();
+
+            return p;
         }
 
         public bool DodajProizvedenoVinoNaPaletu(Guid paletaId, Guid evidencijaProizvodnjeVinaId)
         {
+            if (paleteRepozitorijum == null || evidencijaVinaRepo == null || loggerServis == null)
+                return false;
+
+            if (paletaId == Guid.Empty || evidencijaProizvodnjeVinaId == Guid.Empty)
+                return false;
+
             var paleta = paleteRepozitorijum.PronadjiPaletuPoId(paletaId);
             if (paleta == null || paleta.Id == Guid.Empty)
             {
-                loggerServis.Evidentiraj(
-                    TipEvidencije.WARNING,
-                    $"[PALETE] Dodavanje vina neuspesno – paleta ne postoji (ID={paletaId})."
-                );
+                loggerServis.Evidentiraj(TipEvidencije.WARNING, "[PALETE] Dodavanje vina neuspesno – paleta ne postoji (ID=" + paletaId + ").");
                 return false;
             }
 
             var evidencije = evidencijaVinaRepo.SveEvidencije();
-            var evidencija = evidencije.FirstOrDefault(e => e.Id == evidencijaProizvodnjeVinaId);
-            if (evidencija == null)
+            if (evidencije == null)
+                return false;
+
+            var evidencija = evidencije.FirstOrDefault(e => e != null && e.Id == evidencijaProizvodnjeVinaId);
+            if (evidencija == null || evidencija.Id == Guid.Empty)
                 return false;
 
             if (paleta.VinaIds == null)
                 paleta.VinaIds = new List<Guid>();
 
-
             if (paleta.VinaIds.Contains(evidencijaProizvodnjeVinaId))
                 return false;
 
-
             paleta.VinaIds.Add(evidencijaProizvodnjeVinaId);
-
 
             return paleteRepozitorijum.AzurirajPaletu(paleta);
         }
-
-
     }
 }
