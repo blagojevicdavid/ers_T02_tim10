@@ -45,6 +45,7 @@ namespace Services.ProdajaServisi
             Guid vinskiPodrumId,
             string kupac)
         {
+<<<<<<< HEAD
             if (_pakovanje == null || _skladistenje == null || _prodaja == null || _logger == null || _vinoRepo == null || _paleteRepo == null)
                 return Guid.Empty;
 
@@ -63,6 +64,10 @@ namespace Services.ProdajaServisi
             if (brojFlasa <= 0)
                 return Guid.Empty;
 
+=======
+            if (string.IsNullOrWhiteSpace(nazivVina)) throw new ArgumentException("Naziv vina je obavezan.");  //ne valja
+            if (brojFlasa <= 0) throw new ArgumentException("Broj flaša mora biti > 0.");
+>>>>>>> b8d76ad952313d624b62bfabd14004a7c3b0061d
             if (Math.Abs(zapremina - 0.75) > 0.0001 && Math.Abs(zapremina - 1.5) > 0.0001)
                 return Guid.Empty;
 
@@ -235,7 +240,7 @@ namespace Services.ProdajaServisi
                     preostalo--;
                 }
 
-                _paleteRepo.AzurirajPaletu(p);
+                _paleteRepo.AzurirajPaletu(p);   //ne provjeravam
             }
 
             if (preostalo > 0)

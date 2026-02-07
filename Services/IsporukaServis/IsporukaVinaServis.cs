@@ -20,7 +20,7 @@ namespace Services.IsporukaServis
             _logger = logger;
         }
 
-        public void PosaljiZahtjev(ZahtjevZaIsporuku zahtjev)
+        public void PosaljiZahtjev(ZahtjevZaIsporuku zahtjev)   //bool
         {
             
 

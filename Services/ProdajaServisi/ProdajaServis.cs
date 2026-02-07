@@ -18,9 +18,15 @@ namespace Services.ProdajaServisi
             IFaktureRepozitorijum faktureRepozitorijum,
             ILoggerServis loggerServis)
         {
+<<<<<<< HEAD
             this.paleteRepozitorijum = paleteRepozitorijum;
             this.faktureRepozitorijum = faktureRepozitorijum;
             this.loggerServis = loggerServis;
+=======
+            this.paleteRepozitorijum = paleteRepozitorijum ?? throw new ArgumentNullException(nameof(paleteRepozitorijum));   //ne valja
+            this.faktureRepozitorijum = faktureRepozitorijum ?? throw new ArgumentNullException(nameof(faktureRepozitorijum));
+            this.loggerServis = loggerServis ?? throw new ArgumentNullException(nameof(loggerServis));
+>>>>>>> b8d76ad952313d624b62bfabd14004a7c3b0061d
         }
 
         public Guid IsporuciVinoKupcu(
