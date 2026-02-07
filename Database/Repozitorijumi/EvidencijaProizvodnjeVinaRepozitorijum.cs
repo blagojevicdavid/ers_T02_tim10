@@ -21,7 +21,7 @@ namespace Database.Repozitorijumi
         public EvidencijaProizvodnjeVina DodajEvidenciju(EvidencijaProizvodnjeVina evidencija)
         {
             bazaPodataka.Tabele.EvidencijeProizvodnjeVina.Add(evidencija);
-            bazaPodataka.SacuvajPromene();
+            bazaPodataka.SacuvajPromene();  //popravka
             return evidencija;
         }
         public IEnumerable<EvidencijaProizvodnjeVina> SveEvidencije()

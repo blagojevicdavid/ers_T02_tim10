@@ -41,7 +41,7 @@ namespace Services.VinogradServisi
 
             //azuriram nivo i u fermentaciji kad sam vec tu
             fermentacija.PoslednjiBrix = nivoSeceraBrix;
-            fermentacijaRepo.AzurirajFermentaciju(fermentacija);
+            fermentacijaRepo.AzurirajFermentaciju(fermentacija);  //povratna vr provjera
 
             return merenje;
         }

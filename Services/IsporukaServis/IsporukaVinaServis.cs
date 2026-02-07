@@ -19,7 +19,7 @@ namespace Services.IsporukaServis
             _skladistenje = skladistenje;
         }
 
-        public void PosaljiZahtjev(ZahtjevZaIsporuku zahtjev)
+        public void PosaljiZahtjev(ZahtjevZaIsporuku zahtjev)   //bool
         {
             
 

@@ -59,7 +59,7 @@ namespace Services.SkladistenjeServisi
 
         public bool PrihvatiOtpremljenuPaletu(Paleta paleta)
         {
-            return true;
+            return true;     //ne treba nista 
         }
 
         public IEnumerable<Paleta> IsporuciPaleteZaProdaju(int brojPaleta)

@@ -18,7 +18,7 @@ namespace Services.ProdajaServisi
             IFaktureRepozitorijum faktureRepozitorijum,
             ILoggerServis loggerServis)
         {
-            this.paleteRepozitorijum = paleteRepozitorijum ?? throw new ArgumentNullException(nameof(paleteRepozitorijum));
+            this.paleteRepozitorijum = paleteRepozitorijum ?? throw new ArgumentNullException(nameof(paleteRepozitorijum));   //ne valja
             this.faktureRepozitorijum = faktureRepozitorijum ?? throw new ArgumentNullException(nameof(faktureRepozitorijum));
             this.loggerServis = loggerServis ?? throw new ArgumentNullException(nameof(loggerServis));
         }

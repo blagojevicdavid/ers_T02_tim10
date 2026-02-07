@@ -90,7 +90,7 @@ namespace Database.Repozitorijumi
         }
         public IEnumerable<Faktura> PreuzmiSveFakture()
         {
-            return bazaPodataka.Tabele.Fakture; // ili kako se već zove lista u bazi
+            return bazaPodataka.Tabele.Fakture; 
         }
     }
 }
