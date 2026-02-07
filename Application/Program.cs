@@ -77,7 +77,16 @@ namespace Loger_Bloger
             IBerbaLozeServis berbaLozeServis = new BerbaLozeServis(berbaLozeRepozitorijum, loggerServis);
             IProracunGrozdjaServis proracunGrozdjaServis = new ProracunGrozdjaServis();
             IVinovaLozaServis vinovaLozaServis = new VinovaLozaServis(vinovaLozaRepozitorijum);
-            IProizvodnjaVinaServis proizvodnjaVinaServis = new ProizvodnjaVinaServis(vinovaLozaRepozitorijum, vinoRepozitorijum, vinovaLozaServis, loggerServis);
+            IProizvodnjaVinaServis proizvodnjaVinaServis = new ProizvodnjaVinaServis(
+    vinovaLozaRepozitorijum,
+    vinoRepozitorijum,
+    vinovaLozaServis,
+    berbaLozeServis,
+    fermentacijaServis,
+    merenjeSeceraServis,
+    evidencijaVinaServis,
+    loggerServis
+);
 
 
             IProdajaServis prodajaServis = new ProdajaServis(
