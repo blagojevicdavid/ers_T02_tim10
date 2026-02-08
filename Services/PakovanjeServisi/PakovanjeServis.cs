@@ -46,9 +46,26 @@ namespace Services.PakovanjeServisi
 
             if (vinskiPodrumId == Guid.Empty)
                 return (false, new Paleta());
+            string trazeniNaziv;
+            if (nazivVina == null)
+            {
+                trazeniNaziv = string.Empty;
+            }
+            else
+            {
+                trazeniNaziv = nazivVina.Trim();
+            }
 
-            string trazeniNaziv = nazivVina == null ? string.Empty : nazivVina.Trim();
-            string adresa = adresaOdredista == null ? string.Empty : adresaOdredista.Trim();
+            string adresa;
+            if (adresaOdredista == null)
+            {
+                adresa = string.Empty;
+            }
+            else
+            {
+                adresa = adresaOdredista.Trim();
+            }
+
 
             if (trazeniNaziv.Length == 0 || adresa.Length == 0)
                 return (false, new Paleta());
@@ -108,7 +125,17 @@ namespace Services.PakovanjeServisi
             if (vinskiPodrumId == Guid.Empty)
                 return (false, new Paleta());
 
-            string adresa = adresaOdredista == null ? string.Empty : adresaOdredista.Trim();
+            string adresa;
+
+            if (adresaOdredista == null)
+            {
+                adresa = string.Empty;
+            }
+            else
+            {
+                adresa = adresaOdredista.Trim();
+            }
+
             if (adresa.Length == 0)
                 return (false, new Paleta());
 
@@ -121,7 +148,17 @@ namespace Services.PakovanjeServisi
                 {
                     if (p == null) continue;
 
-                    string pAdresa = p.AdresaOdredista == null ? string.Empty : p.AdresaOdredista.Trim();
+                    string pAdresa;
+
+                    if (p.AdresaOdredista == null)
+                    {
+                        pAdresa = string.Empty;
+                    }
+                    else
+                    {
+                        pAdresa = p.AdresaOdredista.Trim();
+                    }
+
 
                     if (pAdresa.Equals(adresa, StringComparison.OrdinalIgnoreCase) &&
                         p.VinskiPodrumId == vinskiPodrumId)

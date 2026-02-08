@@ -118,13 +118,20 @@ namespace Services.VinogradServisi
 
         private Paleta NadjiPrvuUpakovanu()
         {
-            if (paleteRepozitorijum == null) return null;
+            if (paleteRepozitorijum == null)
+                return new Paleta();
 
             var upakovane = paleteRepozitorijum.PronadjiPaletePoStatusu(StatusPalete.Upakovana);
-            if (upakovane == null) return null;
+            if (upakovane == null)
+                return new Paleta();
 
-            return upakovane.FirstOrDefault();
+            var prva = upakovane.FirstOrDefault();
+            if (prva == null)
+                return new Paleta();
+
+            return prva;
         }
+
 
         private Paleta KreirajNovuUpakovanuPaletu()
         {
@@ -143,12 +150,23 @@ namespace Services.VinogradServisi
             if (paleteRepozitorijum == null || loggerServis == null)
                 return new Paleta();
 
-            string adresa = adresaOdredista == null ? string.Empty : adresaOdredista.Trim();
+            string adresa;
+
+            if (adresaOdredista == null)
+            {
+                adresa = string.Empty;
+            }
+            else
+            {
+                adresa = adresaOdredista.Trim();
+            }
+
             if (adresa.Length == 0)
             {
                 loggerServis.Evidentiraj(TipEvidencije.ERROR, "[PALETE] Kreiranje palete neuspesno – adresa odredista nije unijeta.");
                 return new Paleta();
             }
+
 
             Paleta paleta = KreirajNovuUpakovanuPaletu();
             if (paleta == null || paleta.Id == Guid.Empty)

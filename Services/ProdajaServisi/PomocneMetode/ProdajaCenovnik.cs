@@ -7,7 +7,15 @@ namespace Services.ProdajaServisi.PomocneMetode
         public decimal IzracunajCenu(TipProdaje tipProdaje)
         {
             decimal bazna = 10m;
-            return tipProdaje == TipProdaje.Diskont ? bazna * 0.85m : bazna;
+            if (tipProdaje == TipProdaje.Diskont)
+            {
+                return bazna * 0.85m;
+            }
+            else
+            {
+                return bazna;
+            }
+
         }
     }
 }

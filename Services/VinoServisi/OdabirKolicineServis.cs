@@ -17,7 +17,7 @@ namespace Services.VinoServisi
             this.ponudaVinaServis = ponudaVinaServis;
         }
 
-        public OdabranoVinoZaProdaju?Odaberi(string sifra, int kolicina)
+        public OdabranoVinoZaProdaju Odaberi(string sifra, int kolicina)
         {
             if (string.IsNullOrWhiteSpace(sifra)) return null;
             if (kolicina <= 0) return null;

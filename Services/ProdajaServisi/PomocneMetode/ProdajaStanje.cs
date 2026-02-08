@@ -108,11 +108,29 @@ namespace Services.ProdajaServisi.PomocneMetode
             if (v == null)
                 return false;
 
-            string n1 = v.Naziv == null ? string.Empty : v.Naziv.Trim();
-            string n2 = naziv == null ? string.Empty : naziv.Trim();
+            string n1;
+            if (v.Naziv == null)
+            {
+                n1 = string.Empty;
+            }
+            else
+            {
+                n1 = v.Naziv.Trim();
+            }
+
+            string n2;
+            if (naziv == null)
+            {
+                n2 = string.Empty;
+            }
+            else
+            {
+                n2 = naziv.Trim();
+            }
 
             if (!string.Equals(n1, n2, StringComparison.OrdinalIgnoreCase))
                 return false;
+
 
             if (v.Kategorija != kategorija)
                 return false;

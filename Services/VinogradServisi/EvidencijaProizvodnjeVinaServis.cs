@@ -38,7 +38,20 @@ namespace Services.VinogradServisi
             if (zapreminaFlaseLitara <= 0)
                 return new EvidencijaProizvodnjeVina();
 
-            string naziv = nazivVina == null ? string.Empty : nazivVina.Trim();
+            string naziv;
+
+if (nazivVina == null)
+{
+    naziv = string.Empty;
+}
+else
+{
+    naziv = nazivVina.Trim();
+}
+
+if (naziv.Length == 0)
+    return new EvidencijaProizvodnjeVina();
+
             if (naziv.Length == 0)
                 return new EvidencijaProizvodnjeVina();
 
