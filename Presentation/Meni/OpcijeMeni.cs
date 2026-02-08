@@ -82,7 +82,7 @@ namespace Presentation.Meni
             while (!izlaz)
             {
                 Console.Clear();
-                Console.WriteLine("Prijavljeni ste kao -> Glavni enolog");
+                Console.WriteLine("Prijavljeni ste kao -> Kelar majstor");
                 Console.WriteLine("===================================");
                 Console.WriteLine("1) Ponuda vina");
                 Console.WriteLine("2) Vina na stanju");
