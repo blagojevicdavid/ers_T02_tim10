@@ -73,20 +73,10 @@ namespace Loger_Bloger
                 evidencijaVinaRepozitorijum
             );
 
-
             IBerbaLozeServis berbaLozeServis = new BerbaLozeServis(berbaLozeRepozitorijum, loggerServis);
             IProracunGrozdjaServis proracunGrozdjaServis = new ProracunGrozdjaServis();
             IVinovaLozaServis vinovaLozaServis = new VinovaLozaServis(vinovaLozaRepozitorijum);
-            IProizvodnjaVinaServis proizvodnjaVinaServis = new ProizvodnjaVinaServis(
-    vinovaLozaRepozitorijum,
-    vinoRepozitorijum,
-    vinovaLozaServis,
-    berbaLozeServis,
-    fermentacijaServis,
-    merenjeSeceraServis,
-    evidencijaVinaServis,
-    loggerServis
-);
+            IProizvodnjaVinaServis proizvodnjaVinaServis = new ProizvodnjaVinaServis( vinovaLozaRepozitorijum,vinoRepozitorijum, vinovaLozaServis,berbaLozeServis,fermentacijaServis,merenjeSeceraServis, evidencijaVinaServis, loggerServis);
 
 
             IProdajaServis prodajaServis = new ProdajaServis(
@@ -127,60 +117,21 @@ namespace Loger_Bloger
             IIsporukaVinaServis isporukaVinaServis =
                 new IsporukaVinaServis(skladistenjeServis, loggerServis);
 
-
-
-
-
             IProdajaTokServis prodajaTokServis = new ProdajaTokServis(pakovanjeServis, skladistenjeServis, prodajaServis, loggerServis, vinoRepozitorijum, paleteRepozitorijum);
-
-
-
-
-
-
-
-
 
             // -------------------- MENIJI --------------------
             // Prodaja / pregled (enolog)
             PonudaVinaMeni ponudaVinaMeni = new PonudaVinaMeni(ponudaVinaServis);
             OdabirKolicineVinaMeni odabirKolicineVinaMeni = new OdabirKolicineVinaMeni(ponudaVinaServis, odabirKolicineVinaServis);
             ProdajaMeni prodajaMeni = new ProdajaMeni(prodajaTokServis, skladistenjeServis, vinskiPodrumRepozitorijum);
-
-
-
             FaktureMeni faktureMeni = new FaktureMeni(fakturePregledServis);
-
-            // Vinograd/berba (enolog)
-            //VinovaLozaMeni vinovaLozaMeni = new VinovaLozaMeni(vinovaLozaServis);
-            //BerbaLozeMeni berbaLozeMeni = new BerbaLozeMeni(berbaLozeServis);
-            //ProracunGrozdjaMeni proracunGrozdjaMeni = new ProracunGrozdjaMeni(proracunGrozdjaServis);
-
-            // Operativa (kelar)
             PakovanjeMeni pakovanjeMeni = new PakovanjeMeni(pakovanjeServis);
-           // PaleteMeni paleteMeni = new PaleteMeni(paleteServis);
             SkladistenjeMeni skladistenjeMeni = new SkladistenjeMeni(skladistenjeServis);
             IsporukaVinaMeni isporukaVinaMeni = new IsporukaVinaMeni(isporukaVinaServis);
 
-           // FermentacijaMeni fermentacijaMeni = new FermentacijaMeni(fermentacijaServis, merenjeSeceraServis);
-            //ProizvodnjaVinaMeni proizvodnjaVinaMeni = new ProizvodnjaVinaMeni(evidencijaVinaServis, /*paleteMeni*/ pakovanjeMeni);
 
             // -------------------- GLAVNI MENI --------------------
-            OpcijeMeni meni = new OpcijeMeni(
-                ponudaVinaMeni,
-                odabirKolicineVinaMeni,
-                prodajaMeni,
-                faktureMeni,
-                //vinovaLozaMeni,
-               // berbaLozeMeni,
-                //proracunGrozdjaMeni,
-                //fermentacijaMeni,
-               // proizvodnjaVinaMeni,
-                pakovanjeMeni,
-                //paleteMeni,
-                skladistenjeMeni,
-                isporukaVinaMeni
-            );
+            OpcijeMeni meni = new OpcijeMeni( ponudaVinaMeni,odabirKolicineVinaMeni,prodajaMeni,faktureMeni,pakovanjeMeni,skladistenjeMeni,isporukaVinaMeni);
 
             if (prijavljen.Uloga == TipKorisnika.GlavniEnolog)
                 meni.PrikaziEnolog();

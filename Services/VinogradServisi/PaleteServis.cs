@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using Domain.Enumeracije;
 using Domain.Modeli;
+using Domain.Konstante;
 using Domain.Repozitorijumi;
 using Domain.Servisi;
 
@@ -11,9 +12,6 @@ namespace Services.VinogradServisi
 {
     public class PaleteServis : IPaleteServis
     {
-        private const int MAX_PALETE_PO_ISPORUCI = 5;
-        private const int PRIPREMA_MS = 300;
-
         private readonly IPaleteRepozitorijum paleteRepozitorijum;
         private readonly IVinskiPodrumRepozitorijum vinskiPodrumRepozitorijum;
         private readonly ILoggerServis loggerServis;
@@ -45,11 +43,11 @@ namespace Services.VinogradServisi
                 return new List<Paleta>();
             }
 
-            if (brojPaleta > MAX_PALETE_PO_ISPORUCI)
+            if (brojPaleta > PaleteKonstante.MAX_PALETE_PO_ISPORUCI)
             {
                 loggerServis.Evidentiraj(
                     TipEvidencije.ERROR,
-                    "[PALETE] Prekoracen limit po isporuci: trazeno=" + brojPaleta + ", max=" + MAX_PALETE_PO_ISPORUCI
+                    "[PALETE] Prekoracen limit po isporuci: trazeno=" + brojPaleta + ", max=" + PaleteKonstante.MAX_PALETE_PO_ISPORUCI
                 );
                 return new List<Paleta>();
             }
@@ -93,7 +91,7 @@ namespace Services.VinogradServisi
                     paleta = sacuvana;
                 }
 
-                Thread.Sleep(PRIPREMA_MS);
+                Thread.Sleep(PaleteKonstante.PRIPREMA_MS);
 
                 paleta.VinskiPodrumId = vinskiPodrumId;
                 paleta.Status = StatusPalete.Otpremljena;
