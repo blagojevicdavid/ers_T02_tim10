@@ -163,7 +163,7 @@ namespace Loger_Bloger
             IsporukaVinaMeni isporukaVinaMeni = new IsporukaVinaMeni(isporukaVinaServis);
 
            // FermentacijaMeni fermentacijaMeni = new FermentacijaMeni(fermentacijaServis, merenjeSeceraServis);
-            ProizvodnjaVinaMeni proizvodnjaVinaMeni = new ProizvodnjaVinaMeni(evidencijaVinaServis, /*paleteMeni*/ pakovanjeMeni);
+            //ProizvodnjaVinaMeni proizvodnjaVinaMeni = new ProizvodnjaVinaMeni(evidencijaVinaServis, /*paleteMeni*/ pakovanjeMeni);
 
             // -------------------- GLAVNI MENI --------------------
             OpcijeMeni meni = new OpcijeMeni(
@@ -175,7 +175,7 @@ namespace Loger_Bloger
                // berbaLozeMeni,
                 //proracunGrozdjaMeni,
                 //fermentacijaMeni,
-                proizvodnjaVinaMeni,
+               // proizvodnjaVinaMeni,
                 pakovanjeMeni,
                 //paleteMeni,
                 skladistenjeMeni,

@@ -14,12 +14,10 @@ namespace Database.Repozitorijumi
     public class FaktureRepozitorijum : IFaktureRepozitorijum
     {
         private readonly IBazaPodataka bazaPodataka;
-
         public FaktureRepozitorijum(IBazaPodataka baza)
         {
             bazaPodataka = baza;
         }
-
         public bool AzurirajFakturu(Faktura faktura)
         {
             try
@@ -46,7 +44,13 @@ namespace Database.Repozitorijumi
             {
                 bazaPodataka.Tabele.Fakture.Add(faktura);
                 bool uspesno = bazaPodataka.SacuvajPromene();
-                return uspesno ? faktura : new Faktura();
+                if (uspesno)
+                {
+                    return faktura;
+                }
+
+                return new Faktura();
+
             }
             catch
             {

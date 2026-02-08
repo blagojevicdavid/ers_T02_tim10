@@ -24,7 +24,11 @@ namespace Database.Repozitorijumi
             {
                 bazaPodataka.Tabele.BerbeLoze.Add(berba);
                 bool uspesno = bazaPodataka.SacuvajPromene();
-                return uspesno ? berba : new BerbaLoze();
+                if (uspesno)
+                    return berba;
+
+                return new BerbaLoze();
+
             }
             catch
             {
@@ -39,8 +43,17 @@ namespace Database.Repozitorijumi
 
         public BerbaLoze PronadjiPoId(Guid id)
         {
-            return bazaPodataka.Tabele.BerbeLoze.FirstOrDefault(x => x.Id == id) ?? new BerbaLoze();
+            var berba = bazaPodataka.Tabele.BerbeLoze
+                .FirstOrDefault(x => x.Id == id);
+
+            if (berba == null)
+            {
+                return new BerbaLoze();
+            }
+
+            return berba;
         }
+
 
         public bool Azuriraj(BerbaLoze berba)
         {

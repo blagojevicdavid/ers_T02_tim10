@@ -20,10 +20,6 @@ namespace Services.ProdajaServisi
             this.faktureRepozitorijum = faktureRepozitorijum;
             this.loggerServis = loggerServis;
 
-            this.paleteRepozitorijum = paleteRepozitorijum;
-            this.faktureRepozitorijum = faktureRepozitorijum;
-            this.loggerServis = loggerServis;
-
         }
         public Guid IsporuciVinoKupcu( Guid paletaId,string kupac, decimal cenaPoKomadu,TipProdaje tipProdaje,NacinPlacanja nacinPlacanja)
         {

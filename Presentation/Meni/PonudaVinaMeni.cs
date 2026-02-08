@@ -52,13 +52,16 @@ namespace Presentation.Meni
             }
 
             Console.WriteLine(new string('-', 95));
-            Console.ReadLine(); // samo da se ekran ne zatvori odmah
+            Console.ReadLine(); 
         }
-
         private static string Skrati(string s, int max)
         {
             if (string.IsNullOrEmpty(s)) return "";
-            return s.Length <= max ? s : s.Substring(0, max - 3) + "...";
+            if (s.Length <= max)
+            {
+                return s;
+            }
+            return s.Substring(0, max - 3) + "...";
         }
     }
 }

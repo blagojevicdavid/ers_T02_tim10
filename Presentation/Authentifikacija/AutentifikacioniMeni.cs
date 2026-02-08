@@ -25,7 +25,17 @@ namespace Presentation.Authentifikacija
                 Console.WriteLine("0) Izlaz");
                 Console.Write("Izbor: ");
 
-                string izbor = Console.ReadLine() ?? "";
+                var izbor = Console.ReadLine();
+                if (izbor == null)
+                {
+                    izbor = "";
+                }
+
+                if (izbor == null)
+                {
+                    izbor = "";
+                }
+
 
                 switch (izbor)
                 {
@@ -53,10 +63,18 @@ namespace Presentation.Authentifikacija
             korisnik = new Korisnik();
 
             Console.Write("Korisničko ime: ");
-            string korisnickoIme = Console.ReadLine() ?? "";
+            var korisnickoIme = Console.ReadLine();
+            if (korisnickoIme == null)
+            {
+                korisnickoIme = "";
+            }
 
             Console.Write("Lozinka: ");
-            string lozinka = Console.ReadLine() ?? "";
+            var lozinka = Console.ReadLine();
+            if (lozinka == null)
+            {
+                lozinka = "";
+            }
 
             var (uspesno, prijavljeni) =
                 autentifikacijaServis.Prijava(korisnickoIme.Trim(), lozinka.Trim());
@@ -78,20 +96,39 @@ namespace Presentation.Authentifikacija
             Korisnik novi = new Korisnik();
 
             Console.Write("Ime i prezime: ");
-            novi.ImePrezime = Console.ReadLine() ?? "";
+            var imePrezime = Console.ReadLine();
+            if (imePrezime == null)
+            {
+                imePrezime = "";
+            }
+            novi.ImePrezime = imePrezime;
 
             Console.Write("Korisničko ime: ");
-            novi.KorisnickoIme = Console.ReadLine() ?? "";
+            var korisnickoIme = Console.ReadLine();
+            if (korisnickoIme == null)
+            {
+                korisnickoIme = "";
+            }
+            novi.KorisnickoIme = korisnickoIme;
 
             Console.Write("Lozinka: ");
-            novi.Lozinka = Console.ReadLine() ?? "";
+            var lozinka = Console.ReadLine();
+            if (lozinka == null)
+            {
+                lozinka = "";
+            }
+            novi.Lozinka = lozinka;
 
             Console.WriteLine("Izaberite ulogu:");
             Console.WriteLine("1) Glavni enolog");
             Console.WriteLine("2) Kelar majstor");
             Console.Write("Izbor: ");
 
-            string izborUloge = Console.ReadLine() ?? "";
+            var izborUloge = Console.ReadLine();
+            if (izborUloge == null)
+            {
+                izborUloge = "";
+            }
 
             if (izborUloge == "1")
                 novi.Uloga = TipKorisnika.GlavniEnolog;

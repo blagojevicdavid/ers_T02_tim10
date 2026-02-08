@@ -16,9 +16,7 @@ namespace Presentation.Meni
         private readonly IVinskiPodrumRepozitorijum vinskiPodrumRepo;
         private readonly ISkladistenjeServis skladistenjeServis;
 
-        public LokalniPodrumMeni(
-            IVinskiPodrumRepozitorijum lokalniPodrumRepo,
-            ISkladistenjeServis skladistenjeServis)
+        public LokalniPodrumMeni(IVinskiPodrumRepozitorijum lokalniPodrumRepo,ISkladistenjeServis skladistenjeServis)
         {
             this.vinskiPodrumRepo = lokalniPodrumRepo;
             this.skladistenjeServis = skladistenjeServis;

@@ -24,7 +24,13 @@ namespace Database.Repozitorijumi
             {
                 bazaPodataka.Tabele.Fermentacije.Add(fermentacija);
                 bool uspesno = bazaPodataka.SacuvajPromene();
-                return uspesno ? fermentacija : new Fermentacija();
+                if (uspesno)
+                {
+                    return fermentacija;
+                }
+
+                return new Fermentacija();
+
             }
             catch
             {

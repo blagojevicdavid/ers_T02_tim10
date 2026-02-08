@@ -25,7 +25,11 @@ namespace Presentation.Meni
             Console.WriteLine("2) Lokalni podrum");
             Console.Write("Izbor: ");
 
-            string? izbor = Console.ReadLine();
+            var izbor = Console.ReadLine();
+            if (izbor == null)
+            {
+                izbor = "";
+            }
 
             if (izbor == "1")
                 skladistenjeServis.PostaviNacinSkladistenja(NacinSkladistenja.VinskiPodrum);

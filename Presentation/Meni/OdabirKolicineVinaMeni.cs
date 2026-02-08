@@ -69,8 +69,13 @@ namespace Presentation.Meni
 
         private static string Skrati(string s, int max)
         {
-            if (string.IsNullOrEmpty(s)) return "";
-            return s.Length <= max ? s : s.Substring(0, max - 3) + "...";
+            if (string.IsNullOrEmpty(s)) return ""; if (s.Length <= max)
+            {
+                return s;
+            }
+
+            return s.Substring(0, max - 3) + "...";
+
         }
     }
 }

@@ -18,8 +18,9 @@ namespace Presentation.Meni
             Console.WriteLine("\n--- PRIPREMA VINA ZA PRODAJU (Pakovanje + Slanje u skladiste) ---");
 
             Console.Write("Naziv vina: ");
-            string? naziv = Console.ReadLine();
-            if (string.IsNullOrWhiteSpace(naziv))
+            var naziv = Console.ReadLine();
+
+            if (naziv == null || naziv.Trim() == "")
             {
                 Console.WriteLine("Naziv ne sme biti prazan.");
                 Console.ReadLine();
@@ -53,8 +54,9 @@ namespace Presentation.Meni
             }
 
             Console.Write("Adresa odredista: ");
-            string? adresa = Console.ReadLine();
-            if (string.IsNullOrWhiteSpace(adresa))
+            var adresa = Console.ReadLine();
+
+            if (adresa == null || adresa.Trim() == "")
             {
                 Console.WriteLine("Adresa ne sme biti prazna.");
                 Console.ReadLine();
@@ -62,9 +64,9 @@ namespace Presentation.Meni
             }
 
             Console.Write("Vinski podrum ID (GUID): ");
-            string? guidInput = Console.ReadLine();
+            var guidInput = Console.ReadLine();
 
-            if (string.IsNullOrWhiteSpace(guidInput))
+            if (guidInput == null || guidInput.Trim() == "")
             {
                 Console.WriteLine("ID ne sme biti prazan.");
                 Console.ReadLine();

@@ -26,7 +26,12 @@ namespace Presentation.Meni
             Console.WriteLine("\n=== PRODAJA VINA ===");
 
             Console.Write("Unesite naziv vina: ");
-            string nazivVina = (Console.ReadLine() ?? string.Empty).Trim();
+            var nazivVina = Console.ReadLine();
+            if (nazivVina == null)
+            {
+                nazivVina = "";
+            }
+            nazivVina = nazivVina.Trim();
             if (string.IsNullOrWhiteSpace(nazivVina))
             {
                 Console.WriteLine("Naziv vina je obavezan.");
@@ -56,7 +61,14 @@ namespace Presentation.Meni
             }
 
             Console.Write("Unesite zapreminu flase u litrima (0.75 ili 1.5): ");
-            string zapTxt = (Console.ReadLine() ?? string.Empty).Trim().Replace(',', '.');
+            var zapTxt = Console.ReadLine();
+            if (zapTxt == null)
+            {
+                zapTxt = "";
+            }
+            zapTxt = zapTxt.Trim();
+            zapTxt = zapTxt.Replace(',', '.');
+            ;
             if (!double.TryParse(zapTxt, NumberStyles.Float, CultureInfo.InvariantCulture, out double zapremina) ||
                 (Math.Abs(zapremina - 0.75) > 0.0001 && Math.Abs(zapremina - 1.5) > 0.0001))
             {
@@ -75,7 +87,17 @@ namespace Presentation.Meni
                 Pauza();
                 return;
             }
-            TipProdaje tipProdaje = (tipOpt == 1) ? TipProdaje.Restoranska : TipProdaje.Diskont;
+            TipProdaje tipProdaje;
+
+            if (tipOpt == 1)
+            {
+                tipProdaje = TipProdaje.Restoranska;
+            }
+            else
+            {
+                tipProdaje = TipProdaje.Diskont;
+            }
+
 
             Console.WriteLine("Izaberite način placanja:");
             Console.WriteLine("1) Gotovina");
@@ -93,10 +115,16 @@ namespace Presentation.Meni
             if (placOpt == 1) nacinPlacanja = NacinPlacanja.Gotovina;
             else if (placOpt == 2) nacinPlacanja = NacinPlacanja.Predracun;
             else nacinPlacanja = NacinPlacanja.GotovinskiRacun;
-
             Console.Write("Unesite adresu odredista: ");
-            string adresa = (Console.ReadLine() ?? string.Empty).Trim();
-            if (string.IsNullOrWhiteSpace(adresa))
+            var adresa = Console.ReadLine();
+            if (adresa == null)
+            {
+                adresa = "";
+            }
+
+            adresa = adresa.Trim();
+
+            if (adresa == "")
             {
                 Console.WriteLine("Adresa odredista je obavezna.");
                 Pauza();
@@ -104,13 +132,21 @@ namespace Presentation.Meni
             }
 
             Console.Write("Unesite kupca (naziv/adresa): ");
-            string kupac = (Console.ReadLine() ?? string.Empty).Trim();
-            if (string.IsNullOrWhiteSpace(kupac))
+            var kupac = Console.ReadLine();
+            if (kupac == null)
+            {
+                kupac = "";
+            }
+
+            kupac = kupac.Trim();
+
+            if (kupac == "")
             {
                 Console.WriteLine("Kupac je obavezan.");
                 Pauza();
                 return;
             }
+
 
             Guid vinskiPodrumId = PreuzmiIliPostaviPodrum();
             if (vinskiPodrumId == Guid.Empty)
@@ -120,16 +156,7 @@ namespace Presentation.Meni
                 return;
             }
 
-            Guid fakturaId = _prodajaTok.IzvrsiProdaju(nazivVina,
-                kategorija,
-                brojFlasa,
-                zapremina,
-                tipProdaje,
-                nacinPlacanja,
-                adresa,
-                vinskiPodrumId,
-                kupac
-            );
+            Guid fakturaId = _prodajaTok.IzvrsiProdaju(nazivVina,kategorija,brojFlasa,zapremina,tipProdaje,nacinPlacanja,adresa,vinskiPodrumId,kupac );
 
             if (fakturaId == Guid.Empty)
             {

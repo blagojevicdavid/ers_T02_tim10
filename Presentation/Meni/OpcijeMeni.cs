@@ -9,19 +9,19 @@ namespace Presentation.Meni
         private readonly OdabirKolicineVinaMeni odabirKolicineVinaMeni;
         private readonly ProdajaMeni prodajaMeni;
         private readonly FaktureMeni faktureMeni;
-        private readonly ProizvodnjaVinaMeni proizvodnjaVinaMeni;
+       // private readonly ProizvodnjaVinaMeni proizvodnjaVinaMeni;
         private readonly PakovanjeMeni pakovanjeMeni;
         private readonly SkladistenjeMeni skladistenjeMeni;
         private readonly IsporukaVinaMeni isporukaVinaMeni;
 
-        public OpcijeMeni(PonudaVinaMeni ponudaVinaMeni,OdabirKolicineVinaMeni odabirKolicineVinaMeni,ProdajaMeni prodajaMeni,FaktureMeni faktureMeni,
-            ProizvodnjaVinaMeni proizvodnjaVinaMeni,PakovanjeMeni pakovanjeMeni,SkladistenjeMeni skladistenjeMeni,IsporukaVinaMeni isporukaVinaMeni)
+        public OpcijeMeni(PonudaVinaMeni ponudaVinaMeni,OdabirKolicineVinaMeni odabirKolicineVinaMeni,ProdajaMeni prodajaMeni,FaktureMeni faktureMeni
+           /* ProizvodnjaVinaMeni proizvodnjaVinaMeni*/,PakovanjeMeni pakovanjeMeni,SkladistenjeMeni skladistenjeMeni,IsporukaVinaMeni isporukaVinaMeni)
         {
             this.ponudaVinaMeni = ponudaVinaMeni;
             this.odabirKolicineVinaMeni = odabirKolicineVinaMeni;
             this.prodajaMeni = prodajaMeni;
             this.faktureMeni = faktureMeni;
-            this.proizvodnjaVinaMeni = proizvodnjaVinaMeni;
+           // this.proizvodnjaVinaMeni = proizvodnjaVinaMeni;
             this.pakovanjeMeni = pakovanjeMeni;
             this.skladistenjeMeni = skladistenjeMeni;
             this.isporukaVinaMeni = isporukaVinaMeni;

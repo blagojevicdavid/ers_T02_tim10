@@ -19,17 +19,13 @@ namespace Database.Repozitorijumi
             {
 
                 Korisnik postoji = PronadjiKorisnikaPoKorisnickomImenu(korisnik.KorisnickoIme);
-
-                // Ako korisnik sa tim korisničkim imenom već postoji, ne dodaje se
                 if (postoji.KorisnickoIme == string.Empty)
                 {
 
                     korisnik.Id = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
-              
                     bazaPodataka.Tabele.Korisnici.Add(korisnik);
 
-   
                     bazaPodataka.SacuvajPromene();
 
                     return korisnik;
