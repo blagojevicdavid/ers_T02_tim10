@@ -40,7 +40,7 @@ namespace Services.VinogradServisi
             merenjeRepo.DodajMerenje(merenje);
 
             fermentacija.PoslednjiBrix = nivoSeceraBrix;
-            fermentacijaRepo.AzurirajFermentaciju(fermentacija);  //povratna vr provjera
+            fermentacijaRepo.AzurirajFermentaciju(fermentacija); 
 
             return merenje;
         }

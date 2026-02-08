@@ -13,7 +13,6 @@ namespace Services.VinoServisi
         private const double LitaraPoLozi = 1.2;
         private const double OptimalniBrix = 24.0;
 
-        // samo za simulaciju toka "grozdje -> fermentacija -> flasiranje"
         private const double KgGrozdjaPoLitru = 1.4;
 
         private readonly IVinovaLozaRepozitorijum _lozaRepo;
@@ -39,7 +38,6 @@ namespace Services.VinoServisi
 
         public List<Vino> ProizvediVina(string nazivVina, KategorijaVina kategorija, int brojFlasa, double zapreminaFlaseLitara)
         {
-            // bez exception-a: samo vracamo prazno + logujemo
             if (_lozaRepo == null || _vinoRepo == null || _vinovaLozaServis == null || _berbaServis == null ||
                 _fermentacijaServis == null || _merenjeSeceraServis == null || _evidencijaProizvodnjeServis == null || _logger == null)
                 return new List<Vino>();
@@ -56,7 +54,6 @@ namespace Services.VinoServisi
                 TipEvidencije.INFO,
                 $"Proizvodnja: start. Vino={naziv}, Kat={kategorija}, Flase={brojFlasa}, Zap={zapreminaFlaseLitara}, L={ukupnoLitara:0.##}");
 
-            // 1) Nadji spremne loze, ako fali - zasadi nove i odmah oznaci kao spremne (simulacija)
             var spremne = (_lozaRepo.PronadjiVinoveLozePoFazi(FazaZrelostiLoze.SpremnaZaBerbu) ?? Enumerable.Empty<VinovaLoza>())
                 .ToList();
 
@@ -72,7 +69,6 @@ namespace Services.VinoServisi
 
             var izabrane = spremne.Take(potrebneLoze).ToList();
 
-            // 2) "Balans secera" + oznaci obrano
             foreach (var loza in izabrane)
             {
                 if (loza.NivoSeceraBrix > OptimalniBrix)
@@ -93,7 +89,6 @@ namespace Services.VinoServisi
                 _lozaRepo.AzurirajVinovuLozu(loza);
             }
 
-            // 3) Berba
             double kolicinaKg = Math.Round(ukupnoLitara * KgGrozdjaPoLitru, 2);
             var berba = _berbaServis.EvidentirajBerbu(DateTime.Now, kolicinaKg);
             if (berba == null || berba.Id == Guid.Empty)
@@ -104,7 +99,7 @@ namespace Services.VinoServisi
 
             _logger.Evidentiraj(TipEvidencije.INFO, $"Proizvodnja: evidentirana berba ({berba.Id}), kg={kolicinaKg:0.##}.");
 
-            // 4) Fermentacija + faze
+
             var fermentacija = _fermentacijaServis.ZapocniFermentaciju(berba.Id);
             if (fermentacija == null || fermentacija.Id == Guid.Empty)
             {
@@ -115,7 +110,7 @@ namespace Services.VinoServisi
             _logger.Evidentiraj(TipEvidencije.INFO, $"Proizvodnja: fermentacija pokrenuta ({fermentacija.Id}).");
             _fermentacijaServis.PromeniFazu(fermentacija.Id, FazaFermentacije.Aktivna);
 
-            // 5) Merenja secera (simulacija)
+
             _merenjeSeceraServis.DodajMerenje(fermentacija.Id, 24.0, "Start");
             _merenjeSeceraServis.DodajMerenje(fermentacija.Id, 12.0, "Tok");
             _merenjeSeceraServis.DodajMerenje(fermentacija.Id, 2.0, "Pred kraj");
@@ -123,7 +118,7 @@ namespace Services.VinoServisi
             _fermentacijaServis.PromeniFazu(fermentacija.Id, FazaFermentacije.Zavrsena);
             _logger.Evidentiraj(TipEvidencije.INFO, $"Proizvodnja: fermentacija zavrsena ({fermentacija.Id}).");
 
-            // 6) Evidencija proizvodnje
+
             var evid = _evidencijaProizvodnjeServis.ZabeleziProizvodnju(fermentacija.Id,naziv,brojFlasa,zapreminaFlaseLitara,
                 "Pokrenuta proizvodnja (nedovoljno zaliha)");
 
@@ -132,7 +127,7 @@ namespace Services.VinoServisi
             else
                 _logger.Evidentiraj(TipEvidencije.INFO, $"Proizvodnja: evidencija sacuvana ({evid.Id}).");
 
-            // 7) Flasiranje (kreiranje Vino zapisa)
+
             var proizvedena = new List<Vino>(brojFlasa);
             DateTime flasirano = DateTime.UtcNow;
 
