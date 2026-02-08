@@ -10,7 +10,10 @@ namespace Domain.PomocneMetode
     {
         public static Dictionary<Vino, StavkaFakture> FormirajPonudu(List<Vino> vina)
         {
-            vina ??= new List<Vino>();
+            if (vina == null)
+            {
+                vina = new List<Vino>();
+            }
 
             var cista = vina
                 .Where(v => v != null)
@@ -24,17 +27,15 @@ namespace Domain.PomocneMetode
             {
                 decimal cena = IzracunajCenu(v.Kategorija, v.ZapreminaLitara);
                 int kolicina = IzracunajKolicinu(v.ZapreminaLitara, v.Naziv, v.Kategorija);
-
-
                 ponuda[v] = new StavkaFakture(v.Id, kolicina, cena);
             }
 
             return ponuda;
         }
 
+
         private static int IzracunajKolicinu(double zapreminaLitra, string naziv, KategorijaVina kategorija)
         {
-            // simulacija rasprodatih vina
             if (kategorija.ToString() == "Premium" && Math.Abs(zapreminaLitra - 0.75) < 0.01)
                 return 0;
 
@@ -54,21 +55,31 @@ namespace Domain.PomocneMetode
         }
 
 
-
         private static decimal IzracunajCenu(KategorijaVina kategorija, double zapreminaLitra)
         {
             bool velika = Math.Abs(zapreminaLitra - 1.5) < 0.0001;
 
-            if (kategorija.ToString().Equals("Stolno", StringComparison.OrdinalIgnoreCase))
-                return velika ? 810m : 450m;
+            if (kategorija == KategorijaVina.Stolno)
+            {
+                if (velika) return 810m;
+                return 450m;
+            }
 
-            if (kategorija.ToString().Equals("Kvalitetno", StringComparison.OrdinalIgnoreCase))
-                return velika ? 1170m : 650m;
+            if (kategorija == KategorijaVina.Kvalitetno)
+            {
+                if (velika) return 1170m;
+                return 650m;
+            }
 
-            if (kategorija.ToString().Equals("Premium", StringComparison.OrdinalIgnoreCase))
-                return velika ? 1620m : 900m;
+            if (kategorija == KategorijaVina.Premium)
+            {
+                if (velika) return 1620m;
+                return 900m;
+            }
 
-            return velika ? 1000m : 500m;
+            if (velika) return 1000m;
+            return 500m;
         }
+
     }
 }

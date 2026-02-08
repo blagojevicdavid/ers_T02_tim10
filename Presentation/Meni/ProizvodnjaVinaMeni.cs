@@ -8,16 +8,16 @@ namespace Presentation.Meni
     public class ProizvodnjaVinaMeni
     {
         private readonly IEvidencijaProizvodnjeVinaServis evidencijaVinaServis;
-        private readonly PaleteMeni paleteMeni;
+       // private readonly PaleteMeni paleteMeni;
         private readonly PakovanjeMeni pakovanjeMeni;
 
         public ProizvodnjaVinaMeni(
             IEvidencijaProizvodnjeVinaServis evidencijaVinaServis,
-            PaleteMeni paleteMeni,
+            //PaleteMeni paleteMeni,
             PakovanjeMeni pakovanjeMeni)
         {
             this.evidencijaVinaServis = evidencijaVinaServis;
-            this.paleteMeni = paleteMeni;
+            //this.paleteMeni = paleteMeni;
             this.pakovanjeMeni = pakovanjeMeni;
         }
 

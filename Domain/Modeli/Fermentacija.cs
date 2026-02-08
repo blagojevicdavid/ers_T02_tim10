@@ -9,15 +9,16 @@ namespace Domain.Modeli
 {
     public class Fermentacija
     {
-        public Guid Id { get; set; }
-        public Guid BerbaId { get; set; }
-        public Guid? VinoId { get; set; }
-        public DateTime DatumPocetka { get; set; }
-        public DateTime? DatumZavrsetka { get; set; }
+        public Guid Id { get; set; } = Guid.Empty;
+        public Guid BerbaId { get; set; } = Guid.Empty;
+        public Guid VinoId { get; set; } = Guid.Empty;
+        public DateTime DatumPocetka { get; set; } = DateTime.MinValue;
+        public DateTime DatumZavrsetka { get; set; } = DateTime.MinValue;
         public FazaFermentacije Faza { get; set; }
-        public double? PoslednjiBrix { get; set; }
-        public double? PoslednjaTemperaturaC { get; set; }
+        public double PoslednjiBrix { get; set; } = 0;
+        public double PoslednjaTemperaturaC { get; set; } = 0;
         public string Napomena { get; set; } = string.Empty;
+
 
         public Fermentacija()
         {

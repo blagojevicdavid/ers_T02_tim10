@@ -10,7 +10,7 @@ namespace Domain.Modeli
     {
         public Guid Id { get; set; }
         public Guid FermentacijaId { get; set; }
-        public string NazivVina { get; set; }
+        public string NazivVina { get; set; } = string.Empty;
         public int BrojFlasa { get; set; }
         public double ZapreminaFlaseLitara { get; set; }
         public double UkupnoLitara { get; set; }
@@ -21,7 +21,7 @@ namespace Domain.Modeli
         {
         }
 
-        public EvidencijaProizvodnjeVina(Guid fermentacijaId, string nazivVina, int brojFlasa, double zapreminaFlaseLitara,DateTime datumVreme, string napomena)
+        public EvidencijaProizvodnjeVina(Guid fermentacijaId, string nazivVina, int brojFlasa, double zapreminaFlaseLitara,DateTime datumVreme, string Napomena)
         {
             FermentacijaId = fermentacijaId;
             NazivVina = nazivVina;
@@ -29,7 +29,7 @@ namespace Domain.Modeli
             ZapreminaFlaseLitara = zapreminaFlaseLitara;
             UkupnoLitara = brojFlasa * zapreminaFlaseLitara;
             DatumVreme = datumVreme;
-            napomena = napomena;
+            napomena = Napomena;
         }
     }
     }

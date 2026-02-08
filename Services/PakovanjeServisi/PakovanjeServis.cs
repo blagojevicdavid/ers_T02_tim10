@@ -16,12 +16,7 @@ namespace Services.PakovanjeServisi
         private readonly ILoggerServis logger;
         private readonly IProizvodnjaVinaServis proizvodnjaServis;
 
-        public PakovanjeServis(
-            IVinoRepozitorijum vinoRepo,
-            IPaleteRepozitorijum paleteRepo,
-            ISkladistenjeServis skladistenjeServis,
-            IProizvodnjaVinaServis proizvodnjaServis,
-            ILoggerServis logger)
+        public PakovanjeServis(IVinoRepozitorijum vinoRepo,IPaleteRepozitorijum paleteRepo, ISkladistenjeServis skladistenjeServis,IProizvodnjaVinaServis proizvodnjaServis,ILoggerServis logger)
         {
             this.vinoRepo = vinoRepo;
             this.paleteRepo = paleteRepo;
@@ -30,13 +25,7 @@ namespace Services.PakovanjeServisi
             this.logger = logger;
         }
 
-        public (bool, Paleta) UpakujVinaUPaletu(
-            string nazivVina,
-            KategorijaVina kategorija,
-            int brojFlasa,
-            double zapreminaFlase,
-            string adresaOdredista,
-            Guid vinskiPodrumId)
+        public (bool, Paleta) UpakujVinaUPaletu(string nazivVina,KategorijaVina kategorija,int brojFlasa,double zapreminaFlase,string adresaOdredista, Guid vinskiPodrumId)
         {
             if (paleteRepo == null || skladistenjeServis == null || proizvodnjaServis == null || logger == null)
                 return (false, new Paleta());
@@ -147,14 +136,7 @@ namespace Services.PakovanjeServisi
             {
                 logger.Evidentiraj(TipEvidencije.INFO, "Pakovanje: nema palete, pokusavam novo pakovanje.");
 
-                var rezultat = UpakujVinaUPaletu(
-                    nazivVina,
-                    kategorija,
-                    brojFlasa,
-                    zapreminaFlase,
-                    adresa,
-                    vinskiPodrumId
-                );
+                var rezultat = UpakujVinaUPaletu(nazivVina,kategorija,brojFlasa,zapreminaFlase,adresa,vinskiPodrumId);
 
                 if (!rezultat.Item1)
                     return (false, new Paleta());

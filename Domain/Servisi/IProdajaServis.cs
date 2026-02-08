@@ -9,12 +9,6 @@ namespace Domain.Servisi
 {
     public interface IProdajaServis
     {
-        Guid IsporuciVinoKupcu(
-            Guid paletaId,
-            string kupac,
-            decimal cenaPoKomadu,
-            TipProdaje tipProdaje,
-            NacinPlacanja nacinPlacanja
-        );
+        Guid IsporuciVinoKupcu(Guid paletaId,string kupac,decimal cenaPoKomadu,TipProdaje tipProdaje,NacinPlacanja nacinPlacanja);
     }
 }

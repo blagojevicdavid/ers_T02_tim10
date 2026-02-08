@@ -9,6 +9,7 @@ namespace Domain.Servisi
 {
     public interface IOdabirKolicineVinaServis
     {
-        OdabranoVinoZaProdaju? Odaberi(string sifra, int kolicina);
+        OdabranoVinoZaProdaju Odaberi(string sifra, int kolicina);
     }
+
 }

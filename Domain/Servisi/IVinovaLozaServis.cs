@@ -10,11 +10,6 @@ namespace Domain.Servisi
     public interface IVinovaLozaServis
     {
         VinovaLoza ZasadiLozu(string naziv);
-        VinovaLoza ZasadiLozu(
-           string naziv,
-           double nivoSeceraBrix,
-           int godinaSadnje,
-           string region
-       );
+        VinovaLoza ZasadiLozu(string naziv,double nivoSeceraBrix,int godinaSadnje,string region);
     }
 }

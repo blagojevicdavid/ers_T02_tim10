@@ -10,6 +10,6 @@ namespace Domain.Servisi
     public interface IPonudaVinaServis
     {
         List<Vino> VratiPonudu();
-        Vino? PronadjiPoSifri(string sifra);
+        Vino PronadjiPoSifri(string sifra);
     }
 }

@@ -9,52 +9,23 @@ namespace Presentation.Meni
         private readonly OdabirKolicineVinaMeni odabirKolicineVinaMeni;
         private readonly ProdajaMeni prodajaMeni;
         private readonly FaktureMeni faktureMeni;
-
-        private readonly VinovaLozaMeni vinovaLozaMeni;
-        private readonly BerbaLozeMeni berbaLozeMeni;
-        private readonly ProracunGrozdjaMeni proracunGrozdjaMeni;
-
-        
-        private readonly FermentacijaMeni fermentacijaMeni;
         private readonly ProizvodnjaVinaMeni proizvodnjaVinaMeni;
         private readonly PakovanjeMeni pakovanjeMeni;
-        private readonly PaleteMeni paleteMeni;
         private readonly SkladistenjeMeni skladistenjeMeni;
         private readonly IsporukaVinaMeni isporukaVinaMeni;
 
-        public OpcijeMeni(
-            PonudaVinaMeni ponudaVinaMeni,
-            OdabirKolicineVinaMeni odabirKolicineVinaMeni,
-            ProdajaMeni prodajaMeni,
-            FaktureMeni faktureMeni,
-            VinovaLozaMeni vinovaLozaMeni,
-            BerbaLozeMeni berbaLozeMeni,
-            ProracunGrozdjaMeni proracunGrozdjaMeni,
-            FermentacijaMeni fermentacijaMeni,
-            ProizvodnjaVinaMeni proizvodnjaVinaMeni,
-            PakovanjeMeni pakovanjeMeni,
-            PaleteMeni paleteMeni,
-            SkladistenjeMeni skladistenjeMeni,
-            IsporukaVinaMeni isporukaVinaMeni)
+        public OpcijeMeni(PonudaVinaMeni ponudaVinaMeni,OdabirKolicineVinaMeni odabirKolicineVinaMeni,ProdajaMeni prodajaMeni,FaktureMeni faktureMeni,
+            ProizvodnjaVinaMeni proizvodnjaVinaMeni,PakovanjeMeni pakovanjeMeni,SkladistenjeMeni skladistenjeMeni,IsporukaVinaMeni isporukaVinaMeni)
         {
             this.ponudaVinaMeni = ponudaVinaMeni;
             this.odabirKolicineVinaMeni = odabirKolicineVinaMeni;
             this.prodajaMeni = prodajaMeni;
             this.faktureMeni = faktureMeni;
-
-            this.vinovaLozaMeni = vinovaLozaMeni;
-            this.berbaLozeMeni = berbaLozeMeni;
-            this.proracunGrozdjaMeni = proracunGrozdjaMeni;
-
-            this.fermentacijaMeni = fermentacijaMeni;
             this.proizvodnjaVinaMeni = proizvodnjaVinaMeni;
             this.pakovanjeMeni = pakovanjeMeni;
-            this.paleteMeni = paleteMeni;
             this.skladistenjeMeni = skladistenjeMeni;
             this.isporukaVinaMeni = isporukaVinaMeni;
         }
-
-        
         public void PrikaziEnolog()
         {
             bool izlaz = false;
@@ -92,11 +63,7 @@ namespace Presentation.Meni
                         faktureMeni.Prikazi();
                         Pauza();
                         break;
-                        /*
-                    case "5":
-                        PrikaziVinogradMeni();
-                        break;
-                        */
+                      
                     case "0":
                         izlaz = true;
                         break;
@@ -108,7 +75,6 @@ namespace Presentation.Meni
             }
         }
 
-        
         public void PrikaziKelarMajstor()
         {
             bool izlaz = false;
@@ -151,7 +117,6 @@ namespace Presentation.Meni
                 }
             }
         }
-
         private static void Pauza()
         {
             Console.WriteLine("\nPritisni ENTER za nastavak...");
