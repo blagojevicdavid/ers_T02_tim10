@@ -12,13 +12,8 @@ namespace Domain.Servisi
     public interface IFermentacijaServis
     {
         Fermentacija ZapocniFermentaciju(Guid lozaId);
-
         bool PromeniFazu(Guid fermentacijaId, FazaFermentacije novaFaza);
-
         IEnumerable<Fermentacija> PregledSvihFermentacija();
-
         Fermentacija PregledFermentacije(Guid fermentacijaId);
-
-
     }
 }

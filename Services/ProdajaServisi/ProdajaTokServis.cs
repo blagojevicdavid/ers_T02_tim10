@@ -13,22 +13,14 @@ namespace Services.ProdajaServisi
         private readonly IPakovanjeServis _pakovanje;
         private readonly IProdajaServis _prodaja;
         private readonly ILoggerServis _logger;
-
         private readonly IVinoRepozitorijum _vinoRepo;
         private readonly IPaleteRepozitorijum _paleteRepo;
         private readonly ISkladistenjeServis _skladistenje;
-
         private readonly ProdajaStanjeServis _stanjeServis;
         private readonly ProdajaPaletaFabrika _paletaFabrika;
         private readonly ProdajaCenovnik _cenovnik;
 
-        public ProdajaTokServis(
-            IPakovanjeServis pakovanje,
-            ISkladistenjeServis skladistenje,
-            IProdajaServis prodaja,
-            ILoggerServis logger,
-            IVinoRepozitorijum vinoRepo,
-            IPaleteRepozitorijum paleteRepo)
+        public ProdajaTokServis(IPakovanjeServis pakovanje, ISkladistenjeServis skladistenje,IProdajaServis prodaja,ILoggerServis logger,IVinoRepozitorijum vinoRepo,IPaleteRepozitorijum paleteRepo)
         {
             _pakovanje = pakovanje;
             _skladistenje = skladistenje;
@@ -36,22 +28,12 @@ namespace Services.ProdajaServisi
             _logger = logger;
             _vinoRepo = vinoRepo;
             _paleteRepo = paleteRepo;
-
             _stanjeServis = new ProdajaStanjeServis(_vinoRepo, _paleteRepo, _logger);
             _paletaFabrika = new ProdajaPaletaFabrika(_paleteRepo, _logger);
             _cenovnik = new ProdajaCenovnik();
         }
 
-        public Guid IzvrsiProdaju(
-            string nazivVina,
-            KategorijaVina kategorija,
-            int brojFlasa,
-            double zapremina,
-            TipProdaje tipProdaje,
-            NacinPlacanja nacinPlacanja,
-            string adresaOdredista,
-            Guid vinskiPodrumId,
-            string kupac)
+        public Guid IzvrsiProdaju( string nazivVina, KategorijaVina kategorija, int brojFlasa,double zapremina,TipProdaje tipProdaje,NacinPlacanja nacinPlacanja,string adresaOdredista,Guid vinskiPodrumId,string kupac)
         {
             if (_pakovanje == null || _skladistenje == null || _prodaja == null || _logger == null || _vinoRepo == null || _paleteRepo == null)
                 return Guid.Empty;
@@ -95,18 +77,10 @@ namespace Services.ProdajaServisi
 
                 while (potrebno > 0)
                 {
-                    var rezultat = _pakovanje.PosaljiPrvuDostupnuUpakovanuPaletu(
-                        vinoTip.Naziv,
-                        vinoTip.Kategorija,
-                        potrebno,
-                        vinoTip.ZapreminaLitara,
-                        adresaOdredista,
-                        vinskiPodrumId
-                    );
-
-                    if (!rezultat.Item1)
+                    var rezultat = _pakovanje.PosaljiPrvuDostupnuUpakovanuPaletu( vinoTip.Naziv, vinoTip.Kategorija, potrebno, vinoTip.ZapreminaLitara,
+                                                                                   adresaOdredista, vinskiPodrumId);
+                        if (!rezultat.Item1)
                         return Guid.Empty;
-
                     var isporucene = _skladistenje.IsporuciPaleteZaProdaju(1);
                     if (isporucene == null || !isporucene.Any())
                         return Guid.Empty;
@@ -135,30 +109,15 @@ namespace Services.ProdajaServisi
 
             decimal cenaPoKomadu = _cenovnik.IzracunajCenu(tipProdaje);
 
-            Guid fakturaId = _prodaja.IsporuciVinoKupcu(
-                paleta.Id,
-                kupac,
-                cenaPoKomadu,
-                tipProdaje,
-                nacinPlacanja
-            );
+            Guid fakturaId = _prodaja.IsporuciVinoKupcu(paleta.Id,kupac,cenaPoKomadu,tipProdaje,nacinPlacanja);
 
             if (fakturaId == Guid.Empty)
                 return Guid.Empty;
 
-            _logger.Evidentiraj(
-                TipEvidencije.INFO,
-                "[PRODAJA TOK] Prodaja OK. Vino=" + vinoTip.Naziv +
-                ", Kolicina=" + brojFlasa +
-                ", Paleta=" + paleta.Sifra +
-                ", Faktura=" + fakturaId +
-                ", Tip=" + tipProdaje +
-                ", Placanje=" + nacinPlacanja
-            );
-
+            _logger.Evidentiraj( TipEvidencije.INFO, "[PRODAJA TOK] Prodaja OK. Vino=" + vinoTip.Naziv +", Kolicina=" + brojFlasa +", Paleta=" + paleta.Sifra +
+                                 ", Faktura=" + fakturaId + ", Tip=" + tipProdaje + ", Placanje=" + nacinPlacanja );
             return fakturaId;
         }
-
         //ostala ovde zbog _vinoRepo
         private bool TryPronadjiVinoTip(string nazivVina, KategorijaVina kategorija, double zapremina, out Vino vino)
         {
@@ -167,11 +126,9 @@ namespace Services.ProdajaServisi
             string trazeni = string.Empty;
             if (!string.IsNullOrWhiteSpace(nazivVina))
                 trazeni = nazivVina.Trim();
-
             var lista = _vinoRepo.PronadjiVinaPoKategoriji(kategorija);
             if (lista == null)
                 return false;
-
             foreach (var v in lista)
             {
                 if (_stanjeServis.OdgovaraTipu(v, trazeni, kategorija, zapremina))

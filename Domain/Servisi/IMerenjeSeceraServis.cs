@@ -9,11 +9,7 @@ namespace Domain.Servisi
 {
     public interface IMerenjeSeceraServis
     {
-        MerenjeSecera DodajMerenje(
-            Guid fermentacijaId,
-            double nivoSeceraBrix,
-            string napmena = "");
-
+        MerenjeSecera DodajMerenje(Guid fermentacijaId,double nivoSeceraBrix,string napmena = "");
         IEnumerable<MerenjeSecera> PregledMerenja(Guid fermentacijaId);
 
 

@@ -9,15 +9,8 @@ namespace Domain.Servisi
 {
     public interface IEvidencijaProizvodnjeVinaServis
     {
-        EvidencijaProizvodnjeVina ZabeleziProizvodnju(
-        Guid fermentacijaId,
-        string nazivVina,
-        int brojFlasa,
-        double zapreminaFlaseLitara,
-        string napomena = ""
-       );
+     EvidencijaProizvodnjeVina ZabeleziProizvodnju(Guid fermentacijaId,string nazivVina,int brojFlasa,double zapreminaFlaseLitara,string napomena = "");
      IEnumerable<EvidencijaProizvodnjeVina> PregledSvihEvidencija();
-
      IEnumerable<EvidencijaProizvodnjeVina> PregledEvidencijaZaFermentaciju(Guid fermentacijaId);
 
     }

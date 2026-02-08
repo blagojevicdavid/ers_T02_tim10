@@ -6,10 +6,6 @@ namespace Domain.Servisi
 {
     public interface IProizvodnjaVinaServis
     {
-        List<Vino> ProizvediVina(
-            string nazivVina,
-            KategorijaVina kategorija,
-            int brojFlasa,
-            double zapreminaFlaseLitara);
+        List<Vino> ProizvediVina(string nazivVina, KategorijaVina kategorija, int brojFlasa, double zapreminaFlaseLitara);
     }
 }

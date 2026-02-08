@@ -76,7 +76,7 @@ namespace Services.SkladistenjeServisi
 
             return paleta != null && paleta.Id != Guid.Empty;
 
-            return true;     //ne treba nista 
+           // return true;     //ne treba nista 
 
         }
 
