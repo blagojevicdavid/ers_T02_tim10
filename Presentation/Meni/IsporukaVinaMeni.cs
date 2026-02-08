@@ -28,9 +28,6 @@ namespace Presentation.Meni
             {
                 BrojPaleta = brojPaleta
             };
-
-            //rememberStatus("Kreiran", zahtjev); treba mi kasnije
-
             isporukaVinaServis.PosaljiZahtjev(zahtjev);
 
             Console.WriteLine($"\nStatus zahtjeva: {zahtjev.Status}");

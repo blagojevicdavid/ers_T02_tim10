@@ -86,7 +86,6 @@ namespace Presentation.Authentifikacija
             Console.Write("Lozinka: ");
             novi.Lozinka = Console.ReadLine() ?? "";
 
-            // IZBOR ULOGE (ENUM – NEMA string greške)
             Console.WriteLine("Izaberite ulogu:");
             Console.WriteLine("1) Glavni enolog");
             Console.WriteLine("2) Kelar majstor");

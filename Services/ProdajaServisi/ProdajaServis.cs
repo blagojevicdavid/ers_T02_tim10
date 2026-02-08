@@ -13,10 +13,7 @@ namespace Services.ProdajaServisi
         private readonly IFaktureRepozitorijum faktureRepozitorijum;
         private readonly ILoggerServis loggerServis;
 
-        public ProdajaServis(
-            IPaleteRepozitorijum paleteRepozitorijum,
-            IFaktureRepozitorijum faktureRepozitorijum,
-            ILoggerServis loggerServis)
+        public ProdajaServis(IPaleteRepozitorijum paleteRepozitorijum,IFaktureRepozitorijum faktureRepozitorijum,ILoggerServis loggerServis)
         {
 
             this.paleteRepozitorijum = paleteRepozitorijum;
@@ -25,15 +22,8 @@ namespace Services.ProdajaServisi
             this.paleteRepozitorijum = paleteRepozitorijum ?? throw new ArgumentNullException(nameof(paleteRepozitorijum));   //ne valja
             this.faktureRepozitorijum = faktureRepozitorijum ?? throw new ArgumentNullException(nameof(faktureRepozitorijum));
             this.loggerServis = loggerServis ?? throw new ArgumentNullException(nameof(loggerServis));
-
         }
-
-        public Guid IsporuciVinoKupcu(
-            Guid paletaId,
-            string kupac,
-            decimal cenaPoKomadu,
-            TipProdaje tipProdaje,
-            NacinPlacanja nacinPlacanja)
+        public Guid IsporuciVinoKupcu( Guid paletaId,string kupac, decimal cenaPoKomadu,TipProdaje tipProdaje,NacinPlacanja nacinPlacanja)
         {
             if (paleteRepozitorijum == null || faktureRepozitorijum == null || loggerServis == null)
                 return Guid.Empty;

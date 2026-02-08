@@ -10,26 +10,29 @@ namespace Domain.PomocneMetode
     {
         public static Dictionary<Vino, StavkaFakture> FormirajPonudu(List<Vino> vina)
         {
-            vina ??= new List<Vino>();
+            if (vina == null)
+            {
+                vina = new List<Vino>();
+            }
 
             var cista = vina
                 .Where(v => v != null)
                 .GroupBy(v => v.Id)
                 .Select(g => g.First())
                 .ToList();
+
             var ponuda = new Dictionary<Vino, StavkaFakture>();
 
             foreach (var v in cista)
             {
                 decimal cena = IzracunajCenu(v.Kategorija, v.ZapreminaLitara);
                 int kolicina = IzracunajKolicinu(v.ZapreminaLitara, v.Naziv, v.Kategorija);
-
-
                 ponuda[v] = new StavkaFakture(v.Id, kolicina, cena);
             }
 
             return ponuda;
         }
+
 
         private static int IzracunajKolicinu(double zapreminaLitra, string naziv, KategorijaVina kategorija)
         {

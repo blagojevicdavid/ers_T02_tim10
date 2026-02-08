@@ -10,7 +10,7 @@ namespace Domain.Servisi
     public interface IIsporukaVinaServis
     {
         List<Paleta> IsporuciPalete(int brojPaleta);
-        void PosaljiZahtjev(ZahtjevZaIsporuku zahtjev);
+        bool PosaljiZahtjev(ZahtjevZaIsporuku zahtjev);
         
 
     }

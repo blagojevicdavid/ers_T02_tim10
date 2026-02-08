@@ -14,10 +14,7 @@ namespace Presentation.Meni
         private readonly ISkladistenjeServis _skladistenjeServis;
         private readonly IVinskiPodrumRepozitorijum _vinskiPodrumRepo;
 
-        public ProdajaMeni(
-            IProdajaTokServis prodajaTok,
-            ISkladistenjeServis skladistenjeServis,
-            IVinskiPodrumRepozitorijum vinskiPodrumRepo)
+        public ProdajaMeni( IProdajaTokServis prodajaTok, ISkladistenjeServis skladistenjeServis, IVinskiPodrumRepozitorijum vinskiPodrumRepo)
         {
             _prodajaTok = prodajaTok;
             _skladistenjeServis = skladistenjeServis;
@@ -115,7 +112,6 @@ namespace Presentation.Meni
                 return;
             }
 
-            // --- AUTOMATSKI ODABIR PODRUMA (ne trazimo od korisnika) ---
             Guid vinskiPodrumId = PreuzmiIliPostaviPodrum();
             if (vinskiPodrumId == Guid.Empty)
             {
@@ -124,9 +120,7 @@ namespace Presentation.Meni
                 return;
             }
 
-            // --- POZIV PRODAJE ---
-            Guid fakturaId = _prodajaTok.IzvrsiProdaju(
-                nazivVina,
+            Guid fakturaId = _prodajaTok.IzvrsiProdaju(nazivVina,
                 kategorija,
                 brojFlasa,
                 zapremina,
@@ -154,10 +148,8 @@ namespace Presentation.Meni
                 return Guid.Empty;
 
             Guid id = Guid.Empty;
-
             var nacin = _skladistenjeServis.PreuzmiNacinSkladistenja();
 
-            // 1) pokušaj uzeti već postavljen podrum iz skladištenja
             if (nacin == NacinSkladistenja.LokalniPodrum)
                 id = _skladistenjeServis.PreuzmiLokalniPodrum();
             else
@@ -166,7 +158,6 @@ namespace Presentation.Meni
             if (id != Guid.Empty)
                 return id;
 
-            // 2) fallback: uzmi prvi podrum iz baze i zapamti ga
             var prvi = _vinskiPodrumRepo.SviVinskiPodrumi().FirstOrDefault();
             if (prvi == null)
                 return Guid.Empty;

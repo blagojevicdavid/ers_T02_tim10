@@ -152,18 +152,18 @@ namespace Loger_Bloger
             FaktureMeni faktureMeni = new FaktureMeni(fakturePregledServis);
 
             // Vinograd/berba (enolog)
-            VinovaLozaMeni vinovaLozaMeni = new VinovaLozaMeni(vinovaLozaServis);
-            BerbaLozeMeni berbaLozeMeni = new BerbaLozeMeni(berbaLozeServis);
-            ProracunGrozdjaMeni proracunGrozdjaMeni = new ProracunGrozdjaMeni(proracunGrozdjaServis);
+            //VinovaLozaMeni vinovaLozaMeni = new VinovaLozaMeni(vinovaLozaServis);
+            //BerbaLozeMeni berbaLozeMeni = new BerbaLozeMeni(berbaLozeServis);
+            //ProracunGrozdjaMeni proracunGrozdjaMeni = new ProracunGrozdjaMeni(proracunGrozdjaServis);
 
             // Operativa (kelar)
             PakovanjeMeni pakovanjeMeni = new PakovanjeMeni(pakovanjeServis);
-            PaleteMeni paleteMeni = new PaleteMeni(paleteServis);
+           // PaleteMeni paleteMeni = new PaleteMeni(paleteServis);
             SkladistenjeMeni skladistenjeMeni = new SkladistenjeMeni(skladistenjeServis);
             IsporukaVinaMeni isporukaVinaMeni = new IsporukaVinaMeni(isporukaVinaServis);
 
-            FermentacijaMeni fermentacijaMeni = new FermentacijaMeni(fermentacijaServis, merenjeSeceraServis);
-            ProizvodnjaVinaMeni proizvodnjaVinaMeni = new ProizvodnjaVinaMeni(evidencijaVinaServis, paleteMeni, pakovanjeMeni);
+           // FermentacijaMeni fermentacijaMeni = new FermentacijaMeni(fermentacijaServis, merenjeSeceraServis);
+            ProizvodnjaVinaMeni proizvodnjaVinaMeni = new ProizvodnjaVinaMeni(evidencijaVinaServis, /*paleteMeni*/ pakovanjeMeni);
 
             // -------------------- GLAVNI MENI --------------------
             OpcijeMeni meni = new OpcijeMeni(
@@ -171,13 +171,13 @@ namespace Loger_Bloger
                 odabirKolicineVinaMeni,
                 prodajaMeni,
                 faktureMeni,
-                vinovaLozaMeni,
-                berbaLozeMeni,
-                proracunGrozdjaMeni,
-                fermentacijaMeni,
+                //vinovaLozaMeni,
+               // berbaLozeMeni,
+                //proracunGrozdjaMeni,
+                //fermentacijaMeni,
                 proizvodnjaVinaMeni,
                 pakovanjeMeni,
-                paleteMeni,
+                //paleteMeni,
                 skladistenjeMeni,
                 isporukaVinaMeni
             );

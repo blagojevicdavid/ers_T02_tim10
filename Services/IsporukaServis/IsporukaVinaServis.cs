@@ -20,7 +20,7 @@ namespace Services.IsporukaServis
             _logger = logger;
         }
 
-        public void PosaljiZahtjev(ZahtjevZaIsporuku zahtjev)   //bool
+        public bool PosaljiZahtjev(ZahtjevZaIsporuku zahtjev)  
         {
             
 
@@ -32,10 +32,11 @@ namespace Services.IsporukaServis
             {
                 zahtjev.Status = StatusZahtjeva.Odbijen;
                 
-                return;
+                return false;
             }
 
             zahtjev.Status = StatusZahtjeva.Isporucen;
+            return true;
             
         }
 
